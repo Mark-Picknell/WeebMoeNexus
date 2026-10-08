@@ -14,17 +14,65 @@ Expected resolution:
 - AniDB character ID: **108685** (`ch108685`)
 - Character page: https://anidb.net/character/108685
 
-Useful evidence dimensions exposed by AniDB include:
+### Ground-truth traits supplied from the AniDB character record
 
-- pink hair
-- blue hair highlights
-- sunglasses
-- lab coat
+Identity / body:
+
+- gender identity: female
+- height: 175 cm
+- weight: 52 kg
+- blood type: B
+- date of birth: 09.06.????
+
+Abilities / role:
+
+- genius
+- poison user
 - mad scientist
+
+Accessories / clothing:
+
+- sunglasses
+- skirt
+- miniskirt
+- boots
+- thigh boots
+- high heels
+- lab coat
+- elastic hair tie
+- string necklace
+- lipstick
+
+Appearance:
+
+- exposed midriff
+- yellow eyes
+- eye shadow
+- blue hair highlights
+- pink hair
+- polished nails
+- fair skin
+
+Weapons:
+
 - knife
 - surgical scalpels
-- female
-- main character in *Akudama Drive*
+
+AniDB also exposes community-oriented metadata such as waifu/trash ratings and fetish-appeal tags. Those should remain provider/community metadata rather than being promoted into universal core identity fields.
+
+### Why this is a strong golden query
+
+Mark's original recollection was not vague in any meaningful sense. The remembered discriminators were highly specific:
+
+```text
+pink-haired
+doctor
+glasses/sunglasses
+lab coat
+scalpel / surgical imagery
+```
+
+Those cues map directly onto the AniDB record and uniquely narrow the search space. The acceptance test is therefore not "recover from a bad memory"; it is "resolve a natural-language memory that is semantically precise but not expressed in provider-native identifiers or canonical names."
 
 ## Why this matters
 
