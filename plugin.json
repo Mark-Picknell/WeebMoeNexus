@@ -1,0 +1,8 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "weeb-moe-nexus",
+  "version": "0.1.0",
+  "description": "Anime knowledge and discovery through a normalized, provenance-preserving MCP layer.",
+  "repository": "https://github.com/Mark-Picknell/WeebMoeNexus",
+  "keywords": ["anime", "anidb", "mcp", "chatgpt", "codex", "metadata", "knowledge"]
+}
