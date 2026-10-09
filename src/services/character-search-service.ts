@@ -1,5 +1,6 @@
 import type { AnimeRecord } from "../domain/anime.js";
 import { normalizeAniDbTitle } from "../providers/anidb/title-normalization.js";
+import { normalizeCharacterEpisodeAppearances, type CharacterEpisodeEvidence } from "./episode-appearance-service.js";
 
 export type CharacterNameMatchType =
   | "exact"
@@ -23,6 +24,7 @@ export interface CharacterSearchMatch {
   picture: string | null;
   /** Missing appearance metadata is unknown; never evidence of nonappearance. */
   episodeAppearancesRaw: string | null;
+  episodeEvidence: CharacterEpisodeEvidence;
   voiceActor: {
     id: number | null;
     name: string;
@@ -93,6 +95,7 @@ export function findCharactersInAnime(
       gender: character.gender,
       picture: character.picture,
       episodeAppearancesRaw: character.episodeAppearancesRaw,
+      episodeEvidence: normalizeCharacterEpisodeAppearances(anime, character.episodeAppearancesRaw),
       voiceActor: character.voiceActor
     });
   }
