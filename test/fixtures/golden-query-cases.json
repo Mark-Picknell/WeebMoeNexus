@@ -1,0 +1,609 @@
+{
+  "schemaVersion": 1,
+  "description": "Human-curated, offline acceptance expectations; NOT an assertion that search tools already satisfy them. Corpus is metadata synthesized from docs/GOLDEN-QUERIES.md, not bulk exported provider content.",
+  "licenseNote": "No third-party audiovisual content, episode frames, lyrics, or scraped catalog payloads included. Check linked source terms before reuse or redistribution.",
+  "cases": [
+    {
+      "id": "GQ-001",
+      "input": "Find the hot pink-haired doctor with a scalpel.",
+      "capabilities": [
+        "semantic-attribute-search",
+        "character-search"
+      ],
+      "expectedEntities": [
+        {
+          "type": "character",
+          "name": "Doctor / Isha",
+          "providerId": "anidb:character:108685"
+        },
+        {
+          "type": "anime",
+          "name": "Akudama Drive",
+          "providerId": "anidb:anime:15437"
+        }
+      ],
+      "requiredFindings": [
+        "visual attributes pink hair, lab coat and surgical scalpels should be evidence, not hard-coded identity"
+      ],
+      "doNotConclude": [
+        "no assumption that character trait query is already implemented"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-001",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-002",
+      "input": "Ogata Megumi",
+      "capabilities": [
+        "person-search",
+        "credit-resolution"
+      ],
+      "expectedEntities": [
+        {
+          "type": "person",
+          "name": "Megumi Ogata / Ogata Megumi"
+        },
+        {
+          "type": "character",
+          "name": "Doctor / Isha",
+          "providerId": "anidb:character:108685"
+        }
+      ],
+      "requiredFindings": [
+        "voice credit from Ogata to Akudama Drive Doctor / Isha"
+      ],
+      "doNotConclude": [
+        "do not split reversed Japanese/Western name order into two people"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-002",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-003",
+      "input": "Super Dimension Fortress Macross",
+      "capabilities": [
+        "title-search",
+        "adaptation-discovery"
+      ],
+      "expectedEntities": [
+        {
+          "type": "anime",
+          "name": "The Super Dimension Fortress Macross",
+          "providerId": "anidb:anime:77"
+        },
+        {
+          "type": "adaptation",
+          "name": "Robotech: The Macross Saga"
+        }
+      ],
+      "requiredFindings": [
+        "anime titles and romaji aliases must resolve to original 1982 TV series"
+      ],
+      "doNotConclude": [
+        "do not collapse Robotech, later Macross sequels and original 1982 series"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-003",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-004",
+      "input": "Does Megumi Ogata voice a character in the original 1982 Macross TV series?",
+      "capabilities": [
+        "credit-resolution",
+        "negative-evidence"
+      ],
+      "expectedEntities": [
+        {
+          "type": "person",
+          "name": "Megumi Ogata"
+        },
+        {
+          "type": "anime",
+          "name": "The Super Dimension Fortress Macross",
+          "providerId": "anidb:anime:77"
+        }
+      ],
+      "requiredFindings": [],
+      "doNotConclude": [
+        "credit not verified; unavailable source coverage is NOT proof of absence",
+        "do not confuse Megumi Nakajima with Megumi Ogata"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-004",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-005",
+      "input": "Super Dimension Fortress Macross: what related adaptation is most relevant to English viewers?",
+      "capabilities": [
+        "adaptation-discovery",
+        "relationship-ranking"
+      ],
+      "expectedEntities": [
+        {
+          "type": "anime",
+          "name": "The Super Dimension Fortress Macross",
+          "providerId": "anidb:anime:77"
+        },
+        {
+          "type": "adaptation",
+          "name": "Robotech: The Macross Saga"
+        }
+      ],
+      "requiredFindings": [
+        "surface Macross-to-Robotech adaptation prominently; keep separate works"
+      ],
+      "doNotConclude": [
+        "do not reduce Robotech to an exact synonym of the entire Macross franchise"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-005",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-006",
+      "input": "Yomigaeru Sora",
+      "capabilities": [
+        "title-search",
+        "adaptation-discovery",
+        "creator-relations"
+      ],
+      "expectedEntities": [
+        {
+          "type": "anime",
+          "name": "Yomigaeru Sora: Rescue Wings",
+          "providerId": "anidb:anime:4113"
+        },
+        {
+          "type": "pilot",
+          "name": "Rescue Angel"
+        }
+      ],
+      "requiredFindings": [
+        "production pilot Rescue Angel vs published series; manga and live action are distinct media"
+      ],
+      "doNotConclude": [
+        "uncorroborated link to unrelated actors or staff must not be invented"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-006",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-007",
+      "input": "Euphoria",
+      "capabilities": [
+        "work-disambiguation",
+        "cast-resolution"
+      ],
+      "expectedEntities": [
+        {
+          "type": "game",
+          "name": "euphoria (CLOCKUP)"
+        },
+        {
+          "type": "anime",
+          "name": "euphoria OVA"
+        }
+      ],
+      "requiredFindings": [
+        "game and OVA adaptation are distinct entities; person aliases link performer"
+      ],
+      "doNotConclude": [
+        "do not assume every Euphoria title shares one fictional canon"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-007",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-008",
+      "input": "Ofureru",
+      "capabilities": [
+        "title-search",
+        "alias-search"
+      ],
+      "expectedEntities": [
+        {
+          "type": "anime",
+          "name": "Overflow"
+        },
+        {
+          "type": "manga",
+          "name": "Overflow ~Iretara Ofureru Kyoudai no Kimochi~"
+        }
+      ],
+      "requiredFindings": [
+        "partial romaji occurs in longer manga source title and supports anime link"
+      ],
+      "doNotConclude": [
+        "Ofureru is not the exact canonical short title of the anime"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-008",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-009",
+      "input": "What links Euphoria and Ofureru?",
+      "capabilities": [
+        "creator-relations",
+        "music-credit"
+      ],
+      "expectedEntities": [
+        {
+          "type": "person",
+          "name": "Ringo Aoba / Aozora Ramune"
+        },
+        {
+          "type": "anime",
+          "name": "Overflow"
+        },
+        {
+          "type": "game",
+          "name": "euphoria (CLOCKUP)"
+        }
+      ],
+      "requiredFindings": [
+        "Ringo Aoba voices Nemu Manaka via alias and performs insert song heard in Overflow episode 5"
+      ],
+      "doNotConclude": [
+        "the insert song originates in Araiya-san!, not the Overflow opening"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-009",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-010",
+      "input": "Explore Euphoria and Ofureru beyond adult anime",
+      "capabilities": [
+        "work-disambiguation",
+        "cross-media"
+      ],
+      "expectedEntities": [
+        {
+          "type": "tv",
+          "name": "Euphoria (2019 HBO)"
+        },
+        {
+          "type": "game",
+          "name": "euphoria (CLOCKUP)"
+        },
+        {
+          "type": "anime",
+          "name": "Overflow"
+        }
+      ],
+      "requiredFindings": [
+        "HBO live-action Euphoria derives from Israeli live-action TV series rather than CLOCKUP game"
+      ],
+      "doNotConclude": [
+        "do not constrain result domain to adult animation or collapse separate adaptations"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-010",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-011",
+      "input": "Yoshimitsu",
+      "capabilities": [
+        "work-disambiguation",
+        "name-disambiguation"
+      ],
+      "expectedEntities": [
+        {
+          "type": "character",
+          "name": "Yoshimitsu (Tekken)"
+        },
+        {
+          "type": "character",
+          "name": "Yoshimitsu (Soulcalibur)"
+        },
+        {
+          "type": "historical-person",
+          "name": "Ashikaga Yoshimitsu"
+        }
+      ],
+      "requiredFindings": [
+        "Manji sword/title inheritance distinct from real-world homonymous people"
+      ],
+      "doNotConclude": [
+        "shared phonetic name is not proof Tekken game character descends from a shogun"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-011",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-012",
+      "input": "Ashikaga Yoshimitsu",
+      "capabilities": [
+        "historical-person",
+        "name-disambiguation"
+      ],
+      "expectedEntities": [
+        {
+          "type": "historical-person",
+          "name": "Ashikaga Yoshimitsu (足利義満)"
+        },
+        {
+          "type": "historical-person",
+          "name": "Awataguchi Yoshimitsu (粟田口吉光)"
+        },
+        {
+          "type": "historical-person",
+          "name": "Minamoto no Yoshimitsu (源義光)"
+        }
+      ],
+      "requiredFindings": [
+        "different kanji and historical people; distinguish representations in Ikkyu-san"
+      ],
+      "doNotConclude": [
+        "homophonous Yoshimitsu names are not the same person"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-012",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-013",
+      "input": "Plue",
+      "capabilities": [
+        "character-search",
+        "cross-franchise"
+      ],
+      "expectedEntities": [
+        {
+          "type": "character",
+          "name": "Plue (Rave Master)"
+        },
+        {
+          "type": "character",
+          "name": "Nikora / Plue (Fairy Tail)"
+        }
+      ],
+      "requiredFindings": [
+        "shared creator Hiro Mashima; design reuse, in-universe independent identities, documented crossover are separate link types"
+      ],
+      "doNotConclude": [
+        "lookalike Plues are not always the same in-universe individual"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-013",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-014",
+      "input": "Oda Nobunaga",
+      "capabilities": [
+        "historical-person",
+        "fictional-portrayals"
+      ],
+      "expectedEntities": [
+        {
+          "type": "historical-person",
+          "name": "Oda Nobunaga (織田信長)"
+        },
+        {
+          "type": "character",
+          "name": "Cinnamon (Oda Cinnamon Nobunaga)"
+        }
+      ],
+      "requiredFindings": [
+        "multiple distinct fictional portrayals of same historical referent; Shiba Inu reincarnation is a portrayal"
+      ],
+      "doNotConclude": [
+        "Saburo in Nobunaga Concerto impersonates Nobunaga rather than being the same in-universe person"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-014",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-015",
+      "input": "Bungo",
+      "capabilities": [
+        "name-disambiguation",
+        "work-disambiguation"
+      ],
+      "expectedEntities": [
+        {
+          "type": "lexeme",
+          "name": "文豪 (bungō)"
+        },
+        {
+          "type": "place",
+          "name": "Bungo Province (豊後)"
+        },
+        {
+          "type": "character",
+          "name": "Bungo Ishihama (石浜文吾)"
+        }
+      ],
+      "requiredFindings": [
+        "same romanization represents different Japanese scripts, common noun, place and given name"
+      ],
+      "doNotConclude": [
+        "Bungo baseball manga is not a spin-off of Bungo Stray Dogs"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-015",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-016",
+      "input": "Carrera (Tensura car-name connections)",
+      "capabilities": [
+        "name-disambiguation",
+        "real-world-etymology"
+      ],
+      "expectedEntities": [
+        {
+          "type": "character",
+          "name": "Carrera / Jaune (Tensura)"
+        },
+        {
+          "type": "product",
+          "name": "Porsche Carrera"
+        },
+        {
+          "type": "event",
+          "name": "Carrera Panamericana"
+        },
+        {
+          "type": "character",
+          "name": "Sally Carrera (Cars)"
+        }
+      ],
+      "requiredFindings": [
+        "Tensura novel character named after Porsche; Porsche badge named after the real race; Pixar Sally is independently Porsche-based"
+      ],
+      "doNotConclude": [
+        "this case is NOT the user-intended Carrera; no Tensura x Cars crossover"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-016",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    },
+    {
+      "id": "GQ-017",
+      "input": "Title=Viper GTS; Character=Carrera; Species=Succubus",
+      "capabilities": [
+        "constraint-resolution",
+        "character-search"
+      ],
+      "expectedEntities": [
+        {
+          "type": "character",
+          "name": "Carrera (Viper GTS)"
+        },
+        {
+          "type": "anime",
+          "name": "Viper GTS",
+          "providerId": "anidb:anime:1725"
+        },
+        {
+          "type": "game",
+          "name": "Viper GTS (Sogna)"
+        }
+      ],
+      "requiredFindings": [
+        "source game -> adult OVA adaptation; prior Viper V-6 episode precedes GTS storyline"
+      ],
+      "doNotConclude": [
+        "do not substitute Tensura's Carrera / Jaune when work and species are supplied",
+        "car-name resemblance in Sogna work is not sufficient proof of official Dodge or Porsche naming"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-017",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
+    }
+  ]
+}
