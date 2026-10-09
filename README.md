@@ -112,6 +112,24 @@ WeebMoeNexus intentionally does **not** scrape AniDB pages. Requests go through 
 
 The default HTTP spacing is 2.5 seconds. Do not lower it below 2 seconds.
 
+## Persistent anime response cache (P1-07)
+
+Successful AniDB anime records now survive process restarts. Application
+configuration defaults `ANIDB_ANIME_CACHE_DIR` to `.cache/anidb/anime`; choose a
+persistent writable directory to retain data across host/container replacement.
+Set it to an empty string for memory-only operation. The existing
+`ANIDB_CACHE_TTL_MS` remains 72 hours by default.
+
+Disk hits preserve the original normalized record and retrieval provenance.
+Restarting never renews the expiry. Expired, corrupt, oversized, incompatible,
+or wrong-ID records are misses, and a failed refresh never returns stale data
+as a current success. Cache writes use a complete temporary file and rename;
+write failures retain the validated in-memory result and emit a safe diagnostic.
+Concurrent lookups for one ID share one in-flight read within an `AnimeService`.
+
+See [cache behavior, configuration and limits](docs/ANIME-CACHE.md). The public
+title-dump cache described below remains separate.
+
 ## Official AniDB title dump cache
 
 AniDB publishes an **official public title list** at `https://anidb.net/api/anime-titles.xml.gz` (see [AniDB dump XML specification](https://wiki.anidb.net/User:Eloyard/anititles_dump)). We never scrape title search pages.
@@ -144,7 +162,7 @@ Read-only MCP example:
 {"name":"get_related_anime","arguments":{"anidbId":501}}
 ```
 
-Unlike the offline title index, this tool needs the registered AniDB HTTP client to fetch the **source anime record** when it is not already cached (the existing pacing and in-memory 72-hour cache apply). It reports only direct `<relatedanime>` entries actually present in that one source response, with the original relationship labels, nullable titles, source anime/target anime IDs, a navigation URL for each target, and a separate **evidence URL/timestamp for the source assertion**. No target anime is fetched or validated solely because its ID appears as a relation. Missing links mean *nothing was reported in the response*, not proof there are no related works.
+Unlike the offline title index, this tool needs the registered AniDB HTTP client to fetch the **source anime record** when it is not already cached (the existing pacing and 72-hour memory/disk cache apply). It reports only direct `<relatedanime>` entries actually present in that one source response, with the original relationship labels, nullable titles, source anime/target anime IDs, a navigation URL for each target, and a separate **evidence URL/timestamp for the source assertion**. No target anime is fetched or validated solely because its ID appears as a relation. Missing links mean *nothing was reported in the response*, not proof there are no related works.
 
 **Evidence:** [Offline relation projection tests](test/related-anime.test.ts) and [real MCP client/transport integration with mocked AniDB](test/mcp-related-anime.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355). Bounded traversal of these work links is described below. Cross-anime/global character search, cross-media historical equivalence, hosted deployment, and co-watching remain pending.
 
@@ -260,4 +278,3 @@ Phase 2 local title search is approved and complete. Next: read-only source-grou
 ---
 
 Built by Mark + JayMe while going delightfully off-script.
-

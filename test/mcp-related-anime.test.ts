@@ -15,6 +15,8 @@ const synthetic = `<?xml version="1.0" encoding="UTF-8"?>
 test("MCP get_related_anime retrieves one source and preserves direct evidence without target fetches", async () => {
   // Set the client identity before importing the module-scoped AnimeService.
   const originalClient = process.env.ANIDB_CLIENT;
+  const previousCacheDirectory = process.env.ANIDB_ANIME_CACHE_DIR;
+  process.env.ANIDB_ANIME_CACHE_DIR = ""; // Synthetic fixtures never share persistent application data.
   process.env.ANIDB_CLIENT = "weebmoenexus";
   const originalFetch = globalThis.fetch;
   let fetchCount = 0;
@@ -88,6 +90,8 @@ test("MCP get_related_anime retrieves one source and preserves direct evidence w
   } finally {
     if (client) await client.close();
     if (server) await server.close();
+    if (previousCacheDirectory === undefined) delete process.env.ANIDB_ANIME_CACHE_DIR;
+    else process.env.ANIDB_ANIME_CACHE_DIR = previousCacheDirectory;
     globalThis.fetch = originalFetch;
     if (originalClient === undefined) delete process.env.ANIDB_CLIENT;
     else process.env.ANIDB_CLIENT = originalClient;

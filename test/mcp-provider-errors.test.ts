@@ -7,6 +7,8 @@ test("all AniDB-backed MCP read tools expose structured provider failures withou
   const oldClient = process.env.ANIDB_CLIENT;
   const oldInterval = process.env.ANIDB_MIN_INTERVAL_MS;
   const oldFetch = globalThis.fetch;
+  const previousCacheDirectory = process.env.ANIDB_ANIME_CACHE_DIR;
+  process.env.ANIDB_ANIME_CACHE_DIR = ""; // Synthetic fixtures never share persistent application data.
   process.env.ANIDB_CLIENT = "weebmoenexus";
   process.env.ANIDB_MIN_INTERVAL_MS = "2000";
   const reads: number[] = [];
@@ -55,6 +57,8 @@ test("all AniDB-backed MCP read tools expose structured provider failures withou
   } finally {
     if (client) await client.close();
     if (server) await server.close();
+    if (previousCacheDirectory === undefined) delete process.env.ANIDB_ANIME_CACHE_DIR;
+    else process.env.ANIDB_ANIME_CACHE_DIR = previousCacheDirectory;
     globalThis.fetch = oldFetch;
     if (oldClient === undefined) delete process.env.ANIDB_CLIENT;
     else process.env.ANIDB_CLIENT = oldClient;

@@ -30,6 +30,8 @@ const fixture = `<?xml version="1.0" encoding="UTF-8"?>
 test("real MCP find_character returns only source-scoped characters and retains independent IDs", async () => {
   const originalClient = process.env.ANIDB_CLIENT;
   const originalFetch = globalThis.fetch;
+  const previousCacheDirectory = process.env.ANIDB_ANIME_CACHE_DIR;
+  process.env.ANIDB_ANIME_CACHE_DIR = ""; // Synthetic fixtures never share persistent application data.
   process.env.ANIDB_CLIENT = "weebmoenexus";
   let requestedCount = 0;
   globalThis.fetch = async input => {
@@ -181,6 +183,8 @@ test("real MCP find_character returns only source-scoped characters and retains 
   } finally {
     if (client) await client.close();
     if (server) await server.close();
+    if (previousCacheDirectory === undefined) delete process.env.ANIDB_ANIME_CACHE_DIR;
+    else process.env.ANIDB_ANIME_CACHE_DIR = previousCacheDirectory;
     globalThis.fetch = originalFetch;
     if (originalClient === undefined) delete process.env.ANIDB_CLIENT;
     else process.env.ANIDB_CLIENT = originalClient;

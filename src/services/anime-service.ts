@@ -3,18 +3,19 @@ import { animeRecordSchema, type AnimeRecord } from "../domain/anime.js";
 import { ProviderLookupError } from "../domain/provider-error.js";
 import { AniDbClient } from "../providers/anidb/client.js";
 import { mapAniDbAnimeXml } from "../providers/anidb/mapper.js";
-
-interface CacheEntry {
-  expiresAt: number;
-  value: AnimeRecord;
-}
+import { AniDbAnimeCache, type AnimeCacheEntry } from "../providers/anidb/anime-cache.js";
 
 export class AnimeService {
   private readonly anidb: AniDbClient;
-  private readonly cache = new Map<number, CacheEntry>();
+  private readonly cache = new Map<number, AnimeCacheEntry>();
+  private readonly diskCache: AniDbAnimeCache | null;
+  private readonly inFlight = new Map<number, Promise<AnimeRecord>>();
+  private readonly now: () => number;
 
-  constructor(private readonly config: AniDbConfig) {
+  constructor(private readonly config: AniDbConfig, options: { now?: () => number } = {}) {
     this.anidb = new AniDbClient(config);
+    this.diskCache = config.cacheDirectory?.trim() ? new AniDbAnimeCache(config) : null;
+    this.now = options.now ?? Date.now;
   }
 
   get anidbConfigured(): boolean {
@@ -23,8 +24,23 @@ export class AnimeService {
 
   async getByAniDbId(anidbId: number): Promise<AnimeRecord> {
     const cached = this.cache.get(anidbId);
-    if (cached && cached.expiresAt > Date.now()) {
+    if (cached && cached.expiresAt > this.now() && cached.cachedAt <= this.now()) {
       return cached.value;
+    }
+
+    const pending = this.inFlight.get(anidbId);
+    if (pending) return pending;
+    const request = this.load(anidbId).finally(() => this.inFlight.delete(anidbId));
+    this.inFlight.set(anidbId, request);
+    return request;
+  }
+
+  private async load(anidbId: number): Promise<AnimeRecord> {
+    const persisted = await this.diskCache?.read(anidbId, this.now());
+    // Recheck after asynchronous I/O; an entry can expire during a read.
+    if (persisted && persisted.expiresAt > this.now() && persisted.cachedAt <= this.now()) {
+      this.cache.set(anidbId, persisted);
+      return persisted.value;
     }
 
     const xml = await this.anidb.getAnimeXml(anidbId);
@@ -40,12 +56,13 @@ export class AnimeService {
       });
     }
 
-    this.cache.set(anidbId, {
-      expiresAt: Date.now() + this.config.cacheTtlMs,
-      value
-    });
+    const cachedAt = this.now();
+    const entry = { cachedAt, expiresAt: cachedAt + this.config.cacheTtlMs, value };
+    this.cache.set(anidbId, entry);
+    if (this.diskCache && !await this.diskCache.write(anidbId, entry)) {
+      console.warn("AniDB disk cache write failed; validated result remains available in memory.");
+    }
 
     return value;
   }
 }
-

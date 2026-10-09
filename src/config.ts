@@ -4,6 +4,8 @@ export interface AniDbConfig {
   apiUrl: string;
   minIntervalMs: number;
   cacheTtlMs: number;
+  /** Omit/leave empty for memory-only callers; loadAniDbConfig enables disk caching. */
+  cacheDirectory?: string;
 }
 
 function intEnv(name: string, fallback: number): number {
@@ -21,7 +23,8 @@ export function loadAniDbConfig(): AniDbConfig {
       process.env.ANIDB_HTTP_API_URL?.trim() ??
       "http://api.anidb.net:9001/httpapi",
     minIntervalMs: Math.max(2000, intEnv("ANIDB_MIN_INTERVAL_MS", 2500)),
-    cacheTtlMs: Math.max(60_000, intEnv("ANIDB_CACHE_TTL_MS", 259_200_000))
+    cacheTtlMs: Math.max(60_000, intEnv("ANIDB_CACHE_TTL_MS", 259_200_000)),
+    cacheDirectory: process.env.ANIDB_ANIME_CACHE_DIR?.trim() ?? ".cache/anidb/anime"
   };
 }
 
