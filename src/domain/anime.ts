@@ -12,6 +12,17 @@ export const relationSchema = z.object({
   title: z.string().nullable()
 });
 
+/**
+ * Source-reported AniDB creator/work-credit row. One AniDB creator ID may
+ * legitimately occur more than once with different production roles.
+ * Null ID or name is missing source metadata, never a guessed identity.
+ */
+export const creatorCreditSchema = z.object({
+  id: z.number().int().positive().nullable(),
+  name: z.string().nullable(),
+  role: z.string().nullable()
+});
+
 export const voiceActorSchema = z.object({
   id: z.number().int().positive().nullable(),
   name: z.string(),
@@ -57,6 +68,7 @@ export const animeRecordSchema = z.object({
   picture: z.string().nullable(),
   url: z.string().nullable(),
   relations: z.array(relationSchema),
+  creators: z.array(creatorCreditSchema),
   characters: z.array(characterSchema),
   episodes: z.array(episodeSchema),
   provenance: z.array(provenanceSchema)
