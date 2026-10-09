@@ -122,7 +122,7 @@ Acceptance criteria:
 1. Search handles both Japanese and Western name order and does not return two distinct persons solely because of swapped name components.
 2. Can navigate person → credited character → anime, with provider and language/edition provenance as available.
 3. Does not return unrelated people whose names merely contain "Megumi".
-4. Until a supported staff/person search provider is implemented, report this capability as pending rather than pretending the existing \`get_anime_by_anidb_id\` MCP tool supports it.
+4. Until a supported staff/person search provider is implemented, report this capability as pending rather than pretending the existing `get_anime_by_anidb_id` MCP tool supports it.
 
 Reference:
 
@@ -135,18 +135,18 @@ Reference:
 
 Expected resolution:
 
-- **Original 1982–1983 TV series**, not one of its movies, sequels, localization adaptations, or *Macross Frontier*.
+- **Original 1982–1983 Japanese TV series** as the primary catalog identity, not one of its movies, sequels, or *Macross Frontier*; prominently surface the **Robotech: The Macross Saga** adaptation relationship without conflating their release identities.
 - Original Japanese title: **超時空要塞マクロス**.
 - Recognize the aliases **The Super Dimension Fortress Macross**, **Chōjikū Yōsai Macross**, **Choujikuu Yousai Macross**, and **Macross** when disambiguated.
-- Expected AniDB ID: **77** (\`a77\`).
+- Expected AniDB ID: **77** (`a77`).
 - Independent cross-reference: MyAnimeList anime ID **1088**, AniList anime ID **1088**. Identical numeric values across providers do not imply that provider IDs are interchangeable.
 - TV series episode count: **36**.
 
 Acceptance criteria:
 
-1. \`search_anime("Super Dimension Fortress Macross")\` returns AniDB \`77\` with explicit alias-match evidence.
+1. `search_anime("Super Dimension Fortress Macross")` returns AniDB `77` with explicit alias-match evidence.
 2. Preserve source-specific IDs; do not route a MAL ID into the AniDB API just because both happen to share a number here.
-3. Handle ambiguous \`Macross\` with title type/year/context, and avoid merging the original show with *Do You Remember Love?*, *Robotech*, or later Macross installments.
+3. Handle ambiguous `Macross` with title type/year/context. Do not merge the original show with *Do You Remember Love?*, *Robotech*, or later installments, but **do return Robotech: The Macross Saga as an adaptation / localized reworking**.
 4. This is a **future title-index acceptance test**, not yet a successful plugin query.
 
 References:
@@ -174,7 +174,7 @@ Expected behavior when asked whether Ogata voices someone in the original 1982 *
 Acceptance criteria:
 
 1. Person-name matching and work-title matching each resolve correctly on their own.
-2. Join \`person -> credited role -> anime\` only when relationship evidence exists.
+2. Join `person -> credited role -> anime` only when relationship evidence exists.
 3. Missing credits or incomplete episode metadata must remain **unknown/not documented**, not converted to authoritative **confirmed absent**.
 4. Show where each claim comes from; confidence and provenance matter more than supplying a satisfying relationship.
 
@@ -183,6 +183,35 @@ References:
 - https://macross.anime.net/wiki/The_Super_Dimension_Fortress_Macross
 - https://emou.net/profile/
 - https://macross.anime.net/wiki/Macross_Frontier
+
+## GQ-005 — Surface the relevant adaptation, not just the literal title
+
+> Super Dimension Fortress Macross
+
+**What Mark was testing:** Beyond resolving the original Japanese show's identity, does the system lead naturally to **Robotech**, the US adaptation many English-language viewers know? Earlier answers identified the original and even explicitly warned against merging Robotech, but buried/omitted the **positive adaptation relationship**. That is a relevance/ranking failure, not an entity-disambiguation success.
+
+Expected presentation:
+
+- **The Super Dimension Fortress Macross** — original Japanese television series (1982–1983; 36 episodes).
+- **Robotech: The Macross Saga** — English-language adaptation/reworking of that series, forming the first 36 episodes of the 1985 American `Robotech` television series.
+- `Robotech` incorporates material from three separate Japanese series, so it is **not** a simple English synonym for the entire `Macross` franchise: `Macross`, `Super Dimension Cavalry Southern Cross`, and `Genesis Climber Mospeada`.
+- Localized/rewritten names illustrate the distinction: e.g., original Hikaru Ichijyo → Robotech's Rick Hunter, Misa Hayase → Lisa Hayes. Align people/characters/episodes across adaptations using **explicit edition-specific aliases/relationships and evidence**, not by erasing the identities of the original productions.
+- Even if title search only matches the Japanese original, the answer should **include a related-release/adaptation hit prominently**, particularly when the user is searching from an English-language context.
+
+Acceptance criteria:
+
+1. Given the exact query, rank the primary original title correctly and surface `Robotech: The Macross Saga` with relation type **adapted into**, not same-as.
+2. If relationship evidence is unavailable from the provider, report missing coverage rather than inventing an equivalence.
+3. Support graph traversal in both directions: original Japanese anime → adapted release, and `Robotech` → Japanese source material.
+4. Preserve differences in audio performances, character aliases, storyline edits, and episode mappings as edition/release-specific facts.
+5. Do not treat `Ogata Megumi` as a voice credit for the original `Macross`; she is a separate voice-actor query from this side quest.
+
+References:
+
+- https://macross.anime.net/production/animation_live_action/first/index.html (Macross Compendium; lists `Robotech: The Macross Saga` in original production/release information)
+- https://macc.bunka.go.jp/wp-content/uploads/2023/01/2013_JapaneseAnimationGuide.pdf (Japanese Agency for Cultural Affairs animation guide; describes `Macross` being reworked into `Robotech`)
+- https://robotech.com/news/anime-news-network-at-anime-expo-harmony-gold-renews-license-to-1st-macross-southern-cross-mospeada-anime-series (licensed source series)
+- https://macross.jp/contents/750039 (2021 official Big West / Harmony Gold agreement)
 
 ## Rule
 
