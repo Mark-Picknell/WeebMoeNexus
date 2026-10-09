@@ -9,6 +9,11 @@ import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 const fixture = `<?xml version="1.0" encoding="UTF-8"?>
 <anime id="1725" restricted="1">
   <titles><title xml:lang="en" type="main">Viper GTS</title></titles>
+  <episodes>
+    <episode id="801"><epno type="1">01</epno></episode>
+    <episode id="802"><epno type="1">2</epno></episode>
+    <episode id="803"><epno type="2">1</epno></episode>
+  </episodes>
   <characters>
     <character id="501" type="main character in">
       <name>Carrera</name><gender>female</gender><episodes>1,2</episodes>
@@ -70,6 +75,7 @@ test("real MCP find_character returns only source-scoped characters and retains 
         matchType: string;
         evidenceSourceUrl: string;
         episodeAppearancesRaw: string | null;
+        episodeEvidence: { parseStatus: string; coverage: string; linkedEpisodeIds: number[]; references: string[] };
         voiceActor: { id: number | null; name: string } | null;
       }>;
     };
@@ -87,6 +93,10 @@ test("real MCP find_character returns only source-scoped characters and retains 
     ));
     assert.equal(record.results[0]?.voiceActor?.name, "Sample Performer");
     assert.equal(record.results[0]?.episodeAppearancesRaw, "1,2");
+    assert.deepEqual(record.results[0]?.episodeEvidence.linkedEpisodeIds, [801, 802]);
+    assert.deepEqual(record.results[0]?.episodeEvidence.references, ["1", "2"]);
+    assert.equal(record.results[0]?.episodeEvidence.coverage, "all_references_listed");
+    assert.equal(record.results[1]?.episodeEvidence.parseStatus, "unknown");
     assert.equal(record.results[1]?.episodeAppearancesRaw, null);
 
     assert.ok(listed.tools.some(tool => tool.name === "get_character"));
@@ -107,6 +117,7 @@ test("real MCP find_character returns only source-scoped characters and retains 
         anidbCharacterId: number;
         name: string;
         episodeAppearancesRaw: string | null;
+        episodeEvidence: { parseStatus: string; linkedEpisodeIds: number[] };
         voiceActor: { name: string } | null;
       } | null;
     };
@@ -116,6 +127,7 @@ test("real MCP find_character returns only source-scoped characters and retains 
     assert.equal(detail.character?.anidbCharacterId, 501);
     assert.equal(detail.character?.name, "Carrera");
     assert.equal(detail.character?.episodeAppearancesRaw, "1,2");
+    assert.deepEqual(detail.character?.episodeEvidence.linkedEpisodeIds, [801, 802]);
     assert.equal(detail.character?.voiceActor?.name, "Sample Performer");
 
     const absentId = await client.callTool({
