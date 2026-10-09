@@ -52,6 +52,10 @@ a plausible database workflow instead of a joke.
 - [ ] relation graph traversal with explicit depth/limit controls
 - [ ] optional graph-oriented UI
 
+### Episode appearance data is sparse
+
+A character's episode-appearance field may be missing or incomplete. Treat missing/empty source metadata as **unknown**, never as proof that the character is absent. Where verified positive appearances exist, use them as an optional ranking signal, not a hard filter. User-confirmed, timestamped identifications may provide further evidence, but remain distinct from provider-authored data and should not silently rewrite canonical metadata. Test this with sparse or partially annotated shows before relying on episode-scoped suggestions.
+
 ## Phase 4 — The Nexus becomes a nexus
 
 Add adapters rather than redesigning the core.
@@ -86,7 +90,7 @@ Only after authentication is designed properly:
 Once the boring substrate is trustworthy:
 
 - [ ] character appearance/aesthetic search
-- [ ] Episode-aware cast candidate filtering for pause-frame recognition
+- [ ] Episode-aware candidate ranking for pause-frame recognition; missing episode metadata must never exclude a character
 - [ ] User-confirmed identification/correction and optional permitted reference-image uploads; retain evidence, provenance, consent/licensing and review status
 - [ ] Feedback quality controls so a single mistaken submission does not silently alter canonical character identities
 - [ ] trope/theme search
