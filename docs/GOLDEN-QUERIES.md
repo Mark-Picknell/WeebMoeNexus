@@ -599,7 +599,9 @@ Distinct fictional transformations and medium paths:
 
 > Carrera
 
-**User challenge (2026-10-09):** Mark volunteered “Carrera” because he loves the character, adding that perhaps there would be no connections but he was intrigued. He means **Carrera**, formerly **Jaune / Primordial Yellow**, from *That Time I Got Reincarnated as a Slime (Tensura)*. Do not imply he knew or explicitly intended the hidden automobile crossover; the source-backed connection was discovered in the research.
+**User challenge and CORRECTION (2026-10-09):** Mark volunteered “Carrera” because he loves the character. **We wrongly assumed he meant the Carrera / Jaune (Primordial Yellow) of *Tensura*.** Mark subsequently clarified his reference using *Viper GTS* AniDB anime ID **1725** and the explicit tuple `Title=Viper GTS; Character=Carrera; Species=Succubus`. This GQ documents **a real, separate Tensura Carrera** and her independently verified Porsche-name inspiration, *not Mark's original intended Carrera*. The mistaken inference is preserved as a useful regression example. See GQ-017. Do not imply Mark intentionally suggested the Porsche–Pixar path, and do not erase his past mention of a collaboratively designed *3D Viper GTS* game concept; that earlier project is separate from the Sogna original until archival context confirms details.
+
+**Disambiguation warning:** Both fictional Carrera characters can be represented in Japanese as **カレラ**. The Viper GTS Carrera is a **succubus** with blue-green hair and red eyes (2002 OVA adapted from a 1994 Sogna game); the Tensura Carrera is **Primordial Yellow** and named after a Porsche in the fictional novel. Same spelling, demon associations, different provenance, creators and canons. Do not merge; if user asks for Carrera without work, show alternatives.
 
 ### Crucial canonical etymology (not just matching names)
 
@@ -655,6 +657,45 @@ Spanish word "carrera" (lexeme: race, career)
 - https://newsroom.porsche.com/en/2022/company/porsche-pixar-animation-studios-sally-carrera-cars-27694.html (Porsche confirmation Sally is a **2002 Porsche 911 Carrera**)
 - https://www.porsche.com/stories/culture/porsche-x-pixar-meet-the-real-life-sally-carrera/ (Porsche+Pixar created Sally Special based on 911 Carrera GTS, selling for $3.6m)
 - https://newsroom.porsche.com/en_US/2022/company/porsche-911-sally-special-one-of-a-kind-sally-carrera-pixar-animation-studios-auction-29366.html (Porsche primary confirmation production of custom 992 one-off for charity)
+
+## GQ-017 — Viper GTS Carrera: user-intended succubus, cross-media game→OVA, and collision with Tensura Carrera
+
+> `Carrera` — user intended the green-haired succubus in *Viper GTS*, not Tensura's Primordial Yellow.
+
+### User-supplied disambiguation is evidence
+
+On 2026-10-09 Mark said `Title=Viper GTS; Character=Carrera; Species=Succubus`, added `We designed a whole game around that once upon a time...lol`, then linked **https://anidb.net/anime/1725**. The assistant ignored the tuple's title, jumped to the **unrelated character Carrera from That Time I Got Reincarnated as a Slime**, and then misinterpreted `Viper GTS` as an original game pitch instead of recognizing a pre-existing *Viper GTS* game/animation franchise. This is a **documented conversational entity resolution failure**, and the correction should directly change the acceptance test, not be treated as a separate unnamed tangent. The earlier Mark/JayMe custom 3D Viper GTS game design has previously been discussed, but full contents were not retrieved in this turn; don't claim it didn't exist or that Mark originally authored Sogna's property.
+
+### Documented source works and entity identities
+
+- **Sogna original commercial adult PC-98 game** *Viper GTS* released **25 November 1994**, ported to **FM Towns (1995)** and **Windows (1996)**. MobyGames identifies its prequel: *Viper V-6* story **The Devil Came**, where human Ogawa originally summoned the succubus Carrera. *Viper GTS* continues that plot with other demons such as **Mercedes**. Preserve the work sequence `Viper V-6 episode → Viper GTS game`, and note that **release of the 1994 game predates the 1996 model-year production Dodge Viper GTS**. Their shared title is NOT sufficient proof the Sogna game was officially named after the Dodge car.
+- **2002–2003 adult OVA**, three episodes, *Viper GTS* (also spelled *Viper -GTS-*), animation studio **Moon Rock**, indexed as **AniDB a1725**. It is an adaptation/related audiovisual rendition of Sogna's adult game franchise, not an anime about sports car racing. First episode **24 December 2002**. ACDB links directly to AniDB ID 1725 at https://www.animecharactersdatabase.com/sp/linktodbs.php?id=102428 .
+- **Carrera / カレラ (Viper GTS)**: protagonist adult succubus/demon in *Viper GTS*, appearance blue-green shoulder-length hair, red eyes, horns/pointed ears; Japanese voice **Yuu Asakawa / 浅川悠** in the OVA. Her associates **Mercedes** and **Rati** are distinct succubus characters. Preserve the official work-specific character assignment, rather than matching surname or name only.
+- **Carrera / カレラ (Tensura)**: completely different fictional demoness, **Primordial Yellow / Jaune**, voiced by **Ikumi Hasegawa**, named by Rimuru after a **Porsche** name in the source light novel volume 11. Even if both have Japanese-script spelling カレラ and demonic species themes, the protagonists are **not the same character** and no shared fictional canon is documented.
+- **Automobile and adult-title overlaps:** `Viper GTS` is also a famous Dodge performance-car nameplate; `Carrera` a Porsche name, `Mercedes` a real-world car manufacturer and a common personal name. These make **plausible intentional motif / naming jokes**, but direct licensed or authorial inspiration on the Sogna side was **not confirmed**. Record lexical / automobile name collisions as such until documented; don't infer official Dodge or Porsche relationships from co-occurrence alone.
+- **Explicit sexual genre tags**: the source game and OVA contain adult sexual material. Search must return accurate content classification for media discovery; do not confuse adult media classification with real user age or attribute unsolicited explicit scene details. User's interest in a fictional succubus doesn't imply they ask for pornographic content.
+
+### Golden acceptance criteria
+
+1. Given `Title=Viper GTS; Character=Carrera; Species=Succubus`, resolve to **Carrera from AniDB anime a1725**, with source credit and character role—not to a different work's demon with the same exact romanization. These additional constraints should outweigh popularity rankings and the assistant's recent context.
+2. Given bare `Carrera` following user discussion of anime and demons, offer at least *Viper GTS* and *Tensura* candidates, with one-line factual distinctions, **before** committing to Porsche or Pixar.
+3. Preserve **1994 PC-98 original game → 2002 OVA adaptation**, and **Viper V-6 earlier story → Viper GTS sequel** as two **different** source relationships (adaptation vs sequel). 1994, 1995, 1996, 2002 and 2003 are platform/medium-specific historical dates, not one global release date.
+4. Index AniDB **a1725** from the user-provided URL, character **Carrera (カレラ)**, actual adult content rating, associated cast, and work medium. Respect AniDB HTTP API rules for retrieval; an external URL citation is not proof the internal AniDB API has successfully returned that entry.
+5. Avoid merging homonymous demons or turning an unverified common automobile theme into an officially licensed crossover. Same character name ≠ same character; same word in auto badge and fiction ≠ proven naming origin.
+6. Keep user-authored later collaborative **3D Viper GTS** project history distinguishable from Sogna's 1994 commercial product; request recovered archive provenance before describing custom game design details.
+7. Current live WeebMoeNexus MCP provides `get_anime_by_anidb_id`; future `search_character` and full work-relations query are not implemented. A test query should include `get_anime_by_anidb_id(1725)` when checking API coverage, subject to rate rules, and verify actual returned data rather than inventing a successful response.
+
+### Sources
+
+- https://anidb.net/anime/1725 (USER-SUPPLIED authoritative entry link; direct automated page fetch may be blocked by AniDB AntiLeech)
+- https://www.animecharactersdatabase.com/sp/linktodbs.php?id=102428 (ACDB resolves anime to AniDB a1725)
+- https://www.animecharactersdatabase.com/characters.php?id=45950 (ACDB Viper GTS Carrera: カレラ, blue/green hair, red eyes, horns, Yuu Asakawa, succubus)
+- https://www.animecharactersdatabase.com/source.php?id=102428 (ACDB source, adult-rated OVA, 3 episodes, Moon Rock and Sogna video game basis)
+- https://www.mobygames.com/game/43509/viper-gts/ (Sogna game's Nov 25 1994 PC-98 release, platform ports, prequel Viper V-6 *The Devil Came*)
+- https://www.absoluteanime.com/viper_gts/carrera (anime-specific Carrera character details, corroboration)
+- https://www.ten-sura.com/character/carrera (Tensura independent demon character, Ikumi Hasegawa)
+- https://www.fandompost.com/2018/08/04/viper-gts-hentai-anime-dvd-review/ (English licensed release review confirms OVA content and credits)
+
 
 ## Rule
 
