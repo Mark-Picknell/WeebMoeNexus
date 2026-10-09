@@ -6,3 +6,6 @@ coverage/
 !.env.example
 *.log
 .DS_Store
+
+# Public provider indexes are cached locally, never committed.
+.cache/
