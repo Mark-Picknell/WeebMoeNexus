@@ -107,7 +107,7 @@ npm run titles:refresh
 
 It downloads over HTTPS into `.cache/anidb/anime-titles.xml.gz`, validates bounded gzip/XML structure, and writes atomically. The local cached file is reused for at least **48 hours** by default; the code will not accept a refresh interval shorter than **36 hours**. Set `ANIDB_TITLE_DUMP_CACHE_PATH` to choose a persistent writable cache location for deployment. On refresh failures the last valid copy survives, reported as **stale** (the manual command exits unsuccessfully to signal an operational warning). Ordinary CI uses synthetic, local fixtures, and **never downloads the real AniDB dump**.
 
-**Status:** The official-dump downloader and disk cache are implemented and tested. **Title parsing/indexing and `search_anime` remain upcoming phases (P2-02 onward).** The tool does not yet automatically fetch/refresh at MCP startup or return search results. The cached dump contains only public title metadata, not characters, image frames or episode content.
+**Status:** The official-dump downloader, disk cache, and **local title parser/index (P2-01 and P2-02)** are implemented and tested offline. The manual refresh also reports the number of indexed anime and title variants. `AniDbTitleIndex` preserves original language, title kind, source AniDB IDs, and exact-title collisions. **Normalization (P2-03) and the MCP `search_anime` endpoint (P2-04) are not yet implemented.** The server does not automatically refresh the dump on startup. The cached dump contains only public title metadata, not characters, image frames or episode content.
 
 ## Plugin packaging
 
