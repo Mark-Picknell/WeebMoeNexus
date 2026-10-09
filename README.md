@@ -23,6 +23,7 @@ The read-only MCP surface remains deliberately small:
 - `health` — confirms the server is alive and whether AniDB client registration is configured.
 - `get_anime_by_anidb_id` — fetches one anime by AniDB ID, normalizes the XML, caches it, and returns structured content with provenance.
 - `search_anime` — searches the **previously downloaded local AniDB title index** for exact/normalized aliases and, when none match, conservative Latin/romaji typo candidates. Returns distinct AniDB IDs, original title/language/kind, match type, source URL and the measured edit distance for fuzzy matches. It does **not** search character names or make network calls.
+- `get_related_anime` — reads one anime’s **directed, source-reported** AniDB related-anime links, including provider relation type, optional target title, AniDB IDs, source evidence URL and retrieval time. It reuses the existing paced/cached anime service and does not guess reverse edges, fetch linked targets, or traverse an inferred franchise graph.
 
 ## Why this shape?
 
@@ -119,6 +120,18 @@ After `npm run titles:refresh`, call the read-only MCP tool:
 ```
 
 Results contain the **total number of distinct anime IDs**, even when `limit` truncates the returned list. Exact/normalized matches take priority; only when none exist does conservative Latin/romaji typo matching run. Fuzzy results are labeled and include an integer `editDistance`, so a suggested title is never represented as an authoritative identity join. Missing titles remain **unknown in the current local index**, not proof of absence. The tool is available in the locally running MCP server, not yet deployed as a hosted ChatGPT connector.
+
+### Direct anime relation lookup (Phase 3, P3-01)
+
+Read-only MCP example:
+
+```json
+{"name":"get_related_anime","arguments":{"anidbId":501}}
+```
+
+Unlike the offline title index, this tool needs the registered AniDB HTTP client to fetch the **source anime record** when it is not already cached (the existing pacing and in-memory 72-hour cache apply). It reports only direct `<relatedanime>` entries actually present in that one source response, with the original relationship labels, nullable titles, source anime/target anime IDs, a navigation URL for each target, and a separate **evidence URL/timestamp for the source assertion**. No target anime is fetched or validated solely because its ID appears as a relation. Missing links mean *nothing was reported in the response*, not proof there are no related works.
+
+**Evidence:** [Offline relation projection tests](test/related-anime.test.ts) and [real MCP client/transport integration with mocked AniDB](test/mcp-related-anime.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355). Character/person search, cross-media historical equivalence, franchise traversal, hosted deployment, and co-watching are **not yet implemented**.
 
 ## Plugin packaging
 
