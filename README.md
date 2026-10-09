@@ -57,9 +57,20 @@ Test with MCP Inspector:
 npx @modelcontextprotocol/inspector@latest
 ```
 
-## AniDB setup
+## AniDB registration and setup
 
-AniDB requires applications using its API to identify themselves with a registered client name/version. Register a client with AniDB, then set:
+The public AniDB software project is registered as:
+
+- **Name:** WeebMoeNexus
+- **AniDB software ID:** `22277`
+- **Type:** Website Integration
+- **Target OS:** Cross-platform
+- **Language:** TypeScript / Node.js
+- **State:** in development
+- **Project URL:** https://github.com/Mark-Picknell/WeebMoeNexus
+- **Contact:** https://github.com/Mark-Picknell/WeebMoeNexus/issues
+
+AniDB still requires an API **client** to be added beneath that software project before live API requests are allowed. Once the client exists, configure its registered name/version locally:
 
 ```env
 ANIDB_CLIENT=your_registered_client_name
