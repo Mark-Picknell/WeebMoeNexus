@@ -595,6 +595,67 @@ Distinct fictional transformations and medium paths:
 - https://www.tv-tokyo.co.jp/anime/bungo-alchemist/staff/ (official anime voice cast)
 - https://bungo-stray-dogs.jp/tv/character/?character=oda-sakunosuke (official fictional Oda Sakunosuke)
 
+## GQ-016 — Carrera: actual automotive naming inspiration across anime, Pixar, products, sport, and watchmaking
+
+> Carrera
+
+**User challenge (2026-10-09):** Mark volunteered “Carrera” because he loves the character, adding that perhaps there would be no connections but he was intrigued. He means **Carrera**, formerly **Jaune / Primordial Yellow**, from *That Time I Got Reincarnated as a Slime (Tensura)*. Do not imply he knew or explicitly intended the hidden automobile crossover; the source-backed connection was discovered in the research.
+
+### Crucial canonical etymology (not just matching names)
+
+The *Tensura* novel itself explains the motif. In **light novel volume 11** (author Fuse, English translation Kevin Gifford, **Yen Press June 22 2021**), Rimuru chooses exotic sports car names for newly recruited demons:
+
+- **Diablo** — Lamborghini Diablo
+- **Testarossa** — Ferrari Testarossa
+- **Ultima** — Ultima GTR supercar
+- **Carrera** — a **Porsche** name, associated with Carrera sports cars. The source text confirms Porsche in general, **not uniquely a specific Porsche 911 generation, GT or GTS**.
+
+Car associations are genuine **in-work naming inspirations / name-derivations**, not brand product placements, identity equivalence, an official sponsor deal, or fictional universes crossing. The official *Tensura* portal identifies **Carrera / カレラ** as one of the **Primordial Demons**, recruited by Diablo to the Jura-Tempest Federation, named by Rimuru and evolved to a Demon Peer; Japanese CV **Ikumi Hasegawa / 長谷川育美**. The group also includes Testarossa and Ultima, with demon lieutenants bearing other actual vehicle names: Veyron, Zonda, Agera, Esprit, etc. In 2026 official Bandai Namco game *Isekai Memories (Maoryu)* welcomed newly named Carrera as a playable battle character in an event, with CV credit. Important: a CHARACTER's in-world name-giving, real-world author's literary choice, and published media adaptation are three separate types of nodes/relationships.
+
+### The real-world origin and related media
+
+- **Spanish `carrera`** is a regular word for **race / career**, and is used as a **real surname**. This common noun and documented persons must be disambiguated from branded products and fictional characters; neither surname nor word by itself proves related origin beyond language.
+- The **Carrera Panamericana** was a real Mexican endurance road race first run in 1950, attracting Porsche successes in 1953 and 1954. Official Porsche account says the race **directly inspired Porsche's Carrera name**, first used for a high-performance engine and later vehicles, including Porsche 356 Carrera and 911 Carrera. Brand/model/year/generation are different entities; don't infer the novel singled out Carrera GT.
+- The same road race **independently inspired the Carrera chronograph/watch** created by **Jack Heuer**, first launched 1963; this is an independently documented `name_inspired_by_event` edge, **not** named after the anime demon, not necessarily a Porsche product, and not necessarily a single creator across both brands. TAG Heuer and Porsche later jointly produced a **Carrera Porsche Chronograph**, a licensed real-world collaboration between those brands.
+- Pixar/Disney's *Cars* (2006) has a **fictional sentient 2002 Porsche 911 Carrera, Sally Carrera**, according to Pixar and Porsche. **Sally Carrera is an entirely different fictional character** from the *Tensura* demon. The shared path is the *real model*, not an anime/film crossover, despite their similar names.
+- In 2022 Porsche + Pixar jointly created the **Porsche 911 Sally Special**, a **physical, drivable 911 Carrera GTS (type 992)** inspired by their *Cars* fictional character, which sold at auction for **$3.6 million** to benefit charity. Graph direction here is deliberately **reversed**: an automotive product inspires fictional Sally Carrera → that fictional character inspires a later real limited one-off car. Do not invert chronology, or suggest it is the same car represented in the film (original Sally was based on the 996 generation).
+
+### Graph paths to preserve
+
+```text
+Spanish word "carrera" (lexeme: race, career)
+   └─ used_as_part_of_name ──> Carrera Panamericana (historical motor race)
+        ├─ inspired_name_of ──> Porsche Carrera (automobile model family)
+        │     ├─ inspired_name_of ──> Carrera (Tensura demon / Jaune)
+        │     └─ vehicle_model_of ──> Sally Carrera (Cars fictional car)
+        │                                └─ inspired_design_of ──> 911 Sally Special (2022 actual Porsche)
+        └─ inspired_name_of ──> Heuer/TAG Heuer Carrera (watch family)
+                                         └─ collaborated_with ──> Porsche (brand-partnership product)
+```
+
+### Acceptance criteria
+
+1. `search_character("Carrera")` discovers the **Tensura Primordial Yellow** with Japanese spelling カレラ, alias Jaune (ジョーヌ), source work, Rimuru naming context and character voice credit, and separately returns **Sally Carrera** as Pixar's car character; **never merge identities**.
+2. The system should be able to surface the **verified car-name etymology** via named inspiration (Tensura LN Vol 11) for all four demons, while also offering the Porsche manufacturer's official history of the Carrera badge, *Carrera Panamericana*, and *TAG Heuer Carrera* **watch**. Each edge is sourced independently; the anime/manga author is not the real-world origin of the word.
+3. Distinguish `carrera` the Spanish lexeme, Carrera the surname, Porsche's automotive nameplate, model variant and specific physical artifact, racing **event**, watch **product line**, and fictional characters.
+4. Handle **vehicle-character** `Sally Carrera` correctly as an animate fictional person (fictional biology) who is a licensed car model, without turning her into a human being or real-world person. Link 2006 film's Sally to 2002 Porsche 911 Carrera (996), and later unique 2022 911 Sally Special (992) via `character_inspired_real_artifact`.
+5. Separate `was_named_by_in_story` (Rimuru names the demon) from `narratively_named_after_real_product` (author's fictional metareference) and `inspired_by_real_event` (Porsche and Heuer naming). Do not infer *Tensura × Cars* canonical crossover or an official Porsche × anime licensing collaboration.
+6. If the query is merely `Carrera`, provide disambiguation and domain relevance, NOT a car-shopping result by default and NOT an anime-only tunnel, preserving user's known in-session intent without permanently overfitting all other searches.
+7. The current running MCP still supports only ID-based anime lookups. These cross-ontology person/product/event/fictional-item graph traversals are **unimplemented** acceptance goals.
+
+### Primary, authoritative and corroborating sources
+
+- https://www.ten-sura.com/character/carrera (*Tensura* official character page: 108 Carrera, voice Ikumi Hasegawa, Rimuru name-giving)
+- https://www.ten-sura.com/character (*Tensura* official roster including Testarossa, Ultima, Carrera and demon lieutenants)
+- https://yenpress.com/titles/9781975314415-that-time-i-got-reincarnated-as-a-slime-vol-11-light-novel (authorized English publisher for Fuse's LN Vol 11; the novel text explicitly explains automobile-name inspiration; publisher page itself is bibliographic and does **not** quote that naming passage)
+- https://ten-sura-m.bn-ent.net/news/5804/ (official 2026 Bandai Namco *Maoryu* event featuring Carrera and Esprit as new named recruits with CV)
+- https://newsroom.porsche.com/en_US/2022/products/porsche-code-terminology-model-name-in-house-type-number-27505.html (Porsche official origin of Carrera nameplate from Mexican race)
+- https://www.porsche.com/stories/culture/the-wild-event-that-helped-define-porsche-and-tag/ (Porsche official confirms both manufacturers independently named products after Carrera Panamericana)
+- https://www.pixar.com/cars (Pixar official: Sally 2002 Porsche 911)
+- https://newsroom.porsche.com/en/2022/company/porsche-pixar-animation-studios-sally-carrera-cars-27694.html (Porsche confirmation Sally is a **2002 Porsche 911 Carrera**)
+- https://www.porsche.com/stories/culture/porsche-x-pixar-meet-the-real-life-sally-carrera/ (Porsche+Pixar created Sally Special based on 911 Carrera GTS, selling for $3.6m)
+- https://newsroom.porsche.com/en_US/2022/company/porsche-911-sally-special-one-of-a-kind-sally-carrera-pixar-animation-studios-auction-29366.html (Porsche primary confirmation production of custom 992 one-off for charity)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
