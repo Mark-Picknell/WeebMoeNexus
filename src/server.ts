@@ -7,7 +7,10 @@ import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
-export function buildServer(titleSearch = new LocalAnimeTitleSearch()): McpServer {
+export function buildServer(): McpServer {
+  // The MCP HTTP transport calls this zero-argument factory with a request
+  // context, so do not repurpose its parameter for test dependency injection.
+  const titleSearch = new LocalAnimeTitleSearch();
   const server = new McpServer(
     {
       name: "weeb-moe-nexus",
