@@ -4,6 +4,7 @@ import { loadAniDbConfig } from "./config.js";
 import { animeRecordSchema } from "./domain/anime.js";
 import { AnimeService } from "./services/anime-service.js";
 import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
+import { getRelatedAnimeFromRecord } from "./services/related-anime-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
@@ -146,6 +147,66 @@ export function buildServer(): McpServer {
           content: [{
             type: "text",
             text: error instanceof Error ? error.message : "Unknown title search failure"
+          }]
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_related_anime",
+    {
+      title: "Get direct anime relationships from AniDB",
+      description:
+        "Read AniDB's directly reported related-anime links for one source anime ID. Returns original relation labels, optional related-work titles, AniDB IDs and per-edge source provenance. Does not infer reverse links, traverse a franchise graph, or fetch related targets. Missing links mean no relations were reported in this source response, not proof no relationships exist.",
+      inputSchema: z.object({
+        anidbId: z.number().int().positive()
+          .describe("Source anime's AniDB ID")
+      }),
+      outputSchema: z.object({
+        sourceAnimeId: z.number().int().positive(),
+        sourceTitle: z.string(),
+        sourceUrl: z.string().url(),
+        reportedRelationCount: z.number().int().nonnegative(),
+        relations: z.array(z.object({
+          sourceAnimeId: z.number().int().positive(),
+          targetAnimeId: z.number().int().positive(),
+          relationType: z.string(),
+          targetTitle: z.string().nullable(),
+          targetUrl: z.string().url(),
+          evidenceSourceUrl: z.string().url(),
+          retrievedAt: z.string()
+        }))
+      }),
+      annotations: {
+        readOnlyHint: true,
+        idempotentHint: true,
+        destructiveHint: false,
+        openWorldHint: true
+      }
+    },
+    async ({ anidbId }) => {
+      try {
+        // Uses the existing paced AniDB client + normalized anime cache.
+        // Do not fetch linked targets; this operation reports one source's
+        // explicit, directed assertions only.
+        const anime = await service.getByAniDbId(anidbId);
+        const output = getRelatedAnimeFromRecord(anime);
+        return {
+          content: [{
+            type: "text",
+            text: output.reportedRelationCount === 0
+              ? `AniDB's source record for ${output.sourceTitle} (#${anidbId}) does not report related anime. That does not establish that none exist.`
+              : `AniDB reports ${output.reportedRelationCount} direct relation(s) for ${output.sourceTitle} (#${anidbId}); relation labels and targets are source data, not inferred identities.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: error instanceof Error ? error.message : "Unknown AniDB relation lookup failure"
           }]
         };
       }
