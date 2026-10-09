@@ -60,6 +60,22 @@ test("real MCP tool registration and invocation work against only a local cached
     assert.equal(structured.results[0]?.matchType, "exact");
     assert.equal(structured.results[0]?.sourceUrl, "https://anidb.net/anime/77");
 
+    // The same MCP route must expose measured typo evidence without losing
+    // the two separate anime identities sharing the original title.
+    const fuzzy = await client.callTool({
+      name: "search_anime", arguments: { query: "macorss", limit: 10 }
+    });
+    assert.notEqual(fuzzy.isError, true);
+    const fuzzyOutput = fuzzy.structuredContent as {
+      totalMatches: number;
+      results: Array<{ anidbId: number; matchType: string; editDistance?: number }>;
+    };
+    assert.equal(fuzzyOutput.totalMatches, 2);
+    assert.deepEqual(fuzzyOutput.results.map(x => x.anidbId), [77, 1088]);
+    assert.ok(fuzzyOutput.results.every(x =>
+      x.matchType === "fuzzy" && x.editDistance === 1
+    ));
+
     const absent = await client.callTool({
       name: "search_anime", arguments: { query: "Carrera" }
     });
