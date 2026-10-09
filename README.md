@@ -108,7 +108,7 @@ npm run titles:refresh
 
 It downloads over HTTPS into `.cache/anidb/anime-titles.xml.gz`, validates bounded gzip/XML structure, and writes atomically. The local cached file is reused for at least **48 hours** by default; the code will not accept a refresh interval shorter than **36 hours**. Set `ANIDB_TITLE_DUMP_CACHE_PATH` to choose a persistent writable cache location for deployment. On refresh failures the last valid copy survives, reported as **stale** (the manual command exits unsuccessfully to signal an operational warning). Ordinary CI uses synthetic, local fixtures, and **never downloads the real AniDB dump**.
 
-**Status:** All six Phase 2 title-search implementation tasks (P2-01–P2-06) are coded and **offline CI validated**. `search_anime` first finds exact/normalized source-supplied aliases (Japanese/English/romaji) without invented translations. Only when no deterministic title matches, a bounded Unicode-codepoint edit-distance fallback handles **Latin and romanized** title typos, including adjacent-letter swaps. Fuzzy hits are explicitly labeled `fuzzy` with `editDistance`; original title, language, kind and AniDB URL remain intact. Duplicate aliases are collapsed **per AniDB ID**, never across different anime. Very short titles and Japanese/mixed-script names are not fuzzily guessed. **Phase 2 is awaiting Mark's exit acceptance**; implementation and offline tests are done, but character/person searches, a live title-dump integration check, automatic background refresh, hosting and ChatGPT plugin installation are not claimed. The local title cache must first be populated with `npm run titles:refresh`; the MCP `search_anime` call itself never invokes AniDB over the network.
+**Status:** All six Phase 2 title-search implementation tasks (P2-01–P2-06) are coded and **offline CI validated**. `search_anime` first finds exact/normalized source-supplied aliases (Japanese/English/romaji) without invented translations. Only when no deterministic title matches, a bounded Unicode-codepoint edit-distance fallback handles **Latin and romanized** title typos, including adjacent-letter swaps. Fuzzy hits are explicitly labeled `fuzzy` with `editDistance`; original title, language, kind and AniDB URL remain intact. Duplicate aliases are collapsed **per AniDB ID**, never across different anime. Very short titles and Japanese/mixed-script names are not fuzzily guessed. **Phase 2 was accepted by Mark on 2026-10-09** after passing offline CI; this approval covers the local title-search implementation. Character/person searches, a live title-dump integration check, automatic background refresh, hosting and ChatGPT plugin installation are not claimed. The local title cache must first be populated with `npm run titles:refresh`; the MCP `search_anime` call itself never invokes AniDB over the network.
 
 ### Local MCP search example
 
@@ -141,7 +141,7 @@ Current OpenAI plugin guidance uses MCP servers as the tool/data layer. The serv
 
 See [docs/ROADMAP.md](docs/ROADMAP.md).
 
-The next meaningful milestone is title search backed by AniDB's sanctioned title dump, so the plugin can resolve human text to an AniDB ID before calling the richer per-anime endpoint.
+Phase 2 local title search is approved and complete. Next: read-only source-grounded anime relationships, character and voice-credit discovery, and eventually cross-provider identity resolution. Co-watching an episode is a separate long-term system goal, not an existing capability.
 
 ---
 
