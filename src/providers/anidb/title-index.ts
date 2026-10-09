@@ -93,7 +93,7 @@ export class AniDbTitleIndex {
       // Keep Japanese and mixed-script aliases deterministic for now:
       // one edit can change meaningful kanji/kana identity or voicing.
       // Fuzzy matching currently applies only to Latin/romanized titles.
-      if (!/^[\\p{Script=Latin}\\p{N} ]+$/u.test(queryKey)) continue;
+      if (!/^[\p{Script=Latin}\p{N} ]+$/u.test(queryKey)) continue;
       const keyLength = [...queryKey].length;
       const budget = titleEditBudget(keyLength);
       if (budget === 0) continue;
@@ -101,7 +101,7 @@ export class AniDbTitleIndex {
       for (let length = keyLength - budget; length <= keyLength + budget; length++) {
         for (const candidateKey of this.normalizedKeysByLength.get(length) ?? []) {
           if (candidateKey === queryKey) continue;
-          if (!/^[\\p{Script=Latin}\\p{N} ]+$/u.test(candidateKey)) continue;
+          if (!/^[\p{Script=Latin}\p{N} ]+$/u.test(candidateKey)) continue;
           const distance = boundedTitleEditDistance(queryKey, candidateKey, budget);
           if (distance === null || distance === 0) continue;
           for (const hit of this.byNormalizedTitle.get(candidateKey) ?? []) {
