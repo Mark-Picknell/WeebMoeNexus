@@ -175,6 +175,14 @@ As of 2026-10-09, **no documented, supported per-episode character appearance li
 
 No MAL or Jikan credentials, live probes, adapter installation, or provider authorization were requested or performed. The optional second-provider decision remains assigned to Mark (`P4-06`).
 
+### AniDB creator and seiyuu credits (Phase 3, P3-07)
+
+`get_anime_by_anidb_id` now preserves `creators: [{id, name, role}]` from the source anime XML's `<creators><name id="..." type="...">` rows. An AniDB creator ID is retained when valid; a missing/invalid ID becomes `null` **without inventing an identity based only on the name**. Distinct rows remain distinct when the same AniDB creator/person has several production roles, and separate IDs remain separate even when display names match. Production roles are reported verbatim; no inference that `type="Original Work"` means one universal creator relationship.
+
+A character's existing `voiceActor` source credit remains attached to that specific character, with strictly parsed nullable AniDB creator ID, source name, and picture. Voice cast identities are **not** automatically merged with independent contributors or characters merely because a string matches. The schema retains nullable/unknown metadata instead of making up an actor ID.
+
+This is a source-preserving normalization milestone, **not** an all-works person index, AniDB creator-by-ID API, globally comprehensive cast list, per-episode voice performance, or cross-provider credit graph. [Four synthetic creator/seiyuu regression tests](test/anidb-creator-credits.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37983181781), with XML field shape cross-checked against the [go-anidb HTTP model](https://github.com/Jessidhia/go-anidb/blob/master/http/anime.go). No additional live AniDB requests were made.
+
 ## Plugin packaging
 
 This repository includes a portable `plugin.json` identity manifest. A root `mcp.json` will be added when we have a stable deployed HTTPS `/mcp` endpoint instead of checking in a fake deployment URL.
