@@ -250,6 +250,88 @@ Evidence and sources:
 - https://www.rescue-w.jp/2006/anime_info.html (original site's film description and its connection to the anime and manga)
 - https://shojikawamori.jp/en/ (Kawamori official biography; original *Macross* creator/mechanical designer)
 
+## GQ-007 — Euphoria: adult visual novel, animation, and source-medium identity
+
+> Euphoria
+
+Initial candidate: *euphoria* (CLOCKUP), a Japanese adult visual novel from 2011.
+
+Related media:
+
+- Original visual novel (2011), by CLOCKUP, with its own creator and character/performance credits.
+- Distinct adult OVA adaptation produced by Majin, six installments issued from 2011 to 2016.
+- Related print work *euphoria ~another room~* (2011).
+- Preserve the producer, format, release date, and content-rating provenance per work and territory. Never collapse source game, anime adaptation, and novel into one record.
+- The original *euphoria* game lists voice actress **青空ラムネ (Aozora Ramune)** for **Nemu Manaka**; independent credits identify her as **Ringo Aoba (青葉りんご)**. Preserve credit-name/alias context for this performer.
+
+Acceptance:
+
+1. A generic title query presents clearly distinguished game, anime, and novel entities, ranked by likely user intent, with links rather than forcing one into a single media-type identity.
+2. Mature-content labels remain available as source-reported metadata; the default result can explain the work without fetching/showing explicit imagery.
+3. The performer alias `Aozora Ramune` must link to Ringo Aoba only with supported evidence; separate on-screen acting roles from music credits.
+4. User must not be led to believe any anime adaptation was independently verified through WeebMoeNexus; this is a future acceptance test.
+
+Sources:
+
+- https://w.atwiki.jp/ercr/pages/388.html (original game date, CLOCKUP, staff, voice-acting credit under 青空ラムネ)
+- https://www.a1c.jp/~majin/product/eupho01.html (animation studio's original-adaptation identification, adult-site advisory)
+- https://www.imdb.com/title/tt9252794/fullcredits/ (animation voice credits and Aozora Ramune alias)
+- https://en.wikipedia.org/wiki/Euphoria_(visual_novel) (work adaptation history, verify individual assertions at providers)
+
+## GQ-008 — Ofureru: partial-romaji source-title fragment
+
+> Ofureru
+
+**Current strongest candidate, pending Mark's confirmation:** *Overflow* (おーばーふろぉ), a 2020 adult short-form anime produced by Studio Hōkiboshi.
+
+Retrieval challenge:
+
+- The user's input `Ofureru` isn't the anime's displayed short title `Overflow`.
+- It occurs within some Latin-alphabet romanizations of the **extended source manga title**, *Overflow ~Iretara Ofureru Kyoudai no Kimochi~*. Other sources render the phrase `Afureru`; variations in transliteration and Japanese spelling must not be flattened without evidence.
+- The animated series and source manga are related but distinct works; retrieve via token/subtitle/romanization normalization plus `adapted from` relation, with match evidence.
+- The 2020 anime has eight short episodes. Its televised/broadcast presentation and complete adult edition are **release variants of the same production**, to be distinguished when discussing different content, rights, and audio/translation.
+- Competing matches for `Ofureru` are possible. A fragment alone should yield a ranked hypothesis rather than a fabricated exact-match title.
+
+Acceptance:
+
+1. `search_anime("Ofureru")` can suggest *Overflow* when supported by indexed extended-title evidence, even when exact short-title matching fails.
+2. Display `matched phrase: Iretara Ofureru ...`, source and title type, confidence / ambiguity, and Japanese-script match where available.
+3. Preserve original manga `adapted into` anime, and broadcast vs full-version release relationships without treating them as new unrelated shows.
+4. Never infer that the two named side-quest works are in one franchise merely because they share adult-content categories.
+
+Sources:
+
+- https://www.crunchyroll.com/es/news/latest/2020/1/7/el-anime-overflow-contar-con-tan-solo-ocho-episodios (original manga extended title, 8-episode anime, broadcast vs complete editions, production)
+- https://www.animeclick.it/anime/29284/overflow (extended romaji, Japanese script, adaptation and episode count)
+- https://overflow.cf-anime.com/goods/ (official anime goods including manga titles and editions)
+
+## GQ-009 — Euphoria ↔ Overflow: indirect musician / inserted song
+
+> Euphoria
+>
+> Ofureru
+
+Research discovery worth testing independently of Mark's undisclosed goal:
+
+- **Ringo Aoba (青葉りんご)** is credited as **Aozora Ramune (青空ラムネ)** for Nemu Manaka in *euphoria*. The *euphoria* OVA credits Aoba as Nemu and with theme-song vocals.
+- In *Overflow* (2020), episode **5** uses the insert song **恋愛☆洗セーション (Ren'ai Sai Session)** performed by Ringo Aoba and Ayaka Igasaki; this song **originates in the 2019 show** *Araiya-san! Ore to Aitsu ga Onnayu de!?* and is not *Overflow*'s primary theme song.
+- This yields a **performer ↔ voice role ↔ musical performance ↔ reuse in another work** path. The relationship is indirect and must not be presented as shared lead cast, an adaptation, or a shared franchise.
+
+Acceptance:
+
+1. Search both inputs independently and resolve the `Ofureru` hypothesis as a possible partial romanization of *Overflow*.
+2. Detect evidence-supported shared performer, with the person's aliases cross-referenced, credit types and *which episode* used the song.
+3. Explain the role of the intervening third show in the song's origin and keep work identity separate.
+4. If music/source detail is absent from provider, report incomplete evidence instead of inventing direct staff or cast relationships.
+5. Check with Mark whether this is the intended hidden connection before rewriting the test as though his goal were already known.
+
+Sources:
+
+- https://www.imdb.com/title/tt9252794/fullcredits/ (*euphoria* performer / alias credit)
+- https://cal.syoboi.jp/tid/5512/subtitle (original Japanese *Overflow* broadcast records list song, performer, episode 5)
+- https://overflow.cf-anime.com/goods/ (official *Overflow* goods page identifies *Araiya-san!* as the original source of the song)
+- https://www.imdb.com/title/tt14962432/fullcredits/ (additional music credit for Ringo Aoba in *Overflow*)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
