@@ -11,13 +11,15 @@
 - [x] XML → normalized anime mapping
 - [x] Fixture-based mapper test
 - [x] Architecture and agent guidance
+- [x] Register public AniDB software project (WeebMoeNexus, software ID `22277`)
 
 ## Phase 1 — Useful AniDB read path
 
-- [ ] Register the WeebMoeNexus AniDB client name/version
+- [ ] Add an AniDB API client beneath software project `22277`
+- [ ] Record the official client name/version in local configuration
 - [ ] Verify a real `get_anime_by_anidb_id` request manually
 - [ ] Expand fixture coverage for missing/odd AniDB fields
-- [ ] Add structured error codes for not-found, banned, unavailable, and misconfigured states
+- [ ] Add structured error codes for not-found, banned, unavailable, outdated, and misconfigured states
 - [ ] Persist cache across restarts
 
 ## Phase 2 — Human title search
