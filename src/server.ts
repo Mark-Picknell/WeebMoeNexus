@@ -6,6 +6,7 @@ import { AnimeService } from "./services/anime-service.js";
 import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
 import { getRelatedAnimeFromRecord } from "./services/related-anime-service.js";
 import { findCharactersInAnime } from "./services/character-search-service.js";
+import { getCharacterInAnime } from "./services/character-detail-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
@@ -285,6 +286,74 @@ export function buildServer(): McpServer {
             type: "text",
             text: error instanceof Error
               ? error.message : "Unknown scoped character search failure"
+          }]
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_character",
+    {
+      title: "Get a character in a specific AniDB anime by ID",
+      description:
+        "Retrieve one source-reported AniDB character ID within the specified anime. The anime ID is required because character data is provided by the anime HTTP API; this is NOT a global character endpoint. Returns the original character metadata, source provenance and explicit found/not-reported state. Missing metadata is unknown, not evidence of global nonexistence.",
+      inputSchema: z.object({
+        anidbId: z.number().int().positive().safe()
+          .describe("AniDB anime ID containing the character"),
+        characterId: z.number().int().positive().safe()
+          .describe("AniDB character ID returned by find_character or from a trusted source")
+      }),
+      outputSchema: z.object({
+        sourceAnimeId: z.number().int().positive(),
+        sourceAnimeTitle: z.string(),
+        sourceAnimeUrl: z.string().url(),
+        evidenceSourceUrl: z.string().url(),
+        retrievedAt: z.string(),
+        requestedCharacterId: z.number().int().positive(),
+        reportedCharacterCount: z.number().int().nonnegative(),
+        found: z.boolean(),
+        character: z.object({
+          anidbCharacterId: z.number().int().positive(),
+          name: z.string(),
+          characterUrl: z.string().url(),
+          role: z.string().nullable(),
+          gender: z.string().nullable(),
+          picture: z.string().nullable(),
+          episodeAppearancesRaw: z.string().nullable(),
+          voiceActor: z.object({
+            id: z.number().int().positive().nullable(),
+            name: z.string(),
+            picture: z.string().nullable()
+          }).nullable()
+        }).nullable()
+      }),
+      annotations: {
+        readOnlyHint: true,
+        idempotentHint: true,
+        destructiveHint: false,
+        openWorldHint: true
+      }
+    },
+    async ({ anidbId, characterId }) => {
+      try {
+        const anime = await service.getByAniDbId(anidbId);
+        const output = getCharacterInAnime(anime, characterId);
+        return {
+          content: [{
+            type: "text",
+            text: output.found
+              ? `Character #${characterId} is reported within ${output.sourceAnimeTitle} (AniDB #${anidbId}); original source metadata included.`
+              : `Character #${characterId} was not reported among ${output.reportedCharacterCount} character records in this anime's AniDB response. This is not proof the character doesn't exist.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: error instanceof Error ? error.message : "Unknown source-scoped character lookup failure"
           }]
         };
       }
