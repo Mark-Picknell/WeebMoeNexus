@@ -10,6 +10,17 @@ import { getCharacterInAnime } from "./services/character-detail-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
+const episodeEvidenceSchema = z.object({
+  raw: z.string().nullable(),
+  parseStatus: z.enum(["unknown", "complete", "partial"]),
+  coverage: z.enum(["unknown", "all_references_listed", "some_references_unlisted"]),
+  references: z.array(z.string()),
+  linkedEpisodeIds: z.array(z.number().int().positive()),
+  unresolvedReferences: z.array(z.string()),
+  unparsedTokens: z.array(z.string()),
+  sourceEpisodeMetadataCount: z.number().int().nonnegative()
+});
+
 export function buildServer(): McpServer {
   // The MCP HTTP transport calls this zero-argument factory with a request
   // context, so do not repurpose its parameter for test dependency injection.
@@ -250,6 +261,7 @@ export function buildServer(): McpServer {
           gender: z.string().nullable(),
           picture: z.string().nullable(),
           episodeAppearancesRaw: z.string().nullable(),
+          episodeEvidence: episodeEvidenceSchema,
           voiceActor: z.object({
             id: z.number().int().positive().nullable(),
             name: z.string(),
@@ -321,6 +333,7 @@ export function buildServer(): McpServer {
           gender: z.string().nullable(),
           picture: z.string().nullable(),
           episodeAppearancesRaw: z.string().nullable(),
+          episodeEvidence: episodeEvidenceSchema,
           voiceActor: z.object({
             id: z.number().int().positive().nullable(),
             name: z.string(),
