@@ -460,6 +460,45 @@ Sources:
 - https://www.nippon.com/en/japan-topics/b07211/ (historical Ikkyū versus fictional portrayal context)
 - https://www.japanesewiki.com/person/Yoshimitsu%20ASHIKAGA.html (non-anime historical/literary/manga portrayals; verify individual titles when adapters implemented)
 
+## GQ-013 — Plue: reused mascot design, distinct incarnations, real crossover
+
+> Plue
+
+**User candidate, 2026-10-09:** Following the request for a character appearing in distinct anime/franchises, Mark offered `Plue`. This is a particularly strong cross-work search because recurring visual design, fictional in-universe identity, personified species, creator cameo, spin-off, and a genuine crossover must not be treated as equivalent. Do not assert that any surprising side branch was the user's intended trick.
+
+### Core identities / roles
+
+1. *RAVE* / *Rave Master* (*Groove Adventure Rave* anime, manga 1999–2005): Plue (プルー / Purū) is Haru Glory's Rave companion, Rave Bearer with special powers relevant to the Dark Bring stones. Unlike his later incarnations, this Plue is narratively significant and has a shared past with Shiba.
+2. *Fairy Tail* (manga 2006–2017, 2009 anime): Lucy Heartfilia summons a Plue-looking Celestial Spirit, a **Nikora of the Canis Minor constellation**. This character is a distinct in-universe entity / reinterpretation of Mashima's prior mascot, not evidence that Haru Glory's Plue teleported canonically to Fairy Tail.
+3. *Edens Zero* (2018–2024 manga, animated from 2021): Plue-type/Nikora designs appear as background cameos / a species of creatures, including restaurant workers. Kodansha editorial staff explicitly mentioned counting hidden Plues and Fairy Tail people in *Edens Zero* crowds. Distinguish character, recurring **species/design**, and background Easter egg; do not automatically model every background appearance as Haru's specific individual.
+4. *Monster Soul*: Plue-themed plush doll referenced as merchandise; represents an **in-world depiction/merchandise** of the recurring mascot motif, not the identical in-universe live character.
+5. *Magician* (1998 one-shot): an early Plue design predating *RAVE*, part of Mashima's earliest published fiction. `first_seen_in` and `first_major_role_in` are different timeline facts; source attribution should be checked.
+6. Spin-offs / short stories: *Plue's Dog Diaries* (プルーの犬日記; Comic BomBom manga; published by Kodansha) and *Plue's Adventure II* / プルーの冒険日記２, compiled in *Hiro Mashima's Playground / Mashima-en*, are separate **works starring Plue**. Do not misclassify printed manga as anime.
+7. **Explicit crossover**: *Fairy Tail x Rave* (2011 manga crossover, 2013 OVA) intentionally stages interaction between characters from two franchises. The `RAVE` Plue appears in the crossover and should be tagged as the specific RAVE incarnation where evidence permits. *Mashima HERO'S* (2019 crossover manga) deliberately assembles characters from **Rave Master, Fairy Tail, and Edens Zero**, independently confirmed by Kodansha's publisher page. Crossover appearance does **not** make every franchise share one continuous canon.
+
+### Acceptance criteria
+
+1. `search_character("Plue")` returns a **cross-work family of related incarnations** with appearance-specific evidence rather than one flattened identity.
+2. Clearly distinguish **same design/reused mascot**, **same individual in a licensed crossover**, **alternate incarnation**, **species resembling a character**, **background homage**, and **in-world toy**.
+3. Link Rave Plue to Haru/Shiba/Rave stones; Fairy Tail Plue to Lucy and a celestial spirit (Nikora/Canis Minor); and Edens Zero occurrences to ambient characters/species where source supports them.
+4. Include *RAVE*, *Fairy Tail*, *Edens Zero*, `Mashima HERO'S`, *Fairy Tail x Rave*, and non-anime manga publications in the related works graph, preserving medium and production date.
+5. Creator `Hiro Mashima` is a provenance-bearing shared **created_by** node. Do not infer that shared authorship guarantees shared fictional canon.
+6. Capture explicit scene/chapter/episode and type of appearance where available. Include unresolved differences transparently rather than inventing exact episode numbers or direct identity continuity.
+7. Current live MCP supports AniDB anime-by-ID only. Character graph, related manga, and cross-provider title/creator linkage remain **future functionality**.
+
+### Primary and secondary references
+
+- https://pocket.shonenmagazine.com/article/entry/rave_20190827 (Kodansha original RAVE summary: Plue's encounter with Haru and Shiba)
+- https://www.kodansha.co.jp/comic/products/0000044724 (Kodansha bibliography explicitly lists `プルーの犬日記`)
+- https://www.kodansha.co.jp/comic/products/0000008145 (Kodansha Japanese short-story contents `プルーの冒険日記２`)
+- https://kodansha.us/book/hiro-mashimas-playground/ (Kodansha English short-story anthology)
+- https://kodansha.us/series/mashima-heros/ (Kodansha `Mashima HERO'S` crossover description)
+- https://pocket.shonenmagazine.com/title/00961/episode/297673 (Kodansha `HERO'S` crossover first chapter)
+- https://kodansha.us/2018/12/04/kodansha-comics-gift-guide-part-3-with-manga-from-me-to-you/ (Kodansha editorial observation about hidden Plues in `Edens Zero`)
+- https://ravemaster.fandom.com/wiki/Plue (secondary character role and multiple incarnations)
+- https://fairytail.fandom.com/wiki/Plue_(Rave) (secondary `Fairy Tail x Rave` OVA Plue appearance)
+- https://en.wikipedia.org/wiki/List_of_Rave_Master_characters (RAVE Plue and origin detail)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
