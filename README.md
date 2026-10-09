@@ -22,7 +22,7 @@ The read-only MCP surface remains deliberately small:
 
 - `health` — confirms the server is alive and whether AniDB client registration is configured.
 - `get_anime_by_anidb_id` — fetches one anime by AniDB ID, normalizes the XML, caches it, and returns structured content with provenance.
-- `search_anime` — searches the **previously downloaded local AniDB title index** for exact or normalized title and aliases; returns distinct AniDB anime IDs, matched title/language/kind, match type and source URL. It does **not** search character names or make network calls.
+- `search_anime` — searches the **previously downloaded local AniDB title index** for exact/normalized aliases and, when none match, conservative Latin/romaji typo candidates. Returns distinct AniDB IDs, original title/language/kind, match type, source URL and the measured edit distance for fuzzy matches. It does **not** search character names or make network calls.
 
 ## Why this shape?
 
@@ -108,7 +108,7 @@ npm run titles:refresh
 
 It downloads over HTTPS into `.cache/anidb/anime-titles.xml.gz`, validates bounded gzip/XML structure, and writes atomically. The local cached file is reused for at least **48 hours** by default; the code will not accept a refresh interval shorter than **36 hours**. Set `ANIDB_TITLE_DUMP_CACHE_PATH` to choose a persistent writable cache location for deployment. On refresh failures the last valid copy survives, reported as **stale** (the manual command exits unsuccessfully to signal an operational warning). Ordinary CI uses synthetic, local fixtures, and **never downloads the real AniDB dump**.
 
-**Status:** The official-dump downloader/cache, local parser/index, deterministic normalized alias lookup and **`search_anime` MCP endpoint (P2-01–P2-05)** are implemented and tested offline. `findNormalizedTitle(query)` handles case, full-width Unicode, punctuation, whitespace, source-supplied Japanese/English/romaji aliases and conservative macron keys without inventing translations. Results deduplicate aliases for the same AniDB ID, but preserve different anime with the same title; each result includes the original matched title, language, title kind, exact/normalized match type and an AniDB source URL. **Fuzzy matching (P2-06), character/person searches, and automatic background index refresh are not implemented.** The title cache must first be populated with `npm run titles:refresh`; `search_anime` reads local files only and returns an actionable error if none exists. The dump contains public title metadata, not characters, image frames or episodes.
+**Status:** All six Phase 2 title-search implementation tasks (P2-01–P2-06) are coded and **offline CI validated**. `search_anime` first finds exact/normalized source-supplied aliases (Japanese/English/romaji) without invented translations. Only when no deterministic title matches, a bounded Unicode-codepoint edit-distance fallback handles **Latin and romanized** title typos, including adjacent-letter swaps. Fuzzy hits are explicitly labeled `fuzzy` with `editDistance`; original title, language, kind and AniDB URL remain intact. Duplicate aliases are collapsed **per AniDB ID**, never across different anime. Very short titles and Japanese/mixed-script names are not fuzzily guessed. **Phase 2 is awaiting Mark's exit acceptance**; implementation and offline tests are done, but character/person searches, a live title-dump integration check, automatic background refresh, hosting and ChatGPT plugin installation are not claimed. The local title cache must first be populated with `npm run titles:refresh`; the MCP `search_anime` call itself never invokes AniDB over the network.
 
 ### Local MCP search example
 
@@ -118,7 +118,7 @@ After `npm run titles:refresh`, call the read-only MCP tool:
 {"name":"search_anime","arguments":{"query":"Macross","limit":10}}
 ```
 
-Results contain the **total number of distinct anime IDs**, even when `limit` truncates the returned list. An absent title is reported as **not found in the local index**, never as proof no such anime exists. Searches are deterministic exact/normalized aliases only; no upstream search request or fuzzy guessing. The tool is available in the locally running MCP server, not yet deployed as a hosted ChatGPT connector.
+Results contain the **total number of distinct anime IDs**, even when `limit` truncates the returned list. Exact/normalized matches take priority; only when none exist does conservative Latin/romaji typo matching run. Fuzzy results are labeled and include an integer `editDistance`, so a suggested title is never represented as an authoritative identity join. Missing titles remain **unknown in the current local index**, not proof of absence. The tool is available in the locally running MCP server, not yet deployed as a hosted ChatGPT connector.
 
 ## Plugin packaging
 
