@@ -45,6 +45,9 @@ a plausible database workflow instead of a joke.
 - [ ] `get_related_anime`
 - [ ] `find_character`
 - [ ] `get_character`
+- [x] Preserve AniDB's raw character episode-appearance field (when present; without guessing parsing syntax)
+- [ ] Normalize episode-appearance references and cross-check available source coverage
+- [ ] Verify which episode-level character links MAL exposes via its current supported API
 - [ ] richer creator/seiyuu normalization
 - [ ] relation graph traversal with explicit depth/limit controls
 - [ ] optional graph-oriented UI
@@ -83,6 +86,9 @@ Only after authentication is designed properly:
 Once the boring substrate is trustworthy:
 
 - [ ] character appearance/aesthetic search
+- [ ] Episode-aware cast candidate filtering for pause-frame recognition
+- [ ] User-confirmed identification/correction and optional permitted reference-image uploads; retain evidence, provenance, consent/licensing and review status
+- [ ] Feedback quality controls so a single mistaken submission does not silently alter canonical character identities
 - [ ] trope/theme search
 - [ ] “what was that scene/character/anime?” memory reconstruction
 - [ ] relationship-path queries across characters, creators, studios, and works
