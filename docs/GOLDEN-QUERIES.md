@@ -213,6 +213,43 @@ References:
 - https://robotech.com/news/anime-news-network-at-anime-expo-harmony-gold-renews-license-to-1st-macross-southern-cross-mospeada-anime-series (licensed source series)
 - https://macross.jp/contents/750039 (2021 official Big West / Harmony Gold agreement)
 
+## GQ-006 — Yomigaeru Sora: alternate production, cross-media franchise, and shared creators
+
+> Yomigaeru Sora
+
+**Mark's intended discovery is deliberately undisclosed at entry time.** These are independently sourced connections found while exploring the title, not proof that any single one was his target.
+
+Primary identity:
+
+- *Yomigaeru Sora: Rescue Wings* (よみがえる空 -RESCUE WINGS-): 2006 Japanese television anime from J.C.Staff about search-and-rescue helicopter pilot Kazuhiro Uchida.
+- AniDB anime ID **4113**; MyAnimeList anime ID **798** and AniList anime ID **798** are separate provider identities (the identical MAL/AniList numbers are coincidental and must remain namespaced).
+- 12 broadcast episodes and an additional episode for the home-video release.
+
+Relationships that a useful discovery result should surface:
+
+1. **Alternate development branch / pilot:** *Rescue Angel* (レスキューエンジェル; AniList **103123**), roughly three minutes long, used an **originally female protagonist**, whereas the finished TV series features Kazuhiro Uchida as a male protagonist. AniList explicitly marks it as an alternative version; it is not automatically an ordinary TV episode or the same anime record.
+2. **Related live-action production:** *Sora e: Sukui no Tsubasa Rescue Wings* (2008), centered on a female pilot named Haruka Kawashima. This belongs to the *Rescue Wings* media family and should be represented as a distinct production, not a literal English-title synonym.
+3. **Related manga and title collision:** The franchise's original Japanese production site describes *Rescue Wings Zero* as having the earlier title *Rescue Angel* (旧タイトル：レスキューエンジェル). That manga title history must not be conflated with the **Rescue Angel** animation pilot. Likewise, *Sora e Rescue Wings* is another manga with its own publication/characters.
+4. **Cross-query shared contributor:** *Rescue Angel* (pilot) credits **Shōji Kawamori** for mechanical design. His official biography credits him with original creation and mechanical design for *The Super Dimension Fortress Macross* (GQ-003 / GQ-005). The **finished Yomigaeru Sora TV series** instead credits **Takashi Hashimoto (橋本敬史)** for mechanical design. Credit attribution must target the correct production or version, never silently propagate from pilot to TV series.
+
+Acceptance criteria:
+
+1. Resolve the supplied title to **AniDB 4113** and surface related production/alternate-version/media links with named relation types.
+2. If asked for *Rescue Angel*, distinguish the animation pilot from the manga **formerly** bearing that title; include medium, year, and source evidence.
+3. Handle relationships that are **not** title aliases: pilot-to-TV alternative production; TV-to-film franchise connection; TV/pilot-to-manga related-work links; shared-staff link to an otherwise unrelated earlier query.
+4. Do not claim the pilot and TV series had the same protagonist or production credits. Do not claim the 2008 movie retells identical events without evidence.
+5. Give the viewer a clear answer even if a particular API lacks relationship edges; note where additional provider evidence was used.
+6. Do not infer that Mark intended any particular connection until he reveals his own test target. This documents candidate discoveries, not a retrospectively invented expectation.
+
+Evidence and sources:
+
+- https://www.wikidata.org/wiki/Q4022858 (cross-provider identifier mapping, sparsely sourced; verify against providers when available)
+- https://www.tv-tokyo.co.jp/contents/rescue-w/staff/ (original TV staff; Hashimoto credited for mechanical design)
+- https://anilist.co/anime/103123/Rescue-Angel (pilot, female protagonist, alternative relationship, Kawamori mechanical credit)
+- https://www.rescue-w.jp/2006/anime_goods.html (original franchise materials; *Rescue Wings Zero* previous title *Rescue Angel*)
+- https://www.rescue-w.jp/2006/anime_info.html (original site's film description and its connection to the anime and manga)
+- https://shojikawamori.jp/en/ (Kawamori official biography; original *Macross* creator/mechanical designer)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
