@@ -25,6 +25,7 @@ The read-only MCP surface remains deliberately small:
 - `search_anime` — searches the **previously downloaded local AniDB title index** for exact/normalized aliases and, when none match, conservative Latin/romaji typo candidates. Returns distinct AniDB IDs, original title/language/kind, match type, source URL and the measured edit distance for fuzzy matches. It does **not** search character names or make network calls.
 - `get_related_anime` — reads one anime’s **directed, source-reported** AniDB related-anime links, including provider relation type, optional target title, AniDB IDs, source evidence URL and retrieval time. It reuses the existing paced/cached anime service and does not guess reverse edges, fetch linked targets, or traverse an inferred franchise graph.
 - `find_character` — searches character names **within one explicitly specified AniDB anime**; exact/normalized names outrank prefix/substring matches. Returns distinct character IDs, source-work evidence, original names, roles, gender, raw episode appearance text and source-reported voice-actor credits. It does **not** globally search AniDB characters, infer species, or merge identically named characters across works.
+- `get_character` — resolves a selected AniDB character ID **in its specified source anime**, returning that exact record's source metadata, voice credits and evidence; unknown IDs are represented as **not reported in this anime**, not as globally nonexistent. It does not call a standalone character API.
 
 ## Why this shape?
 
@@ -132,7 +133,7 @@ Read-only MCP example:
 
 Unlike the offline title index, this tool needs the registered AniDB HTTP client to fetch the **source anime record** when it is not already cached (the existing pacing and in-memory 72-hour cache apply). It reports only direct `<relatedanime>` entries actually present in that one source response, with the original relationship labels, nullable titles, source anime/target anime IDs, a navigation URL for each target, and a separate **evidence URL/timestamp for the source assertion**. No target anime is fetched or validated solely because its ID appears as a relation. Missing links mean *nothing was reported in the response*, not proof there are no related works.
 
-**Evidence:** [Offline relation projection tests](test/related-anime.test.ts) and [real MCP client/transport integration with mocked AniDB](test/mcp-related-anime.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355). Cross-anime/global character search, character-by-ID lookup, cross-media historical equivalence, franchise traversal, hosted deployment, and co-watching are **not yet implemented**.
+**Evidence:** [Offline relation projection tests](test/related-anime.test.ts) and [real MCP client/transport integration with mocked AniDB](test/mcp-related-anime.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355). Cross-anime/global character search, cross-media historical equivalence, franchise traversal, hosted deployment, and co-watching are **not yet implemented**.
 
 ### Scoped character name lookup (Phase 3, P3-02)
 
@@ -145,6 +146,18 @@ Use `search_anime` to find and choose an anime ID, then call:
 This is a **scoped read** of character records contained in the selected source anime, using the existing registered/paced AniDB HTTP client and cached anime data. Matching is conservative: literal exact, normalized Unicode/case, then prefix, then substring. Each distinct character ID is retained; multiple source characters with the same name are **not** merged. The output retains optional original role/gender, raw appearance string and voice-actor credit, plus per-result **source-work provenance**. Absence in one source anime record is not proof a character doesn't exist anywhere. Species, alternate-universe identities and equivalence between portrayals are not inferred.
 
 [Offline unit regression tests](test/character-search.test.ts) and [in-memory MCP client integration](test/mcp-find-character.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37979555787). The Carrera/Viper GTS sample is **synthetic test data**, not a claim that live AniDB returned those exact character IDs or credits.
+
+### Character-by-ID lookup (Phase 3, P3-03)
+
+After `find_character` identifies a candidate within a known anime, call:
+
+```json
+{"name":"get_character","arguments":{"anidbId":1725,"characterId":501}}
+```
+
+The ID is looked up in **that specific anime's source-reported character list**, using the existing paced/cached AniDB anime read. This is **not a global AniDB character endpoint** and does not assert that two independent anime containing the same character name describe the same fictional individual. The result includes a `found` boolean, nullable `character`, source anime URL, retrieval timestamp, reported character count and the original voice-actor/episode metadata when available. `found:false` means **not reported in this source response**, not an assertion of worldwide absence.
+
+[Character-by-ID unit tests](test/character-detail.test.ts) and [real offline MCP integration](test/mcp-find-character.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37979815355).
 
 ## Plugin packaging
 
