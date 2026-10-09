@@ -12,7 +12,7 @@
 - The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
 - **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
 
-**Current register after title-index implementation · 2026-10-09:** **31/87 completed** and **56 outstanding**. Phase 1 remains **5/7** (structured errors and persistent cache still open); Phase 2 is now **2/6** (official cached title dump and offline index implemented; normalization/search/match evidence/fuzzy logic still pending). Phase 0 remains the only phase with a ✅ heading. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
+**Current register after title-normalization implementation · 2026-10-09:** **32/87 completed** and **55 outstanding**. Phase 1 remains **5/7**; Phase 2 is now **3/6** (official dump/cache, title index and normalization completed; MCP search, match evidence and fuzzy lookup still pending). Phase 0 remains the only phase with a ✅ heading. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
 
 **Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. Immediately after this approval, before implementation work, the register had **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
 
@@ -60,7 +60,7 @@ Use AniDB's sanctioned anime-title dump instead of scraping/searching pages.
 
 - [x] `P2-01` **JayMe** — Implement official HTTPS title-dump download + atomic disk cache with a 48-hour default refresh (36-hour minimum), bounded gzip validation, and offline regression tests. [Verified in CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37967245252); live upstream fetch intentionally not run as part of CI.
 - [x] `P2-02` **JayMe** — Parse the cached AniDB XML into a local index keyed by AniDB ID and exact title, preserving language, alias type and same-name collisions. [Offline CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37967851520).
-- [ ] `P2-03` **JayMe** — Normalize case, punctuation, romaji, English/Japanese aliases
+- [x] `P2-03` **JayMe** — Normalize case, punctuation, full-width Unicode and source-supplied Japanese/English/romaji aliases; support conservative macron keys while preserving original spellings and same-name collisions. [Offline tests passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37971913555).
 - [ ] `P2-04` **JayMe** — Implement `search_anime(query, limit)`
 - [ ] `P2-05` **JayMe** — Return match evidence, not just a guessed ID
 - [ ] `P2-06` **JayMe** — Add fuzzy matching only after deterministic matching is solid
@@ -173,6 +173,12 @@ Once the boring substrate is trustworthy:
 - **P2-02:** Added [src/providers/anidb/title-index.ts](../src/providers/anidb/title-index.ts) for official AniDB `animetitles` XML: `aid`, `title`, `xml:lang` and `type` are preserved as structured data. The in-memory index supports source-ID lookup and **exact-title collision lookup** without merging same-name anime; romanization/case/fuzzy matching deliberately deferred to `P2-03` and `P2-06`.
 - **Offline evidence:** [test/anidb-title-index.test.ts](../test/anidb-title-index.test.ts) verifies title kinds, Japanese and English aliases, XML entities, identical names assigned to different anime IDs, malformed/missing data rejection, gzip cache loading and a 1,500-anime synthetic stress case. The manual `npm run titles:refresh` command also parses and reports counts; [CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37967851520).
 - **Limits:** No live upstream title dump was downloaded during these CI tests. This is a local library, **not yet** an exposed `search_anime` MCP endpoint or evidence that user-facing golden queries pass.
+
+### Completed title-normalization slice (2026-10-09)
+
+- **P2-03:** Added [title-normalization.ts](../src/providers/anidb/title-normalization.ts) and `AniDbTitleIndex.findNormalizedTitle()`. Stable Unicode/case/punctuation/width normalization and conservative romaji macron keys match **source-provided** Japanese, English and romanized aliases while preserving AniDB ID, original title, source language and kind. Distinct anime with colliding normalized titles remain separate hits; no invented transliteration or implicit character identity.
+- **Offline evidence:** [test/anidb-title-normalization.test.ts](../test/anidb-title-normalization.test.ts) checks Japanese voiced kana, fullwidth/halfwidth, romaji macrons, whitespace/punctuation folding, alternate anime with the same title, unchanged exact lookups, and preservation of multiple source aliases. [CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37971913555).
+- **Not yet complete:** MCP `search_anime` endpoint (`P2-04`), ranked match evidence (`P2-05`), and later fuzzy search (`P2-06`). Index lookups are local library operations only.
 
 ## Validation track — fixtures, golden cases and release gates
 
