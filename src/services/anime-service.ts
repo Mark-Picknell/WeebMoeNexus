@@ -1,5 +1,6 @@
 import type { AniDbConfig } from "../config.js";
-import type { AnimeRecord } from "../domain/anime.js";
+import { animeRecordSchema, type AnimeRecord } from "../domain/anime.js";
+import { ProviderLookupError } from "../domain/provider-error.js";
 import { AniDbClient } from "../providers/anidb/client.js";
 import { mapAniDbAnimeXml } from "../providers/anidb/mapper.js";
 
@@ -27,7 +28,17 @@ export class AnimeService {
     }
 
     const xml = await this.anidb.getAnimeXml(anidbId);
-    const value = mapAniDbAnimeXml(xml);
+    let value: AnimeRecord;
+    try {
+      value = animeRecordSchema.parse(mapAniDbAnimeXml(xml));
+      if (value.id !== anidbId) throw new Error("Source ID mismatch");
+    } catch {
+      throw new ProviderLookupError({
+        code: "unavailable", reason: "invalid_response",
+        message: "AniDB response could not be validated for the requested anime. No retry was attempted.",
+        httpStatus: null, apiCode: null
+      });
+    }
 
     this.cache.set(anidbId, {
       expiresAt: Date.now() + this.config.cacheTtlMs,
@@ -37,3 +48,4 @@ export class AnimeService {
     return value;
   }
 }
+

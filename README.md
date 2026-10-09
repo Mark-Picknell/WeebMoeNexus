@@ -28,6 +28,18 @@ The read-only MCP surface remains deliberately small:
 - `find_character` — searches character names **within one explicitly specified AniDB anime**; exact/normalized names outrank prefix/substring matches. Returns distinct character IDs, source-work evidence, original names, roles, gender, raw episode appearance text and source-reported voice-actor credits. It does **not** globally search AniDB characters, infer species, or merge identically named characters across works.
 - `get_character` — resolves a selected AniDB character ID **in its specified source anime**, returning that exact record's source metadata, voice credits and evidence; unknown IDs are represented as **not reported in this anime**, not as globally nonexistent. It does not call a standalone character API.
 
+### Structured provider failures (P1-06)
+
+AniDB-backed read failures expose `isError: true` and a machine-readable
+`structuredContent.error` with provider, stable code (`not_found`, `banned`,
+`unavailable`, `outdated`, `misconfigured`), reason, safe message, separate HTTP
+status/XML API code, and `retried: false`. Existing success outputs are intact.
+Partial traversal adds these details to its failed source without discarding
+recovered edges. HTTP throttling requests backoff without asserting a confirmed
+ban; unknown numeric API errors remain unclassified. Failed or mismatched
+records cannot enter the success cache. See [the contract and evidence
+limits](docs/PROVIDER-ERRORS.md).
+
 ## Why this shape?
 
 The Nexus should own **identity, normalization, provenance, caching, and tool semantics**. Providers should own only the weirdness of their upstream service.

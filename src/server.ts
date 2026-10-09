@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import * as z from "zod/v4";
 import { loadAniDbConfig } from "./config.js";
 import { animeRecordSchema } from "./domain/anime.js";
+import { ProviderLookupError, providerErrorResult } from "./domain/provider-error.js";
 import { AnimeService } from "./services/anime-service.js";
 import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
 import { getRelatedAnimeFromRecord } from "./services/related-anime-service.js";
@@ -101,6 +102,7 @@ export function buildServer(): McpServer {
           structuredContent: output
         };
       } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
         const message =
           error instanceof Error ? error.message : "Unknown AniDB lookup failure";
 
@@ -217,6 +219,7 @@ export function buildServer(): McpServer {
           structuredContent: output
         };
       } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return {
           isError: true,
           content: [{
@@ -254,6 +257,7 @@ export function buildServer(): McpServer {
           structuredContent: output
         };
       } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return {
           isError: true,
           content: [{
@@ -331,6 +335,7 @@ export function buildServer(): McpServer {
           structuredContent: output
         };
       } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return {
           isError: true,
           content: [{
@@ -401,6 +406,7 @@ export function buildServer(): McpServer {
           structuredContent: output
         };
       } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return {
           isError: true,
           content: [{

@@ -5,6 +5,7 @@ import {
   type RelationGraphResult
 } from "../domain/relation-graph.js";
 import { getRelatedAnimeFromRecord } from "./related-anime-service.js";
+import { ProviderLookupError } from "../domain/provider-error.js";
 
 export interface AnimeRecordReader {
   getByAniDbId(anidbId: number): Promise<AnimeRecord>;
@@ -70,7 +71,8 @@ export async function traverseAnimeRelations(
       failures.push({
         anidbId: node.anidbId,
         code: "source_read_failed",
-        message: "Source record could not be read or validated; traversal stopped without retry."
+        message: "Source record could not be read or validated; traversal stopped without retry.",
+        ...(error instanceof ProviderLookupError ? { providerError: error.details } : {})
       });
       break;
     }

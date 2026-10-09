@@ -1,4 +1,5 @@
 import * as z from "zod/v4";
+import { providerErrorSchema } from "./provider-error.js";
 
 export const relationGraphInputSchema = z.object({
   anidbId: z.number().int().positive(),
@@ -49,7 +50,8 @@ export const relationGraphResultSchema = z.object({
   failures: z.array(z.object({
     anidbId: z.number().int().positive(),
     code: z.literal("source_read_failed"),
-    message: z.string()
+    message: z.string(),
+    providerError: providerErrorSchema.optional()
   }))
 });
 
