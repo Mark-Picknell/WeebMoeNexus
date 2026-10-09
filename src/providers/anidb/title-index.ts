@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 import { validateTitleGzip } from "./title-dump.js";
+import { aniDbTitleLookupKeys } from "./title-normalization.js";
 
 /**
  * AniDB's officially published title-dump record. Keep the original spelling,
@@ -30,7 +31,8 @@ export interface AniDbExactTitleMatch {
  *
  * The exact-title map retains *all* hits, including independent anime that
  * share a title, and distinguishes multiple aliases for the same anime.
- * P2-03/P2-04 will add text normalization and an MCP search surface.
+ * Normalized alias lookup keeps the original matched spelling and source ID.
+ * P2-04 will add the MCP search surface.
  */
 export class AniDbTitleIndex {
   readonly animeCount: number;
@@ -39,6 +41,7 @@ export class AniDbTitleIndex {
   constructor(
     private readonly byId: ReadonlyMap<number, AniDbTitleRecord>,
     private readonly byExactTitle: ReadonlyMap<string, readonly AniDbExactTitleMatch[]>,
+    private readonly byNormalizedTitle: ReadonlyMap<string, readonly AniDbExactTitleMatch[]>,
     titleCount: number
   ) {
     this.animeCount = byId.size;
@@ -51,6 +54,25 @@ export class AniDbTitleIndex {
 
   findExactTitle(value: string): readonly AniDbExactTitleMatch[] {
     return this.byExactTitle.get(value) ?? [];
+  }
+
+  /**
+   * Match source-supplied Japanese, English, and romanized aliases after
+   * conservative text normalization. Keep all colliding anime distinct.
+   * One alias is returned once even when multiple lookup keys match it.
+   */
+  findNormalizedTitle(value: string): readonly AniDbExactTitleMatch[] {
+    const matches: AniDbExactTitleMatch[] = [];
+    const seen = new Set<AniDbExactTitleMatch>();
+    for (const key of aniDbTitleLookupKeys(value)) {
+      for (const hit of this.byNormalizedTitle.get(key) ?? []) {
+        if (!seen.has(hit)) {
+          seen.add(hit);
+          matches.push(hit);
+        }
+      }
+    }
+    return matches;
   }
 }
 
@@ -97,6 +119,7 @@ export function parseAniDbTitleXml(xml: string): AniDbTitleIndex {
 
   const byId = new Map<number, AniDbTitleRecord>();
   const exact = new Map<string, AniDbExactTitleMatch[]>();
+  const normalized = new Map<string, AniDbExactTitleMatch[]>();
   let titleCount = 0;
 
   for (const rawAnime of asArray(parent.anime)) {
@@ -144,14 +167,20 @@ export function parseAniDbTitleXml(xml: string): AniDbTitleIndex {
     };
     byId.set(anidbId, record);
     for (const matchedTitle of titles) {
+      const hit = { anidbId, preferredTitle, matchedTitle };
       const matches = exact.get(matchedTitle.value) ?? [];
-      matches.push({ anidbId, preferredTitle, matchedTitle });
+      matches.push(hit);
       exact.set(matchedTitle.value, matches);
+      for (const key of aniDbTitleLookupKeys(matchedTitle.value)) {
+        const keyMatches = normalized.get(key) ?? [];
+        keyMatches.push(hit);
+        normalized.set(key, keyMatches);
+      }
     }
   }
 
   if (byId.size === 0) throw new Error("AniDB title dump contains no anime");
-  return new AniDbTitleIndex(byId, exact, titleCount);
+  return new AniDbTitleIndex(byId, exact, normalized, titleCount);
 }
 
 /**
