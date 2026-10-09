@@ -24,6 +24,8 @@ export const characterSchema = z.object({
   role: z.string().nullable(),
   gender: z.string().nullable(),
   picture: z.string().nullable(),
+  // Preserve AniDB's per-character episode list verbatim until its grammar is validated.
+  episodeAppearancesRaw: z.string().nullable(),
   voiceActor: voiceActorSchema.nullable()
 });
 
