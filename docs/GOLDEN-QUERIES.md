@@ -418,6 +418,42 @@ Sources:
 - https://tekken.fandom.com/wiki/Tekken:_Bloodline (anime cameo; secondary reference)
 - https://en.wikipedia.org/wiki/Tekken:_The_Motion_Picture (animated OVA appearance; corroborate with direct credits where available)
 
+## GQ-012 — Ashikaga Yoshimitsu: historical person, namesake ambiguity, and anime portrayal
+
+> Ashikaga Yoshimitsu
+
+**Follow-up to GQ-011 (2026-10-09):** Mark supplied the historical name **Ashikaga Yoshimitsu**, adding a separate ambiguity to the previously tested *Tekken/Soulcalibur* Yoshimitsu. Treat this as a historical-person search and discover the cross-media depictions; do **not** invent kinship, namesake inspiration, or an in-universe succession relationship with Bandai Namco's fighting-game character.
+
+### Different names under the same Roman letters
+
+- **足利義満** (Ashikaga Yoshimitsu; Japanese given name **義満**), historical third Ashikaga shōgun (1358–1408), a well-documented Muromachi-era political and cultural figure.
+- **吉光** (Yoshimitsu), the *Tekken* / *Soulcalibur* fictional Manji fighter's name and the name of the inherited cursed sword. The Japanese script and component kanji **differ** even though the Romanized reading is the same. This is homophony/name-collision, not an alias for the shogun.
+- The historical person lived centuries before *Tekken*'s modern setting and decades before the earliest fictional *Soulcalibur* setting; chronological overlap cannot establish ancestry or character identity. At present there is **no verified official claim** that Namco/Bandai Namco named its Yoshimitsu after Ashikaga Yoshimitsu. Omit that proposed link unless credible evidence emerges.
+
+### Real historical person portrayed in anime
+
+1. **Ikkyū-san / 一休さん** (Toei Animation, 1975–1982), a fictionalized historical comedy about young monk Ikkyū. Official Toei cast credits **足利義満** voiced by **Shunji Yamada (山田俊司)**. The shogun is a recurring foil for Ikkyū's riddles and wit. This is a **fictional portrayal of a historical person**, not the real person's filmography or proof the dramatic scenarios occurred.
+2. **The World Is Dancing / ワールド イズ ダンシング** (2026, adaptation of Kazuto Mihara's Noh-history manga). The official anime's character page identifies **Ashikaga Yoshimitsu**, voiced by **Takahiro Sakurai (櫻井孝宏)**. This is a separate depiction of the **same real historical person**, not a character crossover or same fictional continuity.
+3. Related non-anime media include historical biographies and manga, notably **Akkanbe Ikkyu** (Hisashi Sakaguchi), in which Yoshimitsu appears. Preserve media type and distinguish historical evidence from dramatized interpretation.
+
+### Relationships / acceptance
+
+- `search_person("Ashikaga Yoshimitsu")` resolves the historical person as a different entity from `search_character("Yoshimitsu")`.
+- Japanese input `足利義満` and `義満` should provide strong direct matches for the shōgun. `吉光` should directly resolve the fictional game persona / title or weapon, NOT the shōgun, despite shared kana reading.
+- `Yoshimitsu` by itself should return disambiguated groups including **historical people**, **fictional individuals and inherited mantles**, and **items named Yoshimitsu**, rather than blindly selecting the fighting-game character or shōgun.
+- Represent historical-person **depicted_as** fictional portrayals in separate works; map each portrayal to its actor/voice actor, not to the historical person as if they literally had a voice actor.
+- Distinguish `shared_name/pronunciation` (linguistic), `portrayal_of` (media representation), `succession/inherited_title` (in-fiction), `inspired_by` (requires documented authorial evidence), and `appears_in` (production role).
+- The first release of WeebMoeNexus is an AniDB anime-by-ID client; these are requirements for later title/person/character/cross-provider adapters, not working MCP searches.
+
+Sources:
+
+- https://jpsearch.go.jp/en/gallery/ndl-JVK2pJ3xwPu34K (Japanese cultural heritage aggregator; historical Ashikaga Yoshimitsu)
+- https://tk8.tekken-official.jp/character/index.php?chara=yoshimitsu (Bandai Namco's official Japanese page uses 吉光)
+- https://lineup.toei-anim.co.jp/ja/tv/ikkyu/story/ (Toei's original *Ikkyū-san* cast explicitly lists 足利義満 and 山田俊司)
+- https://sh-anime.shochiku.co.jp/worldisdancing-anime/character/yoshimitsu/ (2026 *The World Is Dancing* official cast lists 足利義満 and 櫻井孝宏)
+- https://www.nippon.com/en/japan-topics/b07211/ (historical Ikkyū versus fictional portrayal context)
+- https://www.japanesewiki.com/person/Yoshimitsu%20ASHIKAGA.html (non-anime historical/literary/manga portrayals; verify individual titles when adapters implemented)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
