@@ -499,6 +499,58 @@ Sources:
 - https://fairytail.fandom.com/wiki/Plue_(Rave) (secondary `Fairy Tail x Rave` OVA Plue appearance)
 - https://en.wikipedia.org/wiki/List_of_Rave_Master_characters (RAVE Plue and origin detail)
 
+## GQ-014 — Oda Nobunaga: one historical referent, incompatible fictional versions across anime, games, and live action
+
+> Oda Nobunaga
+
+**User challenge (2026-10-09):** After Plue's cross-franchise creator-mascot test, Mark offered historical Sengoku warlord **Oda Nobunaga** (織田信長), whose interpretations span far more franchise and media boundaries. The deeper acceptance target is not merely count of results. It is recognizing distinct ways fiction transforms or reuses a **historical referent**. Mark has not supplied any additional hidden expected answer, so do not retroactively claim a particular cameo was his intended test.
+
+### Source reality and creative uses
+
+**Historical referent:** Oda Nobunaga (織田信長, 1534–1582), leading Japanese Sengoku daimyo involved in the 16th-century campaigns toward unification, killed in the Honnō-ji Incident in 1582. The historical person must be a distinct entity from every fictional character adapted from or alluding to him. Japanese order Oda (surname) + Nobunaga (given name); alternate English order Nobunaga Oda refers to the same historical person.
+
+Distinct fictional transformations and medium paths:
+
+1. **Dramatized historical portrayal:** *Ninja Girl & Samurai Master / Nobunaga no Shinobi* (anime adapting manga), comedy about Sengoku figures with a fictional ninja serving Nobunaga. The warlord in that story depicts the historical person, but adventures and dialogue are dramatization, not historical evidence.
+2. **Supernatural warlord:** Capcom's *Sengoku Basara* Nobunaga is a demon-king stylization. Capcom's official press release specifically describes **GACKT** portraying this fictional Nobunaga in the **2012 live-action series `Sengoku BASARA -MOONLIGHT PARTY-`**. Also adaptions into animation. Keep game version and adaptations connected within the *Basara* IP, but don't merge the characterization with unrelated works' Nobunagas.
+3. **Different-sex counterpart / reimagining:** *Fate/Grand Order* depicts a female Oda Nobunaga (Servant variants such as Archer and Berserker); official *FGO Arcade* lists Archer **織田信長**, CV **Rie Kugimiya / 釘宮理恵**. *The Ambition of Oda Nobuna* has a female historical-analogue named **Oda Nobuna**, **not** a canonical alias of Nobunaga; its Crunchyroll synopsis explicitly distinguishes the names. Preserve alias versus separate person, gender, fictional world and inspiration evidence.
+4. **Fictional reincarnation / nonhuman species:** *Oda Cinnamon Nobunaga* (Crunchyroll) depicts historical warlords reborn as pet dogs, notably Nobunaga as a Shiba Inu named Cinnamon. This is an explicit within-story reincarnation, not the real person's biological history, not an alternate spelling/normal human portrayal.
+5. **Identity substitution / impersonation:** *Nobunaga Concerto* follows time-traveling schoolboy **Saburō** taking the historical warlord's **name and identity** at his request. **Both exist as different characters in the same fictional world**, with a lookalike relationship; the protagonist is NOT the canonical historical individual. Fuji TV identifies manga → anime + live-action television drama + live-action feature film adaptations of the source, each retaining its own medium and actors.
+6. **Another-world displacement / counterfactual survival:** *Drifters* depicts Nobunaga taken from his historical context to a fantasy world to fight with other historical figures. This is an alternate fictional continuation, not a historical record.
+7. **Alternate sci-fi setting:** *Nobunaga the Fool* turns the character into a giant-armor/mecha warrior alongside reimagined historical figures including Jeanne d'Arc and Leonardo da Vinci; the science-fiction world is a fictional counterpart rather than same timeline as the historical figure.
+8. **Historical strategy-game portrayal:** Koei Tecmo's *Nobunaga's Ambition* is a long-running Sengoku strategy franchise recreating/reimagining feudal campaigns. A particular game's playable character is a work-specific digital depiction linked to, not identical in kind to, the real-world person.
+9. **Licensed franchise CROSSOVER, not a historical depiction:** *Pokémon Conquest* is Nintendo/Pokémon Company's actual crossover with Koei Tecmo's *Nobunaga's Ambition* franchise, with **Nobunaga as a Ransei-region warlord**; official Pokémon materials show **Nobunaga with Zekrom**. Model `crossover_of` at WORK/franchise level and `portrayal_of` at CHARACTER/historical-referent level. The Pokémon Nobunaga is neither evidence of real Japanese history nor an episode of the TV Pokémon anime.
+10. **Person's talent/power rather than person appearing:** *Nobunagun* features a modern protagonist with powers linked to Nobunaga via ancestral/genetic/heroic historical framing; check exactly how the series constructs that link before creating an `appears_in` edge. An episode/title mentioning “Oda Nobunaga” does not prove the historical character is present.
+
+### Acceptance criteria
+
+1. Searching `Oda Nobunaga`, `Nobunaga Oda`, or `織田信長` returns the **real-world historical person** and offers related fictional portrayals grouped by media/franchise/continuity, with supporting evidence. Do not choose a single anime/game figure by default simply because WeebMoeNexus started with AniDB.
+2. Distinguish `portrayal_of_real_person`, `alternate_gender_reimagining`, `fictional_counterpart_of`, `reincarnation_of_in_story`, `impersonates`, `crossover_character_of`, `adaptation_portrayal_of`, `inspired_by`, and `namesake_only`; relation labels must be justified by evidence, not inferred from matching names alone.
+3. In `Nobunaga Concerto`, explicitly distinguish **Saburō** from the separate real-named Nobunaga character in the story. Don't merge an assumed identity with a unique human entity.
+4. In `The Ambition of Oda Nobuna`, note that **Nobuna** is a different fictional proper name. In `Fate/Grand Order`, track Servant classes as within-franchise versions/variants without treating voice credit as biological or historical fact.
+5. In `Oda Cinnamon Nobunaga`, a historical referent → fictional dog (reincarnated character) connection must remain searchable despite species change.
+6. Preserve evidence of the official **Pokémon x Nobunaga's Ambition** crossover, creator/publisher rights, game vs anime boundaries; do not invent Pokémon anime episode appearances.
+7. Cross-media adaptions of the *same fictional work* (e.g. anime/drama/film of *Nobunaga Concerto*) must link to their originating manga but not to unrelated works with Nobunaga in title.
+8. Preserve historical source provenance and note fictional invention instead of treating anime narrative events as historical claims.
+9. This is an engineering ACCEPTANCE CASE, not proof the present AniDB ID-based MCP supports character or historical-person lookup. Keep future-provider metadata explicitly separated from existing implemented tools.
+
+### Reference sources (official / primary where available)
+
+- https://jref.com/articles/oda-nobunaga-1534-1582.674/ (historical overview and kanji, 1534–1582)
+- https://www.honnoji.co.jp/en/history/ (Honnō-ji temple history)
+- https://www.crunchyroll.com/series/GR09Q10GR/ninja-girl--samurai-master (Nobunaga no Shinobi anime)
+- https://www.capcom.co.jp/ir/english/news/html/e120616.html (Capcom; 2012 live-action *Sengoku BASARA* actor GACKT)
+- https://arcade.fate-go.jp/servant/detail/ (Fate/Grand Order Arcade's official Archer Nobunaga CV Rie Kugimiya)
+- https://www.crunchyroll.com/series/G6JQK7D5R/The-Ambition-of-Oda-Nobuna (alternate-history female counterpart)
+- https://www.crunchyroll.com/series/GRJ0XX20Y/oda-cinnamon-nobunaga (historical lord reincarnated as dog)
+- https://www.fujitv.com/animation/nobunaga-concerto/ (Saburō/Nobunaga swap; anime drama feature-film)
+- https://www.fujicreative.co.jp/forBuyers/drama/nobunaga-concerto-2/ (live-action drama, actor and plot)
+- https://www.crunchyroll.com/news/features/2017/7/23/time-traveling-slacker-conquers-japan-in-nobunaga-concerto (Drifters and other Nobunaga anime manifestations)
+- https://www.koeitecmoamerica.com/nobunaga/awakening/ (Nobunaga's Ambition official game)
+- https://www.pokemon.com/uk/pokemon-video-games/pokemon-conquest (Pokémon Conquest official game, Nobunaga with Zekrom)
+- https://www.nintendo.com/en-gb/Games/Nintendo-DS/Pokemon-Conquest-523602.html (Nintendo Nobunaga in Ransei)
+- https://iwataasks.nintendo.com/interviews/3ds/pokemonmysterydungeon-gti/0/0/ (Nintendo interview confirms Pokémon × Nobunaga's Ambition cross-franchise production)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
