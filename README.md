@@ -95,6 +95,20 @@ WeebMoeNexus intentionally does **not** scrape AniDB pages. Requests go through 
 
 The default HTTP spacing is 2.5 seconds. Do not lower it below 2 seconds.
 
+## Official AniDB title dump cache
+
+AniDB publishes an **official public title list** at `https://anidb.net/api/anime-titles.xml.gz` (see [AniDB dump XML specification](https://wiki.anidb.net/User:Eloyard/anititles_dump)). We never scrape title search pages.
+
+A manual cache refresh is available:
+
+```bash
+npm run titles:refresh
+```
+
+It downloads over HTTPS into `.cache/anidb/anime-titles.xml.gz`, validates bounded gzip/XML structure, and writes atomically. The local cached file is reused for at least **48 hours** by default; the code will not accept a refresh interval shorter than **36 hours**. Set `ANIDB_TITLE_DUMP_CACHE_PATH` to choose a persistent writable cache location for deployment. On refresh failures the last valid copy survives, reported as **stale** (the manual command exits unsuccessfully to signal an operational warning). Ordinary CI uses synthetic, local fixtures, and **never downloads the real AniDB dump**.
+
+**Status:** The official-dump downloader and disk cache are implemented and tested. **Title parsing/indexing and `search_anime` remain upcoming phases (P2-02 onward).** The tool does not yet automatically fetch/refresh at MCP startup or return search results. The cached dump contains only public title metadata, not characters, image frames or episode content.
+
 ## Plugin packaging
 
 This repository includes a portable `plugin.json` identity manifest. A root `mcp.json` will be added when we have a stable deployed HTTPS `/mcp` endpoint instead of checking in a fake deployment URL.
