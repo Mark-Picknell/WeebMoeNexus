@@ -551,6 +551,50 @@ Distinct fictional transformations and medium paths:
 - https://www.nintendo.com/en-gb/Games/Nintendo-DS/Pokemon-Conquest-523602.html (Nintendo Nobunaga in Ransei)
 - https://iwataasks.nintendo.com/interviews/3ds/pokemonmysterydungeon-gti/0/0/ (Nintendo interview confirms Pokémon × Nobunaga's Ambition cross-franchise production)
 
+## GQ-015 — "Bungo": romanization, historical region, baseball given name, and multiple writer-identity anime
+
+> Bungo
+
+**User challenge (2026-10-09):** After the many fictional variants of historical Oda Nobunaga, Mark suggested the apparently shorter but still ambiguous name **Bungo**, explicitly saying "not as bad but same neighborhood." He has **not yet confirmed** which sense or hidden cross-work relationships he intended. Do not assume that one of the following meanings was *the* answer; the open-world discovery and transparent disambiguation are themselves tests.
+
+### Preserve different Japanese written forms and phonetics
+
+1. **文豪** (ぶんごう, *bungō* / *bungou*) — common Japanese noun meaning **literary master / great writer**, with a **long final vowel**; English anime/game branding often writes "Bungo" without the macron. This is a noun/category, not a unique person's given name.
+2. **豊後** (ぶんご, *Bungo*) — historical **Bungo Province**, in modern Ōita Prefecture, Kyushu, Japan, including the Sengoku-era Ōtomo clan and lord Ōtomo Sōrin. A geographic/toponym entity, not a character or literary profession. Contextual time-period overlap with Oda Nobunaga does not by itself establish any specific direct connection.
+3. **BUNGO―ブンゴ―** (Japanese manga title) — Shueisha/Yūji Ninomiya baseball manga about schoolboy **Bungo Ishihama (石浜文吾)**. Here **文吾** is a male **given name**, *Bungo*, not the literary noun 文豪. Its continuation **BUNGO -unreal-** started in October 2025 and follows the protagonist into high-school baseball; this is a direct sequel/continuation, not an unrelated baseball manga. It is **manga, not documented anime**; do not imply it was animated.
+
+### Literary creators reused in separate fictional IPs
+
+**Bungo Stray Dogs** (文豪ストレイドッグス) — Kadokawa/Atsushi's Yokohama action series: fictional characters **named after** real writers and wielding supernatural abilities often named after their works. Examples: Osamu Dazai → `No Longer Human / 人間失格`, Ryūnosuke Akutagawa → `Rashōmon / 羅生門`, Chūya Nakahara → `For the Tainted Sorrow / 汚れつちまつた悲しみに`. Official cast: Dazai CV **Mamoru Miyano**, Akutagawa CV **Kenshō Ono**, Nakahara CV **Kishō Taniyama**. This series is **not** a historical dramatization of their real activities.
+
+**Bungo and Alchemist: Gears of Judgement** (文豪とアルケミスト ～審判ノ歯車～) — DMM Games' title adapted to anime; historical writers are **reincarnated through alchemy** to rescue threatened literary works from corrupting invaders. Official TV Tokyo cast: Dazai CV **Yūichi Nakamura**, Akutagawa CV **Junichi Suwabe**, Nakahara CV **Tetsuya Kakihara**. These are three distinct fictional versions of the same three historical authors in two separate series, not a licensed *Bungo Stray Dogs* crossover or the same in-universe characters.
+
+**Bonus surname collision:** *Bungo Stray Dogs* contains fictional character **Sakunosuke Oda (織田作之助)**, named after real literary author Sakunosuke Oda; family-name kanji **織田** match historical lord **Oda Nobunaga (織田信長)**. This is an onomastic collision and a valuable lexical discovery, **not** evidence of historical kinship or identical real-world person.
+
+### Acceptance criteria
+
+1. `search("Bungo")` must return **disambiguated senses** across ordinary Japanese vocabulary, region/place, manga title, manga character/given name, and multiple unrelated anime/game works with literary-name themes. The English writing `Bungo` cannot uniquely determine whether the Japanese vowel is long or short.
+2. `文豪` should rank **literary profession/category** and *Bungō*-titled IPs; `豊後` should rank the **historical province**; `文吾` should rank the given-name occurrence; `ブンゴ` should preferentially match the baseball manga **BUNGO**. Normalize romanizations without destroying script-specific distinctions and avoid spelling them all identically in entity canonical names.
+3. `search_person("Osamu Dazai")` should return the real Japanese writer and connect through `inspired_character` / `fictional_portrayal_of` to separate characters in *Bungo Stray Dogs* and *Bungo and Alchemist*. Actor credits belong on each portrayal, not on the historic author.
+4. Model works by writers (`No Longer Human`, `Rashōmon`, `For the Tainted Sorrow`) separately from anime abilities that share their names; document `ability_named_after_work` if source-supported. Do **not** treat a fictional supernatural power as authored literature.
+5. Mark `BUNGO -unreal-` as sequel to the Shueisha baseball series, with a character-level `same_protagonist` continuation edge. It must not be treated as a *Bungo Stray Dogs* spin-off or *Bungo and Alchemist* adaptation.
+6. Keep words' etymology/meaning, geographic-name reuse, creator inspirations, fictional reinterpretations, common family names, and work adaptations as **different relationship types**. Shared spelling does not establish direct connection.
+7. The running WeebMoeNexus MCP currently supports **AniDB anime-by-ID**, not this open-world multilingual disambiguation or character/person graph; treat this as a future golden-query acceptance test, not functioning search.
+
+### Primary sources
+
+- https://kotobank.jp/word/%E6%96%87%E8%B1%AA-623145 (Shogakukan's Japanese dictionary: 文豪 reading ぶんごう, great literary writer)
+- https://www.city.oita.oita.jp/livingguide/en/shokai/index.html (Ōita City government, former Bungo and Ōtomo history)
+- https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-890189-3 (publisher *BUNGO* manga vol. 1)
+- https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-894088-5 (publisher *BUNGO -unreal-* vol. 1; 石浜文吾, given-name kanji)
+- https://jpu.dc2007.com/manga/bungo_unreal/ (publisher Young Jump site; continuation and start date)
+- https://www.kadokawa.co.jp/topics/2781/ (Kadokawa 2019 anime press release; real-author names as fictional power wielders; example of literary-title abilities)
+- https://promo.kadokawa.co.jp/bungo/character/ (Kadokawa official character roster and supernatural ability titles)
+- https://www.bungo-stray-dogs.jp/staff-and-cast/ (official Bungo Stray Dogs voice cast)
+- https://www.tv-tokyo.co.jp/anime/bungo-alchemist/story/ (official anime premise)
+- https://www.tv-tokyo.co.jp/anime/bungo-alchemist/staff/ (official anime voice cast)
+- https://bungo-stray-dogs.jp/tv/character/?character=oda-sakunosuke (official fictional Oda Sakunosuke)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
