@@ -332,6 +332,46 @@ Sources:
 - https://overflow.cf-anime.com/goods/ (official *Overflow* goods page identifies *Araiya-san!* as the original source of the song)
 - https://www.imdb.com/title/tt14962432/fullcredits/ (additional music credit for Ringo Aoba in *Overflow*)
 
+## GQ-010 — Ambiguous adult/anime name is not a genre restriction
+
+> Euphoria
+>
+> Ofureru
+
+**User correction (2026-10-08):** Mark emphasized that both inputs have non-hentai and related non-anime media, revealing a search failure: early analysis overfocused on adult animation and took a plausible genre match as if it exhausted the name and relationship space. The exact intended identity of `Ofureru` remains unconfirmed.
+
+### Confirmed examples of broader discovery
+
+**Euphoria** is highly ambiguous across unrelated works and media:
+
+- CLOCKUP's 2011 adult visual novel, its adult OVA, and a related novel are adaptation/media links.
+- **Euphoria (2019 HBO series)** is a **live-action** teen drama starring Zendaya, inspired by an **Israeli television series of the same name** (2012–13). The American series and Israeli original are linked by adaptation; neither is adapted from CLOCKUP's game. These are namesakes, **not one work**.
+- Other live-action films called *Euphoria* and music titles are also independent title collisions, not extensions of the game franchise.
+
+**Ofureru** is still a *hypothesis*, not a resolved canonical anime title:
+
+- The string occurs in romanizations of the subtitle of the adult manga *Overflow ~Iretara Ofureru Kyoudai no Kimochi~*, which was adapted as the 2020 anime *Overflow*.
+- The production had a **standard broadcast version** distinct from its **complete adult edition**. Preserve this difference; source-reported classifications must not be overwritten by a single uniform “hentai” label.
+- The source **manga is non-anime media**, but “not anime” does **not** automatically mean “non-explicit.” Do not assume that a manga adaptation is non-hentai or that the broadcast version is free of mature material.
+- Do not claim *Overflow* is the user's intended match unless confirmed; broader candidate retrieval remains required.
+
+### Acceptance criteria
+
+1. An unqualified `Euphoria` search should expose independently named works in game, animation, live-action television, film, books, and music as relevant to the user's stated scope. Group linked adaptations separately from namesakes.
+2. `Ofureru` should return transparently ranked possible matches and explain whether its string matches a canonical title, subtitle, romanization variant, or other source field.
+3. Both queries should discover relevant **non-anime media** and, if present, **non-explicit editions/works**, while preserving each source's actual content classification.
+4. Do not merge unrelated works because they share a title; do not hide meaningful adaptations because media differ.
+5. Ensure safe default display of metadata and non-explicit previews without erasing age-restriction information.
+6. Where media are outside AniDB's coverage, mark them as external-provider discovery or future adapter work, not as already-resolved AniDB entities.
+
+Sources:
+
+- https://www.hulu.jp/euphoria (Japan's Hulu listing for the unrelated HBO live-action television drama)
+- https://www.unext.co.jp/ja/press-room/euphoria-2026-04-13 (Japanese distributor announcement of HBO television series)
+- https://en.wikipedia.org/wiki/Euphoria_(disambiguation) (scope of namesake works, cross-check individual media as needed)
+- https://www.akibastation.es/2019/11/anime-de-overflow.html (original manga and two anime presentation versions)
+- https://www.animeclick.it/manga/29490/overflow (original source manga information)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
