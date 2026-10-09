@@ -1,38 +1,65 @@
-# Roadmap
+# WeebMoeNexus — Roadmap and Owner-Assigned Task Register
+
+> **Canonical owner-assigned task register · Rebased 2026-10-09**  
+> This is a planning baseline, **not a Git history rebase**. Owner assignments are **proposed by JayMe, pending Mark's approval**. A task is marked complete only when its deliverable is in the repository or an external action has verifiable evidence. The original phase numbers and work items are retained.
+
+## How to read this tracker
+
+- `- [x]` = done/verified; `- [ ]` = not yet verified. A phase heading gains **✅** only when **all required tasks** in that phase are finished. The checked Markdown checkbox is the task status; the emoji in a heading is the phase status. **Do not use ✅ merely because the phase has started.**
+- **Owner = person accountable for executing and reporting the task.** **JayMe:** analysis, code, tests, documentation, PRs/commits where the connector permits. **Mark:** provider/account registration and consent, access/credentials, budgets/hosting decisions, product prioritization and final acceptance. Owner does **not** imply the other person cannot help.
+- External services/accounts and user-owned changes **always require Mark's explicit authorization**. JayMe must not claim that an integration, login or deployment is complete unless actually verified.
+- **Evidence ≠ implementation.** GQ-001–GQ-017 in [GOLDEN-QUERIES.md](GOLDEN-QUERIES.md) are documented research/acceptance **cases**, not 17 passing executable test suites and not working character search.
+- The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
+- **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
+
+## Current verified baseline (2026-10-09)
+
+| Phase | Existing completed / existing tasks | State |
+|---|---:|---|
+| 0 — Skeleton | 10 / 10 | ✅ Completed |
+| 1 — AniDB read | 4 / 7 | In progress |
+| 2 — Title search | 0 / 6 | Not implemented |
+| 3 — Relationships | 1 / 9 | Model preservation only |
+| 4 — Cross-provider | 0 / 5 | Not implemented |
+| 5 — Personal context | 0 / 5 | Not implemented |
+| 6 — Complex discovery | 0 / 8 | Acceptance cases only |
+
+**Verification anchors:** `src/server.ts` currently registers only `health` and `get_anime_by_anidb_id`. Offline suites in `test/anidb-client.test.ts` and `test/anidb-mapper.test.ts` supply **five** test cases. [Successful real AniDB smoke test](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270) covered anime **15437**, not all golden queries. This baseline is an audit of the existing roadmap checkmarks, **before** adding the new tracked work below.
+
 
 ## Phase 0 — Skeleton ✅
 
-- [x] Portable plugin manifest
-- [x] MCP TypeScript v2 server
-- [x] Provider/service/domain separation
-- [x] AniDB HTTP client boundary
-- [x] Conservative request pacing
-- [x] In-memory cache
-- [x] XML → normalized anime mapping
-- [x] Fixture-based mapper test
-- [x] Architecture and agent guidance
-- [x] Register public AniDB software project (WeebMoeNexus, software ID `22277`)
+- [x] `P0-01` **JayMe** — Portable plugin manifest
+- [x] `P0-02` **JayMe** — MCP TypeScript v2 server
+- [x] `P0-03` **JayMe** — Provider/service/domain separation
+- [x] `P0-04` **JayMe** — AniDB HTTP client boundary
+- [x] `P0-05` **JayMe** — Conservative request pacing
+- [x] `P0-06` **JayMe** — In-memory cache
+- [x] `P0-07` **JayMe** — XML → normalized anime mapping
+- [x] `P0-08` **JayMe** — Fixture-based mapper test
+- [x] `P0-09` **JayMe** — Architecture and agent guidance
+- [x] `P0-10` **Mark** — Register public AniDB software project (WeebMoeNexus, software ID `22277`)
 
 ## Phase 1 — Useful AniDB read path
 
-- [x] Add an AniDB HTTP API client beneath software project `22277` (client ID `32071`)
-- [x] Record official client name `weebmoenexus`, version `1`
-- [x] Verify one real anime read via `AnimeService.getByAniDbId(15437)` with [live GitHub Actions evidence](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270)
-- [ ] Expand fixture coverage for missing/odd AniDB fields
-- [x] Add offline client-identity, cache, and ban-response regression tests
-- [ ] Add structured error codes for not-found, banned, unavailable, outdated, and misconfigured states
-- [ ] Persist cache across restarts
+- [x] `P1-01` **Mark** — Add an AniDB HTTP API client beneath software project `22277` (client ID `32071`)
+- [x] `P1-02` **JayMe** — Record official client name `weebmoenexus`, version `1`
+- [x] `P1-03` **JayMe** — Verify one real anime read via `AnimeService.getByAniDbId(15437)` with [live GitHub Actions evidence](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270)
+- [ ] `P1-04` **JayMe** — Expand fixture coverage for missing/odd AniDB fields
+- [x] `P1-05` **JayMe** — Add offline client-identity, cache, and ban-response regression tests
+- [ ] `P1-06` **JayMe** — Add structured error codes for not-found, banned, unavailable, outdated, and misconfigured states
+- [ ] `P1-07` **JayMe** — Persist cache across restarts
 
 ## Phase 2 — Human title search
 
 Use AniDB's sanctioned anime-title dump instead of scraping/searching pages.
 
-- [ ] Download and cache the title dump on a respectful refresh cadence
-- [ ] Parse titles into a local index
-- [ ] Normalize case, punctuation, romaji, English/Japanese aliases
-- [ ] Implement `search_anime(query, limit)`
-- [ ] Return match evidence, not just a guessed ID
-- [ ] Add fuzzy matching only after deterministic matching is solid
+- [ ] `P2-01` **JayMe** — Download and cache the title dump on a respectful refresh cadence
+- [ ] `P2-02` **JayMe** — Parse titles into a local index
+- [ ] `P2-03` **JayMe** — Normalize case, punctuation, romaji, English/Japanese aliases
+- [ ] `P2-04` **JayMe** — Implement `search_anime(query, limit)`
+- [ ] `P2-05` **JayMe** — Return match evidence, not just a guessed ID
+- [ ] `P2-06` **JayMe** — Add fuzzy matching only after deterministic matching is solid
 
 This is the milestone that makes:
 
@@ -42,15 +69,21 @@ a plausible database workflow instead of a joke.
 
 ## Phase 3 — Relationship exploration
 
-- [ ] `get_related_anime`
-- [ ] `find_character`
-- [ ] `get_character`
-- [x] Preserve AniDB's raw character episode-appearance field (when present; without guessing parsing syntax)
-- [ ] Normalize episode-appearance references and cross-check available source coverage
-- [ ] Verify which episode-level character links MAL exposes via its current supported API
-- [ ] richer creator/seiyuu normalization
-- [ ] relation graph traversal with explicit depth/limit controls
-- [ ] optional graph-oriented UI
+- [ ] `P3-01` **JayMe** — `get_related_anime`
+- [ ] `P3-02` **JayMe** — `find_character`
+- [ ] `P3-03` **JayMe** — `get_character`
+- [x] `P3-04` **JayMe** — Preserve AniDB's raw character episode-appearance field (when present; without guessing parsing syntax)
+- [ ] `P3-05` **JayMe** — Normalize episode-appearance references and cross-check available source coverage
+- [ ] `P3-06` **JayMe** — Verify which episode-level character links MAL exposes via its current supported API
+- [ ] `P3-07` **JayMe** — richer creator/seiyuu normalization
+- [ ] `P3-08` **JayMe** — relation graph traversal with explicit depth/limit controls
+- [ ] `P3-09` **JayMe** — optional graph-oriented UI
+
+### Relationship acceptance and evidence tasks
+
+- [ ] `P3-10` **JayMe** — Implement person and character disambiguation that respects work/title/species/alias constraints (regression: `Viper GTS / Carrera / succubus`, not Tensura Carrera).
+- [ ] `P3-11` **JayMe** — Define typed edges for voice credits, multiple portrayals, adaptation, inherited names, cameos and crossovers, each with source references.
+- [ ] `P3-12` **Mark** — Review/accept how ambiguous candidates and evidence are presented before any UI decisions are locked in.
 
 ### Episode appearance data is sparse
 
@@ -69,33 +102,91 @@ Candidate providers:
 
 Work items:
 
-- [ ] canonical cross-provider identity graph
-- [ ] field-level provenance
-- [ ] conflict representation
-- [ ] provider health/capability registry
-- [ ] source preference policy without erasing dissenting data
+- [ ] `P4-01` **JayMe** — canonical cross-provider identity graph
+- [ ] `P4-02` **JayMe** — field-level provenance
+- [ ] `P4-03` **JayMe** — conflict representation
+- [ ] `P4-04` **JayMe** — provider health/capability registry
+- [ ] `P4-05` **JayMe** — source preference policy without erasing dissenting data
+
+### Source/provider work and approvals
+
+- [ ] `P4-06` **Mark** — Select and authorize which second/third metadata provider(s) to integrate first; define any required access limits/terms.
+- [ ] `P4-07` **JayMe** — Implement approved MAL adapter and its offline contract tests; preserve independent MAL identifiers.
+- [ ] `P4-08` **JayMe** — Implement approved AniList adapter and offline contract tests; preserve independent AniList identifiers.
+- [ ] `P4-09` **JayMe** — Add graph regression fixtures for contradictory provider fields, false name collisions and cross-media links.
+- [ ] `P4-10` **Mark** — Accept provider conflict priorities and document which disagreements remain visible, not silently overwritten.
 
 ## Phase 5 — Personal anime context
 
 Only after authentication is designed properly:
 
-- [ ] watch lists
-- [ ] ratings
-- [ ] status/progress
-- [ ] recommendations grounded in actual list history
-- [ ] explicit write tools with confirmation and clear provider ownership
+- [ ] `P5-01` **JayMe** — watch lists
+- [ ] `P5-02` **JayMe** — ratings
+- [ ] `P5-03` **JayMe** — status/progress
+- [ ] `P5-04` **JayMe** — recommendations grounded in actual list history
+- [ ] `P5-05` **JayMe** — explicit write tools with confirmation and clear provider ownership
+
+### Authentication and permissions are prerequisites
+
+- [ ] `P5-06` **Mark** — Choose/authorize accounts and decide what personal data may be accessed or written.
+- [ ] `P5-07` **JayMe** — Implement per-user authentication/authorization, narrow scopes, secure secret handling and token lifecycle.
+- [ ] `P5-08` **Mark** — Review consent UX and approve explicit write-action confirmations before personal integration is enabled.
 
 ## Phase 6 — Deliciously weird queries
 
 Once the boring substrate is trustworthy:
 
-- [ ] character appearance/aesthetic search
-- [ ] Episode-aware candidate ranking for pause-frame recognition; missing episode metadata must never exclude a character
-- [ ] User-confirmed identification/correction and optional permitted reference-image uploads; retain evidence, provenance, consent/licensing and review status
-- [ ] Feedback quality controls so a single mistaken submission does not silently alter canonical character identities
-- [ ] trope/theme search
-- [ ] “what was that scene/character/anime?” memory reconstruction
-- [ ] relationship-path queries across characters, creators, studios, and works
-- [ ] visual reference workflows where source/licensing permits
+- [ ] `P6-01` **JayMe** — character appearance/aesthetic search
+- [ ] `P6-02` **JayMe** — Episode-aware candidate ranking for pause-frame recognition; missing episode metadata must never exclude a character
+- [ ] `P6-03` **JayMe** — User-confirmed identification/correction and optional permitted reference-image uploads; retain evidence, provenance, consent/licensing and review status
+- [ ] `P6-04` **JayMe** — Feedback quality controls so a single mistaken submission does not silently alter canonical character identities
+- [ ] `P6-05` **JayMe** — trope/theme search
+- [ ] `P6-06` **JayMe** — “what was that scene/character/anime?” memory reconstruction
+- [ ] `P6-07` **JayMe** — relationship-path queries across characters, creators, studios, and works
+- [ ] `P6-08` **JayMe** — visual reference workflows where source/licensing permits
+
+### End-to-end acceptance
+
+- [ ] `P6-09` **JayMe** — Pass GQ-001 semantic-attribute and rank/explanation test without hard-coded character IDs.
+- [ ] `P6-10` **JayMe** — Pass GQ-011–017 name collision, historical portrayal, mascot reuse, creator/crossover, literary identity and Carrera/Viper GTS disambiguation cases.
+- [ ] `P6-11` **Mark** — Review live, human-facing results against his originally intended examples; approve or correct expected behavior.
+
+## Validation track — fixtures, golden cases and release gates
+
+This track runs **alongside** the phases. A completed golden-query **write-up** is not a passing automated golden-query **test**.
+
+- [x] `V-01` **Mark** — Supply the original natural-language discoveries and correct the assistant's mistaken assumptions (Akudama doctor, Macross/Robotech, Plue, Yoshimitsu, Carrera/Viper GTS, etc.).
+- [x] `V-02` **JayMe** — Document **GQ-001–GQ-017** in [GOLDEN-QUERIES.md](GOLDEN-QUERIES.md), including known answers, false joins, evidence and pending capabilities.
+- [x] `V-03` **JayMe** — Implement original offline mapper/client regression suites; **five** current cases, mocked upstream.
+- [x] `V-04` **JayMe** — Verify one registered, conservatively paced AniDB HTTP smoke request for *Akudama Drive* (a15437) and record [successful run](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270).
+- [ ] `V-05` **JayMe** — Convert golden-query specifications into **versioned, licensed/provenanced offline fixtures** and executable expected-results matrices, including negative/unknown cases.
+- [ ] `V-06` **JayMe** — Add deterministic unit/contract tests that explicitly detect known past assistant mistakes (Carrera homonyms, name-order, false credit/kinship, Macross→Robotech omission); tests remain **offline**.
+- [ ] `V-07` **JayMe** — Expand AniDB XML mapper cases for missing title/character/episode fields, adult/restricted metadata, malformed/unexpected data and exact source attribution.
+- [ ] `V-08` **JayMe** — Add tests to CI as features land; distinguish **not implemented**, **test skipped**, **test failed**, and **test passed** in status reporting.
+- [ ] `V-09` **Mark** — Review/accept the answer quality for the reference queries and supply targeted corrections when genuinely needed.
+
+## Delivery track — deployment and ChatGPT/Codex use
+
+These tasks were missing from the original phase list. **No externally reachable MCP endpoint or installed ChatGPT plugin is being claimed**. Do not invent a deployed URL or check in fictitious `mcp.json` settings.
+
+- [x] `D-01` **JayMe** — Record portable `plugin.json` identity and local MCP development instructions.
+- [x] `D-02` **JayMe** — Establish GitHub Actions offline CI and isolate the manual live AniDB smoke test.
+- [ ] `D-03` **Mark** — Approve hosting provider, account permissions, operational budget and public/private access policy.
+- [ ] `D-04` **JayMe** — Deploy secured HTTPS MCP endpoint with appropriate host/origin/auth validation and environment configuration.
+- [ ] `D-05` **JayMe** — Create accurate MCP/plugin deployment manifest (`mcp.json` when supported) referencing a **verified** endpoint.
+- [ ] `D-06` **Mark** — Explicitly connect/install the authorized integration in ChatGPT and, separately, Codex if desired.
+- [ ] `D-07` **JayMe** — Verify ChatGPT/Codex connectivity and read-only calls from the actual client(s), with Mark's participation where required.
+- [ ] `D-08` **JayMe** — Add production diagnostics, cache handling, rate-limit safeguards and deployment/runbook documentation.
+- [ ] `D-09` **Mark** — Perform final user acceptance and authorize release.
+
+## Rebase and handoff
+
+- [x] `R-01` **JayMe** — Audit original roadmap against checked-in code, tests, README, golden cases, manifests and previous successful CI.
+- [x] `R-02` **JayMe** — Add task IDs, owners, evidence conventions, known dependencies and missing validation/deployment work without rewriting Git history.
+- [ ] `R-03` **Mark** — Approve or revise owner assignments and priority order in this proposed baseline.
+- [ ] `R-04` **Mark** — Confirm the next slice: **recommended** `V-05` fixture matrix + `P1-04` odd-field coverage, then `P2-01` official title dump and `P2-04` `search_anime`.
+- [ ] `R-05` **JayMe** — Begin approved next slice with offline regression tests and commit/code review; do **not** mistake planning for implementation.
+
+**Phase completion protocol:** Mark reviews requirements and final behavior; JayMe supplies commits/tests and links to evidence; tasks are marked `[x]` only after verification. A phase gains ✅ only when its task list's required items are checked and Mark accepts its exit criteria. If a feature is deliberately deferred, move it to an explicit deferred/backlog section **before** calling the phase complete; never mark unbuilt functionality done.
 
 The project name may be WeebMoeNexus. The data model should still be able to survive code review.
