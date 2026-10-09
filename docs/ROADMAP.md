@@ -12,7 +12,7 @@
 - The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
 - **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
 
-**Current register after Phase 2 acceptance · 2026-10-09:** **35/87 completed** and **52 outstanding**. Phase 1 remains **5/7**; Phase 2 is now **6/6 ✅** after offline CI and Mark's explicit acceptance ("Reran and approved!"). Phase 0 is also ✅. No live AniDB title-dump fetch or deployed ChatGPT integration is claimed. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
+**Current register after Phase 3 relationship-read slice · 2026-10-09:** **36/87 completed** and **51 outstanding**. Phase 1 remains **5/7**; Phase 2 is **6/6 ✅**, explicitly accepted by Mark. Phase 3 has **2/9 original tasks done** (raw episode field preservation and direct related-anime read); further character/person, graph traversal and cross-provider work remains open. Phase 0 is also ✅. Offline MCP CI passed; hosted ChatGPT connectivity is not claimed. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
 
 **Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. Immediately after this approval, before implementation work, the register had **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
 
@@ -75,7 +75,7 @@ a plausible database workflow instead of a joke.
 
 ## Phase 3 — Relationship exploration
 
-- [ ] `P3-01` **JayMe** — `get_related_anime`
+- [x] `P3-01` **JayMe** — Implement read-only `get_related_anime` for direct AniDB relationship edges, preserving provider relation labels, source/target IDs, optional titles and per-edge source evidence (without reverse-edge inference or target fetches). [Offline MCP integration passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355).
 - [ ] `P3-02` **JayMe** — `find_character`
 - [ ] `P3-03` **JayMe** — `get_character`
 - [x] `P3-04` **JayMe** — Preserve AniDB's raw character episode-appearance field (when present; without guessing parsing syntax)
@@ -195,6 +195,12 @@ Once the boring substrate is trustworthy:
 - **Safety and evidence:** The local `search_anime` MCP tool invokes fuzzy matching **only if exact/normalized matches yield zero results**. Fuzzy results are visibly labeled `matchType: "fuzzy"` with `editDistance` and retain source alias, language, kind, AniDB ID and URL; distinct anime sharing the same source title remain separate candidates. Length-bucket indexing limits candidate comparisons, with source-evidence-preserving deduplication and no external network calls.
 - **Tests:** [test/anidb-title-fuzzy.test.ts](../test/anidb-title-fuzzy.test.ts) covers transpositions, insertion/deletion/substitution, edit thresholds, Macross identity collisions, Japanese-voicing guardrails, source metadata, short-name and unrelated-name rejection, and 1,500-row stress input. [test/mcp-search-anime.test.ts](../test/mcp-search-anime.test.ts) also checks fuzzy results through an in-memory MCP transport. The initial regression run exposed a Unicode regex escaping defect; it was corrected and the [full final CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37977981690).
 - **Phase exit:** `P2-01–P2-06` are implementation-complete. The Phase 2 heading awaits Mark's acceptance under the documented protocol. This is not evidence of live AniDB title-dump ingestion, fuzzy-search precision in the actual full catalog, hosted MCP connectivity, or semantic character/person resolution.
+
+### Completed direct relation lookup slice (2026-10-09)
+
+- **P3-01:** Added [related-anime-service.ts](../src/services/related-anime-service.ts) and exposed `get_related_anime(anidbId)` via the registered MCP server. It uses the existing paced/cached AniDB anime read, projects only direct `relatedanime` assertions, retains each relationship label as supplied, the target ID, any available target title (nullable), and source-evidence URL/time. A target link is a **navigation URL**, not proof of a separate target verification. No inferred inverse edges, cross-work canon joins, relation traversal or linked-target fetches.
+- **Offline evidence:** [test/related-anime.test.ts](../test/related-anime.test.ts) tests directionality, repeated target IDs under separate relationship types, absent title metadata, and matching source provenance. [test/mcp-related-anime.test.ts](../test/mcp-related-anime.test.ts) connects an actual MCP client and server to a mocked AniDB XML response; verifies tool listing, structured output, source-only fetch, source URL/time and cache reuse. [CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355).
+- **Limits:** This is source-reported work-to-work relation metadata only; no character or voice actor search and no broad franchise, historical-person or cameo inference. The recorded Phase 2 acceptance remains separate from any approval of Phase 3.
 
 ## Validation track — fixtures, golden cases and release gates
 
