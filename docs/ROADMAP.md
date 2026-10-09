@@ -1,7 +1,7 @@
 # WeebMoeNexus — Roadmap and Owner-Assigned Task Register
 
 > **Canonical owner-assigned task register · Rebased 2026-10-09**  
-> This is a planning baseline, **not a Git history rebase**. Owner assignments are **proposed by JayMe, pending Mark's approval**. A task is marked complete only when its deliverable is in the repository or an external action has verifiable evidence. The original phase numbers and work items are retained.
+> This is a planning baseline, **not a Git history rebase**. Owner assignments were **approved by Mark on 2026-10-09** and remain **changeable at Mark's discretion**. A task is marked complete only when its deliverable is in the repository or an external action has verifiable evidence. The original phase numbers and work items are retained.
 
 ## How to read this tracker
 
@@ -11,6 +11,8 @@
 - **Evidence ≠ implementation.** GQ-001–GQ-017 in [GOLDEN-QUERIES.md](GOLDEN-QUERIES.md) are documented research/acceptance **cases**, not 17 passing executable test suites and not working character search.
 - The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
 - **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
+
+**Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. After this approval, the complete register has **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
 
 ## Current verified baseline (2026-10-09)
 
@@ -183,8 +185,8 @@ These tasks were missing from the original phase list. **No externally reachable
 
 - [x] `R-01` **JayMe** — Audit original roadmap against checked-in code, tests, README, golden cases, manifests and previous successful CI.
 - [x] `R-02` **JayMe** — Add task IDs, owners, evidence conventions, known dependencies and missing validation/deployment work without rewriting Git history.
-- [ ] `R-03` **Mark** — Approve or revise owner assignments and priority order in this proposed baseline.
-- [ ] `R-04` **Mark** — Confirm the next slice: **recommended** `V-05` fixture matrix + `P1-04` odd-field coverage, then `P2-01` official title dump and `P2-04` `search_anime`.
+- [x] `R-03` **Mark** — Approve or revise owner assignments and priority order in this proposed baseline. **Approved 2026-10-09; future reassignment remains open.**
+- [x] `R-04` **Mark** — Confirm the next slice: **approved** `V-05` fixture matrix + `P1-04` odd-field coverage, then `P2-01` official title dump and `P2-04` `search_anime`. **Accepted 2026-10-09.**
 - [ ] `R-05` **JayMe** — Begin approved next slice with offline regression tests and commit/code review; do **not** mistake planning for implementation.
 
 **Phase completion protocol:** Mark reviews requirements and final behavior; JayMe supplies commits/tests and links to evidence; tasks are marked `[x]` only after verification. A phase gains ✅ only when its task list's required items are checked and Mark accepts its exit criteria. If a feature is deliberately deferred, move it to an explicit deferred/backlog section **before** calling the phase complete; never mark unbuilt functionality done.
