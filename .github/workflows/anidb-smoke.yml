@@ -1,0 +1,44 @@
+name: AniDB first integration smoke
+
+# Only changes to the deliberately isolated smoke-test script automatically
+# trigger live AniDB traffic. No live traffic is performed in ordinary CI.
+on:
+  push:
+    branches: [main]
+    paths:
+      - src/smoke/anidb-smoke.ts
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: anidb-first-smoke
+  cancel-in-progress: false
+
+jobs:
+  one-request-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install
+
+      - name: Compile
+        run: npm run build
+
+      - name: One registered AniDB HTTP anime lookup (no retries)
+        env:
+          ANIDB_CLIENT: weebmoenexus
+          ANIDB_CLIENT_VERSION: "1"
+          ANIDB_MIN_INTERVAL_MS: "5000"
+        run: node dist/smoke/anidb-smoke.js
