@@ -15,10 +15,11 @@
 
 ## Phase 1 — Useful AniDB read path
 
-- [ ] Add an AniDB API client beneath software project `22277`
-- [ ] Record the official client name/version in local configuration
-- [ ] Verify a real `get_anime_by_anidb_id` request manually
+- [x] Add an AniDB HTTP API client beneath software project `22277` (client ID `32071`)
+- [x] Record official client name `weebmoenexus`, version `1`
+- [x] Verify one real anime read via `AnimeService.getByAniDbId(15437)` with [live GitHub Actions evidence](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270)
 - [ ] Expand fixture coverage for missing/odd AniDB fields
+- [x] Add offline client-identity, cache, and ban-response regression tests
 - [ ] Add structured error codes for not-found, banned, unavailable, outdated, and misconfigured states
 - [ ] Persist cache across restarts
 
