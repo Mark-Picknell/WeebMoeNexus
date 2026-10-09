@@ -12,7 +12,7 @@
 - The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
 - **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
 
-**Current register after first engineering slice · 2026-10-09:** **29/87 completed** and **58 outstanding**. Phase 1 is now **5/7** (two remaining: structured errors and persistent cache); Phase 0 remains the only phase with its heading ✅. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
+**Current register after title-cache implementation · 2026-10-09:** **30/87 completed** and **57 outstanding**. Phase 1 is **5/7** (structured errors and persistent cache still open); Phase 2 is **1/6** (title-dump downloader/cache implemented, actual title parser and search still pending). Phase 0 remains the only phase with a ✅ heading. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
 
 **Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. Immediately after this approval, before implementation work, the register had **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
 
@@ -58,7 +58,7 @@
 
 Use AniDB's sanctioned anime-title dump instead of scraping/searching pages.
 
-- [ ] `P2-01` **JayMe** — Download and cache the title dump on a respectful refresh cadence
+- [x] `P2-01` **JayMe** — Implement official HTTPS title-dump download + atomic disk cache with a 48-hour default refresh (36-hour minimum), bounded gzip validation, and offline regression tests. [Verified in CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37967245252); live upstream fetch intentionally not run as part of CI.
 - [ ] `P2-02` **JayMe** — Parse titles into a local index
 - [ ] `P2-03` **JayMe** — Normalize case, punctuation, romaji, English/Japanese aliases
 - [ ] `P2-04` **JayMe** — Implement `search_anime(query, limit)`
@@ -161,6 +161,12 @@ Once the boring substrate is trustworthy:
 - **V-05:** versioned, human-curated [GQ-001–GQ-017 fixture corpus](../test/fixtures/golden-query-cases.json) and [offline matrix validation tests](../test/golden-query-matrix.test.ts) track expected entities, capabilities, required findings, disallowed inference, unverified relationship boundaries and source-document sections. No third-party media payloads are included. See [passed CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37935165084).
 - **R-05:** actual regression-test files were committed, checked by CI and reviewed for coverage; next work is title-dump index **P2-01**, then parsing, matching and production `search_anime`.
 - **Important scope:** fixture-integrity tests prove corpus consistency, **not** that the unresolved natural-language search results pass. All cases explicitly remain `pending_resolver`. **V-06, P2, P3, P4, P6** are still open until matching production capabilities are implemented and exercised.
+
+### Completed title-cache slice (2026-10-09)
+
+- **P2-01:** Added [src/providers/anidb/title-dump.ts](../src/providers/anidb/title-dump.ts) plus an **opt-in** `npm run titles:refresh` CLI. Official `https://anidb.net/api/anime-titles.xml.gz` is downloaded to an ignored local gzip cache, validated before atomic replacement, and reused for at least 36 hours (48-hour default). A verified stale copy survives temporary upstream download failures; failed scheduled/manual refreshes produce a nonzero exit status if stale.
+- **Offline evidence:** Seven local fetch-mock tests in [test/anidb-title-dump.test.ts](../test/anidb-title-dump.test.ts) pass in [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37967245252): first download, persisted reuse, stale fallback, invalid content protection, corrupt-first-download rejection, concurrent-request coalescing, and minimum refresh cadence. **CI deliberately does not make an upstream network call**; a live AniDB dump download has not been claimed.
+- **Still open:** `P2-02` parse the official XML into a title index; `P2-03` normalization; `P2-04` MCP `search_anime`; evidence and fuzzy matching. Work is not done merely because the transport/cache exists.
 
 ## Validation track — fixtures, golden cases and release gates
 
