@@ -12,7 +12,9 @@
 - The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
 - **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
 
-**Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. After this approval, the complete register has **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
+**Current register after first engineering slice · 2026-10-09:** **29/87 completed** and **58 outstanding**. Phase 1 is now **5/7** (two remaining: structured errors and persistent cache); Phase 0 remains the only phase with its heading ✅. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
+
+**Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. Immediately after this approval, before implementation work, the register had **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
 
 ## Current verified baseline (2026-10-09)
 
@@ -47,7 +49,7 @@
 - [x] `P1-01` **Mark** — Add an AniDB HTTP API client beneath software project `22277` (client ID `32071`)
 - [x] `P1-02` **JayMe** — Record official client name `weebmoenexus`, version `1`
 - [x] `P1-03` **JayMe** — Verify one real anime read via `AnimeService.getByAniDbId(15437)` with [live GitHub Actions evidence](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270)
-- [ ] `P1-04` **JayMe** — Expand fixture coverage for missing/odd AniDB fields
+- [x] `P1-04` **JayMe** — Expand fixture coverage for missing/odd AniDB fields
 - [x] `P1-05` **JayMe** — Add offline client-identity, cache, and ban-response regression tests
 - [ ] `P1-06` **JayMe** — Add structured error codes for not-found, banned, unavailable, outdated, and misconfigured states
 - [ ] `P1-07` **JayMe** — Persist cache across restarts
@@ -153,6 +155,13 @@ Once the boring substrate is trustworthy:
 - [ ] `P6-10` **JayMe** — Pass GQ-011–017 name collision, historical portrayal, mascot reuse, creator/crossover, literary identity and Carrera/Viper GTS disambiguation cases.
 - [ ] `P6-11` **Mark** — Review live, human-facing results against his originally intended examples; approve or correct expected behavior.
 
+### Completed first implementation slice (2026-10-09)
+
+- **P1-04 / V-07:** added eight synthetic offline mapper edge-case tests in [test/anidb-edge-cases.test.ts](../test/anidb-edge-cases.test.ts); the new suite covers absent data, Japanese/English alias titles, adult/restricted metadata, irregular episode annotations, absent character episode appearances, related-work links, invalid IDs and AniDB error payloads. See [passed CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37934962890).
+- **V-05:** versioned, human-curated [GQ-001–GQ-017 fixture corpus](../test/fixtures/golden-query-cases.json) and [offline matrix validation tests](../test/golden-query-matrix.test.ts) track expected entities, capabilities, required findings, disallowed inference, unverified relationship boundaries and source-document sections. No third-party media payloads are included. See [passed CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37935165084).
+- **R-05:** actual regression-test files were committed, checked by CI and reviewed for coverage; next work is title-dump index **P2-01**, then parsing, matching and production `search_anime`.
+- **Important scope:** fixture-integrity tests prove corpus consistency, **not** that the unresolved natural-language search results pass. All cases explicitly remain `pending_resolver`. **V-06, P2, P3, P4, P6** are still open until matching production capabilities are implemented and exercised.
+
 ## Validation track — fixtures, golden cases and release gates
 
 This track runs **alongside** the phases. A completed golden-query **write-up** is not a passing automated golden-query **test**.
@@ -161,9 +170,9 @@ This track runs **alongside** the phases. A completed golden-query **write-up** 
 - [x] `V-02` **JayMe** — Document **GQ-001–GQ-017** in [GOLDEN-QUERIES.md](GOLDEN-QUERIES.md), including known answers, false joins, evidence and pending capabilities.
 - [x] `V-03` **JayMe** — Implement original offline mapper/client regression suites; **five** current cases, mocked upstream.
 - [x] `V-04` **JayMe** — Verify one registered, conservatively paced AniDB HTTP smoke request for *Akudama Drive* (a15437) and record [successful run](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270).
-- [ ] `V-05` **JayMe** — Convert golden-query specifications into **versioned, licensed/provenanced offline fixtures** and executable expected-results matrices, including negative/unknown cases.
+- [x] `V-05` **JayMe** — Convert golden-query specifications into **versioned, licensed/provenanced offline fixtures** and executable expected-results matrices, including negative/unknown cases.
 - [ ] `V-06` **JayMe** — Add deterministic unit/contract tests that explicitly detect known past assistant mistakes (Carrera homonyms, name-order, false credit/kinship, Macross→Robotech omission); tests remain **offline**.
-- [ ] `V-07` **JayMe** — Expand AniDB XML mapper cases for missing title/character/episode fields, adult/restricted metadata, malformed/unexpected data and exact source attribution.
+- [x] `V-07` **JayMe** — Expand AniDB XML mapper cases for missing title/character/episode fields, adult/restricted metadata, malformed/unexpected data and exact source attribution.
 - [ ] `V-08` **JayMe** — Add tests to CI as features land; distinguish **not implemented**, **test skipped**, **test failed**, and **test passed** in status reporting.
 - [ ] `V-09` **Mark** — Review/accept the answer quality for the reference queries and supply targeted corrections when genuinely needed.
 
@@ -187,7 +196,7 @@ These tasks were missing from the original phase list. **No externally reachable
 - [x] `R-02` **JayMe** — Add task IDs, owners, evidence conventions, known dependencies and missing validation/deployment work without rewriting Git history.
 - [x] `R-03` **Mark** — Approve or revise owner assignments and priority order in this proposed baseline. **Approved 2026-10-09; future reassignment remains open.**
 - [x] `R-04` **Mark** — Confirm the next slice: **approved** `V-05` fixture matrix + `P1-04` odd-field coverage, then `P2-01` official title dump and `P2-04` `search_anime`. **Accepted 2026-10-09.**
-- [ ] `R-05` **JayMe** — Begin approved next slice with offline regression tests and commit/code review; do **not** mistake planning for implementation.
+- [x] `R-05` **JayMe** — Begin approved next slice with offline regression tests and commit/code review; do **not** mistake planning for implementation.
 
 **Phase completion protocol:** Mark reviews requirements and final behavior; JayMe supplies commits/tests and links to evidence; tasks are marked `[x]` only after verification. A phase gains ✅ only when its task list's required items are checked and Mark accepts its exit criteria. If a feature is deliberately deferred, move it to an explicit deferred/backlog section **before** calling the phase complete; never mark unbuilt functionality done.
 
