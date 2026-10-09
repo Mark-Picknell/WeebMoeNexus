@@ -11,7 +11,9 @@ export interface AnimeTitleCandidate {
   matchedTitle: string;
   matchedLanguage: string;
   matchedKind: string;
-  matchType: "exact" | "normalized";
+  matchType: "exact" | "normalized" | "fuzzy";
+  /** Present only for fuzzy results; a measured character edit distance. */
+  editDistance?: number;
   sourceUrl: string;
 }
 
@@ -22,8 +24,9 @@ export interface AnimeTitleSearchResult {
 }
 
 /**
- * Deterministic title matching only: no invented romaji, fuzzy results,
- * character search, or HTTP calls. One candidate per distinct AniDB ID.
+ * Exact and normalized aliases take priority over conservative fuzzy fallback.
+ * No invented romanization, character search, or HTTP calls.
+ * One candidate per distinct AniDB ID.
  */
 export function searchAniDbTitles(
   index: AniDbTitleIndex,
@@ -41,7 +44,8 @@ export function searchAniDbTitles(
   const byId = new Map<number, AnimeTitleCandidate>();
   const add = (
     hit: AniDbExactTitleMatch,
-    matchType: AnimeTitleCandidate["matchType"]
+    matchType: AnimeTitleCandidate["matchType"],
+    editDistance?: number
   ) => {
     // Source titles may duplicate and normalize to identical values;
     // keep a single anime with the strongest available match.
@@ -53,6 +57,7 @@ export function searchAniDbTitles(
       matchedLanguage: hit.matchedTitle.language,
       matchedKind: hit.matchedTitle.kind,
       matchType,
+      ...(editDistance === undefined ? {} : { editDistance }),
       sourceUrl: `https://anidb.net/anime/${hit.anidbId}`
     });
   };
@@ -60,12 +65,22 @@ export function searchAniDbTitles(
   // The two passes make literal matches outrank normalized matches.
   for (const hit of index.findExactTitle(trimmed)) add(hit, "exact");
   for (const hit of index.findNormalizedTitle(trimmed)) add(hit, "normalized");
+  // Only use typo tolerance when no deterministic alias matched at all:
+  // do not pollute exact results with superficially similar identities.
+  if (byId.size === 0) {
+    for (const hit of index.findFuzzyTitle(trimmed)) {
+      add(hit, "fuzzy", hit.editDistance);
+    }
+  }
 
   // Within a given match class the result ordering is source-independent and
   // stable across dump reorderings. Never rank synonyms as proof of identity.
   const ordered = [...byId.values()].sort((a, b) => {
-    if (a.matchType !== b.matchType) {
-      return a.matchType === "exact" ? -1 : 1;
+    const rank = { exact: 0, normalized: 1, fuzzy: 2 } as const;
+    if (a.matchType !== b.matchType) return rank[a.matchType] - rank[b.matchType];
+    if (a.matchType === "fuzzy" && b.matchType === "fuzzy") {
+      const difference = (a.editDistance ?? 4) - (b.editDistance ?? 4);
+      if (difference !== 0) return difference;
     }
     return a.anidbId - b.anidbId;
   });
