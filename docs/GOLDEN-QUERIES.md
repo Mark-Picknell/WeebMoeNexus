@@ -378,7 +378,7 @@ Sources:
 
 > Yoshimitsu
 
-**User candidate (2026-10-09):** Mark suggested Yoshimitsu as a character who crosses apparently different media and franchises. His precise intended surprise has not been explicitly confirmed. The research finds a stronger issue than a shared cameo: the name refers to **multiple individual people, a succession title, and a named weapon**.
+**Clarified user test (2026-10-09):** Mark was testing whether the bare name `Yoshimitsu` would remain trapped in *Tekken/Soulcalibur* results, rather than branching to **real Japanese people's names**, possibly given names or surnames. He did not intend to imply a secret historical link to the game character. Game lore, inherited identity, and sword connections below are *independent research findings*, not a retroactive statement of his assignment. The query is intentionally under-specified and must surface different entity types.
 
 Entities / relationships to keep distinct:
 
@@ -422,13 +422,19 @@ Sources:
 
 > Ashikaga Yoshimitsu
 
-**Follow-up to GQ-011 (2026-10-09):** Mark supplied the historical name **Ashikaga Yoshimitsu**, adding a separate ambiguity to the previously tested *Tekken/Soulcalibur* Yoshimitsu. Treat this as a historical-person search and discover the cross-media depictions; do **not** invent kinship, namesake inspiration, or an in-universe succession relationship with Bandai Namco's fighting-game character.
+**Follow-up to GQ-011 (2026-10-09), clarified by Mark:** He supplied **Ashikaga Yoshimitsu**, then **Awataguchi Yoshimitsu** and **Minamoto no Yoshimitsu**, to check if a search engine for the name `Yoshimitsu` considers **real Japanese names** instead of assuming every result is about video games. Treat these as historically distinct personal names, not clues implying they were associated with the *Tekken/Soulcalibur* character. The anime portrayals below are independently useful discoveries, **not** what Mark was secretly asking us to discover.
 
 ### Different names under the same Roman letters
 
 - **足利義満** (Ashikaga Yoshimitsu; Japanese given name **義満**), historical third Ashikaga shōgun (1358–1408), a well-documented Muromachi-era political and cultural figure.
 - **吉光** (Yoshimitsu), the *Tekken* / *Soulcalibur* fictional Manji fighter's name and the name of the inherited cursed sword. The Japanese script and component kanji **differ** even though the Romanized reading is the same. This is homophony/name-collision, not an alias for the shogun.
 - The historical person lived centuries before *Tekken*'s modern setting and decades before the earliest fictional *Soulcalibur* setting; chronological overlap cannot establish ancestry or character identity. At present there is **no verified official claim** that Namco/Bandai Namco named its Yoshimitsu after Ashikaga Yoshimitsu. Omit that proposed link unless credible evidence emerges.
+
+### Additional historical name matches, not video-game links
+
+- **Awataguchi Yoshimitsu / 粟田口吉光**, a Kamakura-era swordsmith known for blades signed 吉光. This **shares the written name characters** with the fictional *Tekken* fighter, but the shared name does **not** establish any historical inspiration, bloodline, or continuity. Awataguchi identifies his tradition/location; do not force the phrase into modern Western given-name/surname fields without evidence.
+- **Minamoto no Yoshimitsu / 源義光**, a Heian-era warrior known as Shinra Saburō. His personal name 義光 differs in kanji from both the swordsmith's 吉光 and Ashikaga Yoshimitsu's 義満. The `Minamoto no` clan-name form should be indexed according to Japanese historical naming conventions, not a naive first-name/last-name split.
+- **Question about surnames:** Yoshimitsu may occur in different name positions and naming systems; search should identify documented personal-name usage, then label given-name vs family-name status **per entity with evidence** instead of inferring it from Latin word position.
 
 ### Real historical person portrayed in anime
 
@@ -440,7 +446,7 @@ Sources:
 
 - `search_person("Ashikaga Yoshimitsu")` resolves the historical person as a different entity from `search_character("Yoshimitsu")`.
 - Japanese input `足利義満` and `義満` should provide strong direct matches for the shōgun. `吉光` should directly resolve the fictional game persona / title or weapon, NOT the shōgun, despite shared kana reading.
-- `Yoshimitsu` by itself should return disambiguated groups including **historical people**, **fictional individuals and inherited mantles**, and **items named Yoshimitsu**, rather than blindly selecting the fighting-game character or shōgun.
+- `Yoshimitsu` by itself should return disambiguated groups including **historical people (Ashikaga, Awataguchi, Minamoto)**, **fictional individuals and inherited mantles**, and **items named Yoshimitsu**, rather than blindly selecting the fighting-game character or shōgun. This is the user's actual acceptance test.
 - Represent historical-person **depicted_as** fictional portrayals in separate works; map each portrayal to its actor/voice actor, not to the historical person as if they literally had a voice actor.
 - Distinguish `shared_name/pronunciation` (linguistic), `portrayal_of` (media representation), `succession/inherited_title` (in-fiction), `inspired_by` (requires documented authorial evidence), and `appears_in` (production role).
 - The first release of WeebMoeNexus is an AniDB anime-by-ID client; these are requirements for later title/person/character/cross-provider adapters, not working MCP searches.
