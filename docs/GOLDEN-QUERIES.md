@@ -374,6 +374,50 @@ Sources:
 - https://www.akibastation.es/2019/11/anime-de-overflow.html (original manga and two anime presentation versions)
 - https://www.animeclick.it/manga/29490/overflow (original source manga information)
 
+## GQ-011 — Yoshimitsu: character vs inherited mantle vs cursed weapon across franchises
+
+> Yoshimitsu
+
+**User candidate (2026-10-09):** Mark suggested Yoshimitsu as a character who crosses apparently different media and franchises. His precise intended surprise has not been explicitly confirmed. The research finds a stronger issue than a shared cameo: the name refers to **multiple individual people, a succession title, and a named weapon**.
+
+Entities / relationships to keep distinct:
+
+1. **TEKKEN** (1994 onward): the modern Yoshimitsu is leader of the Manji Clan, uses Manji Ninjutsu, and wields the cursed blade Yoshimitsu. The official *Tekken 8* biography explicitly says both the weapon and clan leadership pass between generations of Manji heads. His reinforced armor is upgraded by Dr. Bosconovitch.
+2. **Soulcalibur** (series begins 1998, story set centuries before modern Tekken): a historical Yoshimitsu is clan leader in the 16th century. In the original *Soulcalibur V* continuity, **Yoshimitsu II** kills/succeeds his mentor **Yoshimitsu I**, inheriting the name, status and cursed sword. These are explicitly separate people. Source cites published *Soulcalibur V* profile text via the character archives.
+3. **Soulcalibur VI** is a reimagined/rebooted timeline, returning to the earlier historical Yoshimitsu. An identity graph must distinguish timeline/reimagining from a new person's succession.
+4. **Yoshimitsu the sword** is also the proper name of a cursed blade passed along with the succession title, not merely a prop whose name coincides with the owner's. Model it as an item/weapon entity.
+5. **Crossover appearance and transmedia:** *Street Fighter X Tekken* includes Yoshimitsu as a playable crossover fighter. *Tekken: The Motion Picture* (1998 animated OVA) and *Tekken: Bloodline* (2022 anime) include brief Yoshimitsu appearances. The 2009 live-action *Tekken* film depicts him in another continuity. Crossover guest roles, adaptations, and succession are distinct relation types.
+6. **Release order vs fictional chronology:** Yoshimitsu debuted in *Tekken* before he appeared in *Soulcalibur*, whose **fictional setting** predates modern Tekken by centuries. Do not use in-universe time as release-date sorting, or vice versa.
+
+Graph sketch:
+
+```text
+Yoshimitsu (name / mantle / lineage)
+  ├─ held_by ── Soulcalibur Yoshimitsu I ──[succeeded_by]── Yoshimitsu II
+  ├─ associated_with ── modern Tekken Yoshimitsu (later Manji leader)
+  ├─ represented_by ── Cursed Blade Yoshimitsu (weapon)
+  ├─ associated_with ── Manji Clan / Manji Ninjutsu
+  ├─ appears_in ── Tekken games, Soulcalibur games
+  └─ portrayed_in ── Tekken animation and live-action adaptations
+```
+
+Acceptance:
+
+1. A `search_character("Yoshimitsu")` request returns a **disambiguation group** with historical and modern individuals, inherited mantle, cursed weapon, and canonical game/media appearances.
+2. Avoid falsely asserting one immortal individual fights in both *Soulcalibur* and modern *Tekken*, while surfacing the connection between them prominently.
+3. Represent `succeeded_by`, `member_of`, `uses_weapon`, `appearance_in`, `reboot_version_of`, and `adaptation_portrayal` separately, with credible evidence.
+4. Index game-title characters even though the first WeebMoeNexus provider AniDB covers anime—not games—without claiming the present MCP server already supports this search.
+5. When anime appearance is only a cameo, say so. Do not mislabel *Tekken* as an anime-origin franchise.
+6. Store provenance on individual claims. Historical, modern, reboot, and adapted interpretations are different types of relationship, not mutually exclusive answers.
+
+Sources:
+- https://tekken.com/fighters/yoshimitsu (Bandai Namco official *Tekken 8* biography of modern Manji succession and named sword)
+- https://soulcalibur.fandom.com/wiki/Yoshimitsu/Yoshimitsu_II (*Soulcalibur V* profile transcription of succession ritual, weapon and identity)
+- https://soulcalibur.fandom.com/wiki/Yoshimitsu/New_Timeline (*Soulcalibur VI* reboot timeline)
+- https://tekken.fandom.com/wiki/Yoshimitsu (Tekken/Soulcalibur and crossover relations; check original works)
+- https://tekken.fandom.com/wiki/Tekken:_Bloodline (anime cameo; secondary reference)
+- https://en.wikipedia.org/wiki/Tekken:_The_Motion_Picture (animated OVA appearance; corroborate with direct credits where available)
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.
