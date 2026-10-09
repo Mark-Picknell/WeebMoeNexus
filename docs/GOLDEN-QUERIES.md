@@ -313,7 +313,7 @@ Sources:
 >
 > Ofureru
 
-Research discovery worth testing independently of Mark's undisclosed goal:
+**Independently evidenced relationship, explicitly affirmed as real by Mark (2026-10-08):** This shared-performer link stands alongside the separately confirmed `Ofureru` → *Overflow* title resolution. User confirmation is not a substitute for credit provenance, and does not establish that this was the only intended relationship:
 
 - **Ringo Aoba (青葉りんご)** is credited as **Aozora Ramune (青空ラムネ)** for Nemu Manaka in *euphoria*. The *euphoria* OVA credits Aoba as Nemu and with theme-song vocals.
 - In *Overflow* (2020), episode **5** uses the insert song **恋愛☆洗セーション (Ren'ai Sai Session)** performed by Ringo Aoba and Ayaka Igasaki; this song **originates in the 2019 show** *Araiya-san! Ore to Aitsu ga Onnayu de!?* and is not *Overflow*'s primary theme song.
@@ -325,7 +325,7 @@ Acceptance:
 2. Detect evidence-supported shared performer, with the person's aliases cross-referenced, credit types and *which episode* used the song.
 3. Explain the role of the intervening third show in the song's origin and keep work identity separate.
 4. If music/source detail is absent from provider, report incomplete evidence instead of inventing direct staff or cast relationships.
-5. Check with Mark whether this is the intended hidden connection before rewriting the test as though his goal were already known.
+5. Preserve the user's explicit validation that this is a **real discovered connection**; still distinguish user validation from source evidence, and do not claim it was the only intended hidden connection.
 
 Sources:
 
