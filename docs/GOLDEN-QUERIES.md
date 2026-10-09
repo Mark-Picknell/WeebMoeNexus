@@ -282,7 +282,7 @@ Sources:
 
 > Ofureru
 
-**Current strongest candidate, pending Mark's confirmation:** *Overflow* (おーばーふろぉ), a 2020 adult short-form anime produced by Studio Hōkiboshi.
+**User-confirmed intended resolution:** *Overflow* (おーばーふろぉ), a 2020 adult short-form anime produced by Studio Hōkiboshi. Mark explicitly confirmed on 2026-10-08 that `Ofureru` was his breadcrumb toward *Overflow*; it remains a nonexact, evidence-requiring query.
 
 Retrieval challenge:
 
@@ -290,14 +290,16 @@ Retrieval challenge:
 - It occurs within some Latin-alphabet romanizations of the **extended source manga title**, *Overflow ~Iretara Ofureru Kyoudai no Kimochi~*. Other sources render the phrase `Afureru`; variations in transliteration and Japanese spelling must not be flattened without evidence.
 - The animated series and source manga are related but distinct works; retrieve via token/subtitle/romanization normalization plus `adapted from` relation, with match evidence.
 - The 2020 anime has eight short episodes. Its televised/broadcast presentation and complete adult edition are **release variants of the same production**, to be distinguished when discussing different content, rights, and audio/translation.
-- Competing matches for `Ofureru` are possible. A fragment alone should yield a ranked hypothesis rather than a fabricated exact-match title.
+- Competing matches for `Ofureru` are possible in general. The answer to **this specific user-authored test** is confirmed as *Overflow*, but a production search engine must still rank candidates from source data rather than hard-code Mark's answer.
+- Mark considered using **おーばーふろぉ** instead: this is the anime's stylized Japanese-script title and should resolve via an exact Japanese-script title index, a *separate retrieval path* from the `Ofureru` fragment in the longer source-media subtitle.
 
 Acceptance:
 
-1. `search_anime("Ofureru")` can suggest *Overflow* when supported by indexed extended-title evidence, even when exact short-title matching fails.
+1. `search_anime("Ofureru")` resolves *Overflow* as a well-evidenced candidate via the related source manga's extended title, despite failing exact short-title matching.
 2. Display `matched phrase: Iretara Ofureru ...`, source and title type, confidence / ambiguity, and Japanese-script match where available.
-3. Preserve original manga `adapted into` anime, and broadcast vs full-version release relationships without treating them as new unrelated shows.
-4. Never infer that the two named side-quest works are in one franchise merely because they share adult-content categories.
+3. `search_anime("おーばーふろぉ")` also resolves *Overflow* via the Japanese-script anime title; show that this match is direct while the romanized subtitle fragment requires a different path.
+4. Preserve original manga `adapted into` anime, and broadcast vs full-version release relationships without treating them as new unrelated shows.
+5. Never infer that the two named side-quest works are in one franchise merely because they share adult-content categories.
 
 Sources:
 
@@ -338,7 +340,7 @@ Sources:
 >
 > Ofureru
 
-**User correction (2026-10-08):** Mark emphasized that both inputs have non-hentai and related non-anime media, revealing a search failure: early analysis overfocused on adult animation and took a plausible genre match as if it exhausted the name and relationship space. The exact intended identity of `Ofureru` remains unconfirmed.
+**User correction (2026-10-08):** Mark emphasized that both inputs have non-hentai and related non-anime media, revealing a search failure: early analysis overfocused on adult animation and took a plausible genre match as if it exhausted the name and relationship space. Mark later explicitly confirmed that `Ofureru` was intended to lead to *Overflow*, and said he almost sent the stylized Japanese-script title `おーばーふろぉ` instead.
 
 ### Confirmed examples of broader discovery
 
@@ -348,12 +350,12 @@ Sources:
 - **Euphoria (2019 HBO series)** is a **live-action** teen drama starring Zendaya, inspired by an **Israeli television series of the same name** (2012–13). The American series and Israeli original are linked by adaptation; neither is adapted from CLOCKUP's game. These are namesakes, **not one work**.
 - Other live-action films called *Euphoria* and music titles are also independent title collisions, not extensions of the game franchise.
 
-**Ofureru** is still a *hypothesis*, not a resolved canonical anime title:
+**Ofureru** is a confirmed user-intended *query*, but not the canonical anime title:
 
 - The string occurs in romanizations of the subtitle of the adult manga *Overflow ~Iretara Ofureru Kyoudai no Kimochi~*, which was adapted as the 2020 anime *Overflow*.
 - The production had a **standard broadcast version** distinct from its **complete adult edition**. Preserve this difference; source-reported classifications must not be overwritten by a single uniform “hentai” label.
 - The source **manga is non-anime media**, but “not anime” does **not** automatically mean “non-explicit.” Do not assume that a manga adaptation is non-hentai or that the broadcast version is free of mature material.
-- Do not claim *Overflow* is the user's intended match unless confirmed; broader candidate retrieval remains required.
+- Mark confirmed that *Overflow* is the intended answer for this test. General-purpose retrieval still needs broader candidates and should never treat his confirmed example as proof that every ambiguous query has one unique answer.
 
 ### Acceptance criteria
 
