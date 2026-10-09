@@ -87,6 +87,20 @@ export function mapAniDbAnimeXml(
     title: nullableText(relation)
   }));
 
+  // AniDB supplies production credits as <creators><name id type>.
+  // Keep every source row: one person/company can have multiple roles and
+  // different contributors can share a romanized display name.
+  const creators = list<any>(anime.creators?.name).map((creator) => {
+    const rawId = attr(creator, "id");
+    const id = rawId !== null && /^[1-9]\\d*$/.test(rawId)
+      ? Number(rawId) : null;
+    return {
+      id: id !== null && Number.isSafeInteger(id) ? id : null,
+      name: nullableText(creator),
+      role: attr(creator, "type")
+    };
+  });
+
   const characters = list<any>(anime.characters?.character).map((character) => {
     const seiyuu = character.seiyuu;
     return {
@@ -127,6 +141,7 @@ export function mapAniDbAnimeXml(
     picture: nullableText(anime.picture),
     url: nullableText(anime.url),
     relations,
+    creators,
     characters,
     episodes,
     provenance: [
