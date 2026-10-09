@@ -34,6 +34,16 @@ test("stable character ID reads exactly one member of a work without conflating 
     gender: "female",
     picture: null,
     episodeAppearancesRaw: "1-3",
+    episodeEvidence: {
+      raw: "1-3",
+      parseStatus: "complete",
+      coverage: "unknown",
+      references: ["1", "2", "3"],
+      linkedEpisodeIds: [],
+      unresolvedReferences: ["1", "2", "3"],
+      unparsedTokens: [],
+      sourceEpisodeMetadataCount: 0
+    },
     voiceActor: { id: 88, name: "Sample Performer", picture: "example.jpg" }
   });
   const second = getCharacterInAnime(anime, 502);
@@ -42,6 +52,8 @@ test("stable character ID reads exactly one member of a work without conflating 
   assert.notEqual(second.character?.anidbCharacterId, first.character?.anidbCharacterId);
   assert.equal(second.character?.voiceActor, null);
   assert.equal(second.character?.episodeAppearancesRaw, null);
+  assert.equal(second.character?.episodeEvidence.parseStatus, "unknown");
+  assert.equal(second.character?.episodeEvidence.coverage, "unknown");
   assert.equal(second.character?.gender, null);
 });
 
