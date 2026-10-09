@@ -18,7 +18,7 @@ export function buildServer(): McpServer {
     },
     {
       instructions:
-        "Use WeebMoeNexus for anime metadata and relationship lookup. search_anime matches locally cached AniDB titles and aliases, not character names. Prefer stable IDs when known. AniDB is rate-limited and cached; do not repeatedly call the same lookup just to re-check an unchanged answer."
+        "Use WeebMoeNexus for anime metadata and relationship lookup. search_anime matches locally cached AniDB titles and aliases, with a conservative typo fallback, not character names. Prefer stable IDs when known. AniDB is rate-limited and cached; do not repeatedly call the same lookup just to re-check an unchanged answer."
     }
   );
 
@@ -101,7 +101,7 @@ export function buildServer(): McpServer {
     {
       title: "Search anime by title",
       description:
-        "Search a locally cached AniDB title dump by exact or normalized title, including known Japanese, English and romaji aliases. Returns distinct anime candidates and the matched alias; never searches character names or guesses fuzzy matches. Run 'npm run titles:refresh' to initialize the offline title cache.",
+        "Search a locally cached AniDB title dump by exact and normalized titles (Japanese, English and romaji aliases), falling back to conservative typo matching only when no deterministic alias matches. Returns distinct anime IDs, matched source titles, and edit distance for fuzzy results. Never searches character names. Run 'npm run titles:refresh' to initialize the offline title cache.",
       inputSchema: z.object({
         query: z.string().trim().min(1).max(160).describe("Anime title or title alias"),
         limit: z.number().int().min(1).max(25).default(10)
@@ -116,7 +116,8 @@ export function buildServer(): McpServer {
           matchedTitle: z.string(),
           matchedLanguage: z.string(),
           matchedKind: z.string(),
-          matchType: z.enum(["exact", "normalized"]),
+          matchType: z.enum(["exact", "normalized", "fuzzy"]),
+          editDistance: z.number().int().positive().optional(),
           sourceUrl: z.string().url()
         }))
       }),
@@ -134,7 +135,7 @@ export function buildServer(): McpServer {
           content: [{
             type: "text",
             text: output.totalMatches === 0
-              ? `No locally indexed AniDB title aliases matched "${output.query}". This does not prove the anime does not exist.`
+              ? `No locally indexed AniDB title aliases or conservative typo candidates matched "${output.query}". This does not prove the anime does not exist.`
               : `Found ${output.totalMatches} distinct indexed AniDB anime candidate(s) for "${output.query}" (showing ${output.results.length}).`
           }],
           structuredContent: output
