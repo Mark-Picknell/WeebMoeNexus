@@ -13,7 +13,7 @@ import type { AnimeRecord } from "../domain/anime.js";
 const TYPE_PREFIX: Readonly<Record<number, string>> = {
   1: "", 2: "S", 3: "C", 4: "T", 5: "P", 6: "O"
 };
-const TOKEN = /^([SCTPO]?)([1-9]\d{0,5})$/i;
+const TOKEN = /^([SCTPO]?)(0{0,5}[1-9]\d{0,5})$/i;
 const MAX_REFERENCES = 256;
 const MAX_RAW_LENGTH = 4096;
 
