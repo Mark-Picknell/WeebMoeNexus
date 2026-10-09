@@ -5,6 +5,7 @@ import { animeRecordSchema } from "./domain/anime.js";
 import { AnimeService } from "./services/anime-service.js";
 import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
 import { getRelatedAnimeFromRecord } from "./services/related-anime-service.js";
+import { findCharactersInAnime } from "./services/character-search-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
@@ -207,6 +208,83 @@ export function buildServer(): McpServer {
           content: [{
             type: "text",
             text: error instanceof Error ? error.message : "Unknown AniDB relation lookup failure"
+          }]
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "find_character",
+    {
+      title: "Find a character in a specific AniDB anime",
+      description:
+        "Find source-reported characters by name within ONE known AniDB anime ID. Run search_anime first to resolve the work. Return distinct AniDB character IDs, source anime evidence, optional role/gender/voice actor and raw episode appearance metadata. Supports exact, normalized, prefix and substring names; no guessed aliases, inferred species or cross-series/global character search. A missing result means not reported within this anime response, NOT that the character does not exist.",
+      inputSchema: z.object({
+        anidbId: z.number().int().positive()
+          .describe("AniDB anime ID to scope the character search; resolve work first"),
+        query: z.string().trim().min(2).max(120)
+          .describe("Character's name or part of a name"),
+        limit: z.number().int().min(1).max(25).default(10)
+          .describe("Maximum distinct AniDB character candidates to return")
+      }),
+      outputSchema: z.object({
+        query: z.string(),
+        scope: z.literal("one_anidb_anime"),
+        sourceAnimeId: z.number().int().positive(),
+        sourceAnimeTitle: z.string(),
+        reportedCharacterCount: z.number().int().nonnegative(),
+        totalMatches: z.number().int().nonnegative(),
+        results: z.array(z.object({
+          anidbCharacterId: z.number().int().positive(),
+          characterName: z.string(),
+          characterUrl: z.string().url(),
+          sourceAnimeId: z.number().int().positive(),
+          sourceAnimeTitle: z.string(),
+          sourceAnimeUrl: z.string().url(),
+          evidenceSourceUrl: z.string().url(),
+          retrievedAt: z.string(),
+          matchType: z.enum(["exact", "normalized", "prefix", "contains"]),
+          role: z.string().nullable(),
+          gender: z.string().nullable(),
+          picture: z.string().nullable(),
+          episodeAppearancesRaw: z.string().nullable(),
+          voiceActor: z.object({
+            id: z.number().int().positive().nullable(),
+            name: z.string(),
+            picture: z.string().nullable()
+          }).nullable()
+        }))
+      }),
+      annotations: {
+        readOnlyHint: true,
+        idempotentHint: true,
+        destructiveHint: false,
+        openWorldHint: true
+      }
+    },
+    async ({ anidbId, query, limit }) => {
+      try {
+        // Use the same registered, paced, cached AniDB anime API boundary.
+        // Exactly one specified work is read; never search other series blindly.
+        const anime = await service.getByAniDbId(anidbId);
+        const output = findCharactersInAnime(anime, query, limit);
+        return {
+          content: [{
+            type: "text",
+            text: output.totalMatches === 0
+              ? `No character name matched "${output.query}" among ${output.reportedCharacterCount} character records reported for ${output.sourceAnimeTitle} (AniDB #${anidbId}). This is not proof of absence.`
+              : `Found ${output.totalMatches} distinct character ID candidate(s) named like "${output.query}" in ${output.sourceAnimeTitle} (AniDB #${anidbId}); showing ${output.results.length}.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: error instanceof Error
+              ? error.message : "Unknown scoped character search failure"
           }]
         };
       }
