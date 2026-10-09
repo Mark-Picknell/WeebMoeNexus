@@ -89,6 +89,49 @@ test("real MCP find_character returns only source-scoped characters and retains 
     assert.equal(record.results[0]?.episodeAppearancesRaw, "1,2");
     assert.equal(record.results[1]?.episodeAppearancesRaw, null);
 
+    assert.ok(listed.tools.some(tool => tool.name === "get_character"));
+
+    // Character-ID lookup must operate on the SAME already cached source work,
+    // even when multiple characters share a name.
+    const byId = await client.callTool({
+      name: "get_character",
+      arguments: { anidbId: 1725, characterId: 501 }
+    });
+    assert.notEqual(byId.isError, true);
+    const detail = byId.structuredContent as {
+      found: boolean;
+      requestedCharacterId: number;
+      reportedCharacterCount: number;
+      sourceAnimeId: number;
+      character: {
+        anidbCharacterId: number;
+        name: string;
+        episodeAppearancesRaw: string | null;
+        voiceActor: { name: string } | null;
+      } | null;
+    };
+    assert.equal(detail.found, true);
+    assert.equal(detail.sourceAnimeId, 1725);
+    assert.equal(detail.requestedCharacterId, 501);
+    assert.equal(detail.character?.anidbCharacterId, 501);
+    assert.equal(detail.character?.name, "Carrera");
+    assert.equal(detail.character?.episodeAppearancesRaw, "1,2");
+    assert.equal(detail.character?.voiceActor?.name, "Sample Performer");
+
+    const absentId = await client.callTool({
+      name: "get_character",
+      arguments: { anidbId: 1725, characterId: 9999 }
+    });
+    assert.notEqual(absentId.isError, true);
+    assert.equal((absentId.structuredContent as { found: boolean }).found, false);
+    assert.equal((absentId.structuredContent as { character: unknown }).character, null);
+
+    const invalidId = await client.callTool({
+      name: "get_character",
+      arguments: { anidbId: 1725, characterId: 0 }
+    });
+    assert.equal(invalidId.isError, true);
+
     const japanese = await client.callTool({
       name: "find_character",
       arguments: { anidbId: 1725, query: "カレラ" }
