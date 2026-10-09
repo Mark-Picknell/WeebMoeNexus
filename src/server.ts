@@ -3,10 +3,11 @@ import * as z from "zod/v4";
 import { loadAniDbConfig } from "./config.js";
 import { animeRecordSchema } from "./domain/anime.js";
 import { AnimeService } from "./services/anime-service.js";
+import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
-export function buildServer(): McpServer {
+export function buildServer(titleSearch = new LocalAnimeTitleSearch()): McpServer {
   const server = new McpServer(
     {
       name: "weeb-moe-nexus",
@@ -14,7 +15,7 @@ export function buildServer(): McpServer {
     },
     {
       instructions:
-        "Use WeebMoeNexus for anime metadata and relationship lookup. Prefer stable IDs when known. AniDB is rate-limited and cached; do not repeatedly call the same lookup just to re-check an unchanged answer."
+        "Use WeebMoeNexus for anime metadata and relationship lookup. search_anime matches locally cached AniDB titles and aliases, not character names. Prefer stable IDs when known. AniDB is rate-limited and cached; do not repeatedly call the same lookup just to re-check an unchanged answer."
     }
   );
 
@@ -87,6 +88,61 @@ export function buildServer(): McpServer {
         return {
           isError: true,
           content: [{ type: "text", text: message }]
+        };
+      }
+    }
+  );
+
+  server.registerTool(
+    "search_anime",
+    {
+      title: "Search anime by title",
+      description:
+        "Search a locally cached AniDB title dump by exact or normalized title, including known Japanese, English and romaji aliases. Returns distinct anime candidates and the matched alias; never searches character names or guesses fuzzy matches. Run 'npm run titles:refresh' to initialize the offline title cache.",
+      inputSchema: z.object({
+        query: z.string().trim().min(1).max(160).describe("Anime title or title alias"),
+        limit: z.number().int().min(1).max(25).default(10)
+          .describe("Maximum distinct anime candidates to return")
+      }),
+      outputSchema: z.object({
+        query: z.string(),
+        totalMatches: z.number().int().nonnegative(),
+        results: z.array(z.object({
+          anidbId: z.number().int().positive(),
+          title: z.string(),
+          matchedTitle: z.string(),
+          matchedLanguage: z.string(),
+          matchedKind: z.string(),
+          matchType: z.enum(["exact", "normalized"]),
+          sourceUrl: z.string().url()
+        }))
+      }),
+      annotations: {
+        readOnlyHint: true,
+        idempotentHint: true,
+        destructiveHint: false,
+        openWorldHint: false
+      }
+    },
+    async ({ query, limit }) => {
+      try {
+        const output = await titleSearch.search(query, limit);
+        return {
+          content: [{
+            type: "text",
+            text: output.totalMatches === 0
+              ? `No locally indexed AniDB title aliases matched "${output.query}". This does not prove the anime does not exist.`
+              : `Found ${output.totalMatches} distinct indexed AniDB anime candidate(s) for "${output.query}" (showing ${output.results.length}).`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: error instanceof Error ? error.message : "Unknown title search failure"
+          }]
         };
       }
     }
