@@ -112,7 +112,14 @@ export function mapAniDbAnimeXml(
       episodeAppearancesRaw: nullableText(character.episodes),
       voiceActor: seiyuu
         ? {
-            id: nullableInt(seiyuu["@_id"]),
+            // Seiyuu IDs share AniDB's creator/person namespace; do not
+            // convert invalid/malformed IDs into apparent identity matches.
+            id: (() => {
+              const rawId = attr(seiyuu, "id");
+              if (!rawId || !/^[1-9]\\d*$/.test(rawId)) return null;
+              const parsed = Number(rawId);
+              return Number.isSafeInteger(parsed) ? parsed : null;
+            })(),
             name: text(seiyuu).trim(),
             picture: attr(seiyuu, "picture")
           }
