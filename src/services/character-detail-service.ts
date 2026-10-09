@@ -1,4 +1,5 @@
 import type { AnimeRecord } from "../domain/anime.js";
+import { normalizeCharacterEpisodeAppearances, type CharacterEpisodeEvidence } from "./episode-appearance-service.js";
 
 export interface SourceCharacterDetail {
   anidbCharacterId: number;
@@ -8,6 +9,7 @@ export interface SourceCharacterDetail {
   gender: string | null;
   picture: string | null;
   episodeAppearancesRaw: string | null;
+  episodeEvidence: CharacterEpisodeEvidence;
   voiceActor: {
     id: number | null;
     name: string;
@@ -56,6 +58,7 @@ export function getCharacterInAnime(
     gender: source.gender,
     picture: source.picture,
     episodeAppearancesRaw: source.episodeAppearancesRaw,
+    episodeEvidence: normalizeCharacterEpisodeAppearances(anime, source.episodeAppearancesRaw),
     voiceActor: source.voiceActor
   } : null;
 
