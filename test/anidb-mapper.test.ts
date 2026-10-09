@@ -23,6 +23,7 @@ const fixture = `<?xml version="1.0" encoding="UTF-8"?>
       <name>Doctor Pea</name>
       <gender>female</gender>
       <picture>doctor.jpg</picture>
+      <episodes>1,3,5</episodes>
       <seiyuu id="77" picture="voice.jpg">Voice Actor</seiyuu>
     </character>
   </characters>
@@ -50,7 +51,14 @@ test("maps representative AniDB XML into the normalized domain model", () => {
   });
 
   assert.equal(anime.characters[0]?.name, "Doctor Pea");
+  assert.equal(anime.characters[0]?.episodeAppearancesRaw, "1,3,5");
   assert.equal(anime.characters[0]?.voiceActor?.name, "Voice Actor");
   assert.equal(anime.episodes[0]?.number, "1");
   assert.equal(anime.provenance[0]?.provider, "anidb");
+});
+
+test("preserves absent character episode appearance as unknown, not no appearances", () => {
+  const withoutEpisodeData = fixture.replace("      <episodes>1,3,5</episodes>\n", "");
+  const anime = mapAniDbAnimeXml(withoutEpisodeData);
+  assert.equal(anime.characters[0]?.episodeAppearancesRaw, null);
 });
