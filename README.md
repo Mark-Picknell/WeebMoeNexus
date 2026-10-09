@@ -18,10 +18,11 @@ AniDB provider
 AniDB HTTP API
 ```
 
-The initial MCP surface is deliberately small:
+The read-only MCP surface remains deliberately small:
 
 - `health` — confirms the server is alive and whether AniDB client registration is configured.
 - `get_anime_by_anidb_id` — fetches one anime by AniDB ID, normalizes the XML, caches it, and returns structured content with provenance.
+- `search_anime` — searches the **previously downloaded local AniDB title index** for exact or normalized title and aliases; returns distinct AniDB anime IDs, matched title/language/kind, match type and source URL. It does **not** search character names or make network calls.
 
 ## Why this shape?
 
@@ -107,7 +108,17 @@ npm run titles:refresh
 
 It downloads over HTTPS into `.cache/anidb/anime-titles.xml.gz`, validates bounded gzip/XML structure, and writes atomically. The local cached file is reused for at least **48 hours** by default; the code will not accept a refresh interval shorter than **36 hours**. Set `ANIDB_TITLE_DUMP_CACHE_PATH` to choose a persistent writable cache location for deployment. On refresh failures the last valid copy survives, reported as **stale** (the manual command exits unsuccessfully to signal an operational warning). Ordinary CI uses synthetic, local fixtures, and **never downloads the real AniDB dump**.
 
-**Status:** The official-dump downloader, disk cache, local parser/index and **deterministic normalized alias lookup (P2-01–P2-03)** are implemented and tested offline. The manual refresh also reports the number of indexed anime and title variants. `AniDbTitleIndex` preserves original language, title kind, source AniDB IDs, and both exact and normalized title collisions. `findNormalizedTitle(query)` handles case, full-width characters, punctuation, whitespace, supplied Japanese/English/romaji aliases, and two conservative keys for macron-bearing romaji. **It does not translate Japanese titles or invent unseen aliases.** **The MCP `search_anime` endpoint (P2-04), exposed match evidence (P2-05) and fuzzy matching (P2-06) are not implemented.** The server does not automatically refresh the dump on startup. The cached dump contains only public title metadata, not characters, image frames or episode content.
+**Status:** The official-dump downloader/cache, local parser/index, deterministic normalized alias lookup and **`search_anime` MCP endpoint (P2-01–P2-05)** are implemented and tested offline. `findNormalizedTitle(query)` handles case, full-width Unicode, punctuation, whitespace, source-supplied Japanese/English/romaji aliases and conservative macron keys without inventing translations. Results deduplicate aliases for the same AniDB ID, but preserve different anime with the same title; each result includes the original matched title, language, title kind, exact/normalized match type and an AniDB source URL. **Fuzzy matching (P2-06), character/person searches, and automatic background index refresh are not implemented.** The title cache must first be populated with `npm run titles:refresh`; `search_anime` reads local files only and returns an actionable error if none exists. The dump contains public title metadata, not characters, image frames or episodes.
+
+### Local MCP search example
+
+After `npm run titles:refresh`, call the read-only MCP tool:
+
+```json
+{"name":"search_anime","arguments":{"query":"Macross","limit":10}}
+```
+
+Results contain the **total number of distinct anime IDs**, even when `limit` truncates the returned list. An absent title is reported as **not found in the local index**, never as proof no such anime exists. Searches are deterministic exact/normalized aliases only; no upstream search request or fuzzy guessing. The tool is available in the locally running MCP server, not yet deployed as a hosted ChatGPT connector.
 
 ## Plugin packaging
 
