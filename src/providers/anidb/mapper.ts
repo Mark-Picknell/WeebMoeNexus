@@ -92,7 +92,7 @@ export function mapAniDbAnimeXml(
   // different contributors can share a romanized display name.
   const creators = list<any>(anime.creators?.name).map((creator) => {
     const rawId = attr(creator, "id");
-    const id = rawId !== null && /^[1-9]\\d*$/.test(rawId)
+    const id = rawId !== null && /^[1-9]\d*$/.test(rawId)
       ? Number(rawId) : null;
     return {
       id: id !== null && Number.isSafeInteger(id) ? id : null,
@@ -116,7 +116,7 @@ export function mapAniDbAnimeXml(
             // convert invalid/malformed IDs into apparent identity matches.
             id: (() => {
               const rawId = attr(seiyuu, "id");
-              if (!rawId || !/^[1-9]\\d*$/.test(rawId)) return null;
+              if (!rawId || !/^[1-9]\d*$/.test(rawId)) return null;
               const parsed = Number(rawId);
               return Number.isSafeInteger(parsed) ? parsed : null;
             })(),
