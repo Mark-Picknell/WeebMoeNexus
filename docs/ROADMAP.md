@@ -12,7 +12,7 @@
 - The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
 - **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
 
-**Current register after title-normalization implementation · 2026-10-09:** **32/87 completed** and **55 outstanding**. Phase 1 remains **5/7**; Phase 2 is now **3/6** (official dump/cache, title index and normalization completed; MCP search, match evidence and fuzzy lookup still pending). Phase 0 remains the only phase with a ✅ heading. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
+**Current register after MCP title search implementation · 2026-10-09:** **34/87 completed** and **53 outstanding**. Phase 1 remains **5/7**; Phase 2 is now **5/6** (official dump/cache, title index, normalization, local MCP search and match evidence completed; fuzzy matching still pending). Phase 0 remains the only phase with a ✅ heading. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
 
 **Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. Immediately after this approval, before implementation work, the register had **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
 
@@ -61,8 +61,8 @@ Use AniDB's sanctioned anime-title dump instead of scraping/searching pages.
 - [x] `P2-01` **JayMe** — Implement official HTTPS title-dump download + atomic disk cache with a 48-hour default refresh (36-hour minimum), bounded gzip validation, and offline regression tests. [Verified in CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37967245252); live upstream fetch intentionally not run as part of CI.
 - [x] `P2-02` **JayMe** — Parse the cached AniDB XML into a local index keyed by AniDB ID and exact title, preserving language, alias type and same-name collisions. [Offline CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37967851520).
 - [x] `P2-03` **JayMe** — Normalize case, punctuation, full-width Unicode and source-supplied Japanese/English/romaji aliases; support conservative macron keys while preserving original spellings and same-name collisions. [Offline tests passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37971913555).
-- [ ] `P2-04` **JayMe** — Implement `search_anime(query, limit)`
-- [ ] `P2-05` **JayMe** — Return match evidence, not just a guessed ID
+- [x] `P2-04` **JayMe** — Implement read-only MCP `search_anime(query, limit)` against the local cached AniDB title index, with bounded inputs, deterministic results, and actionable missing-cache errors. [MCP client integration CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37976829986).
+- [x] `P2-05` **JayMe** — Return original matched title, language, title kind, exact/normalized classification, AniDB source URL, and total distinct candidates, retaining same-name anime as separate results. [Validated by offline MCP and service tests](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37976829986).
 - [ ] `P2-06` **JayMe** — Add fuzzy matching only after deterministic matching is solid
 
 This is the milestone that makes:
@@ -178,7 +178,14 @@ Once the boring substrate is trustworthy:
 
 - **P2-03:** Added [title-normalization.ts](../src/providers/anidb/title-normalization.ts) and `AniDbTitleIndex.findNormalizedTitle()`. Stable Unicode/case/punctuation/width normalization and conservative romaji macron keys match **source-provided** Japanese, English and romanized aliases while preserving AniDB ID, original title, source language and kind. Distinct anime with colliding normalized titles remain separate hits; no invented transliteration or implicit character identity.
 - **Offline evidence:** [test/anidb-title-normalization.test.ts](../test/anidb-title-normalization.test.ts) checks Japanese voiced kana, fullwidth/halfwidth, romaji macrons, whitespace/punctuation folding, alternate anime with the same title, unchanged exact lookups, and preservation of multiple source aliases. [CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37971913555).
-- **Not yet complete:** MCP `search_anime` endpoint (`P2-04`), ranked match evidence (`P2-05`), and later fuzzy search (`P2-06`). Index lookups are local library operations only.
+- **Since completed:** `P2-04` local MCP `search_anime` and `P2-05` explicit source alias/match evidence now pass an in-memory protocol integration test. **Still open:** `P2-06` fuzzy matching; no character name/attribute search or hosted connector is claimed.
+
+### Completed local MCP title-search slice (2026-10-09)
+
+- **P2-04:** Added [title-search-service.ts](../src/services/title-search-service.ts) and registered read-only `search_anime(query, limit)` in [server.ts](../src/server.ts). The tool loads the local AniDB gzip dump lazily, reuses its parsed index until the file changes, and provides bounded query/limit and clear local-cache-missing errors. This **does not** fetch or search AniDB over the network during MCP calls.
+- **P2-05:** Result items preserve the original matching alias, language, title kind, exact/normalized match classification, stable AniDB ID, and source URL. Multiple aliases of the same anime are deduplicated; identically named *different* anime remain separate candidates. Total distinct count is available even when a limit hides some results.
+- **Offline evidence:** [test/anidb-title-search.test.ts](../test/anidb-title-search.test.ts) covers duplicate aliases, independent same-name anime, source data, Japanese/English/romaji aliases, bounds, missing/corrupt cache, and hot reload. [test/mcp-search-anime.test.ts](../test/mcp-search-anime.test.ts) exercises **real MCP tool listing and invocation** through an in-memory client/server transport, including expected results and invalid input. [CI passed](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37976829986).
+- **Limits:** A local title dump must be created via the opt-in `npm run titles:refresh`. Neither a live dump fetch in CI nor deployed ChatGPT connectivity is claimed. `P2-06` fuzzy lookup and **Phase 3 character/person resolution** remain open.
 
 ## Validation track — fixtures, golden cases and release gates
 
