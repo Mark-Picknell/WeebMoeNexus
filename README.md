@@ -167,6 +167,14 @@ AniDB's per-character `<episodes>` metadata is retained verbatim. `episodeEviden
 
 The limited parser is informed by [AniDB's episode numbering documentation](https://wiki.anidb.net/AniDB_O%27Matic_-_Documentation%3A_Local_file_renaming) and [the independently maintained go-anidb episode-list examples](https://pkg.go.dev/github.com/jessidhia/go-anidb/misc). These references are **not** proof every live AniDB character-field grammar has been verified. [Synthetic offline regression tests](test/episode-appearance.test.ts) and [actual MCP client tests](test/mcp-find-character.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37981588599); real-source corpus validation and full grammar support remain future tasks.
 
+### MAL/Jikan episode-character research (Phase 3, P3-06)
+
+[Read the documented source-capability audit](docs/research/mal-episode-character-capabilities.md).
+
+As of 2026-10-09, **no documented, supported per-episode character appearance link was verified** in the inspected official MAL v2 references or Jikan v4 endpoints. Jikan (a separate third-party MAL-based API) documents anime-level character/voice credits and episode metadata in different endpoints; joining those lists is **not** evidence that every character appears in every episode. The official MAL reference page was inaccessible to direct inspection in this research session, so this is a carefully qualified review, not a universal impossibility claim. Missing or unsupported fields must remain **unknown**, not interpreted as negative appearance data.
+
+No MAL or Jikan credentials, live probes, adapter installation, or provider authorization were requested or performed. The optional second-provider decision remains assigned to Mark (`P4-06`).
+
 ## Plugin packaging
 
 This repository includes a portable `plugin.json` identity manifest. A root `mcp.json` will be added when we have a stable deployed HTTPS `/mcp` endpoint instead of checking in a fake deployment URL.
