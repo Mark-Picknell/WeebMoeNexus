@@ -155,9 +155,17 @@ After `find_character` identifies a candidate within a known anime, call:
 {"name":"get_character","arguments":{"anidbId":1725,"characterId":501}}
 ```
 
-The ID is looked up in **that specific anime's source-reported character list**, using the existing paced/cached AniDB anime read. This is **not a global AniDB character endpoint** and does not assert that two independent anime containing the same character name describe the same fictional individual. The result includes a `found` boolean, nullable `character`, source anime URL, retrieval timestamp, reported character count and the original voice-actor/episode metadata when available. `found:false` means **not reported in this source response**, not an assertion of worldwide absence.
+The ID is looked up in **that specific anime's source-reported character list**, using the existing paced/cached AniDB anime read. This is **not a global AniDB character endpoint** and does not assert that two independent anime containing the same character name describe the same fictional individual. The result includes a `found` boolean, nullable `character`, source anime URL, retrieval timestamp, reported character count, and original voice-actor/episode metadata when available. Both character tools now also expose bounded `episodeEvidence`: parsed reference keys, matching AniDB episode IDs from the **same source anime**, unresolved references, unsupported syntax, and explicit parse/coverage status while retaining `episodeAppearancesRaw`. `found:false` means **not reported in this source response**, not an assertion of worldwide absence.
 
 [Character-by-ID unit tests](test/character-detail.test.ts) and [real offline MCP integration](test/mcp-find-character.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37979815355).
+
+### Character episode appearances (Phase 3, P3-05)
+
+AniDB's per-character `<episodes>` metadata is retained verbatim. `episodeEvidence` conservatively parses a **supported subset** of the episode-list notation: individual positive episode numbers, leading-zero variants, episode type prefixes (`S`, `C`, `T`, `P`, `O`), comma-separated tokens and finite same-type ranges such as `1-3` or `S1-S3`. The parser **does not silently interpret unknown or ambiguous syntax**, open-ended ranges, mixed-type ranges or multipart episodes. It caps expansion at 256 references, and labels `partial` or `unknown` rather than manufacturing definitive appearances.
+
+`linkedEpisodeIds` are IDs of episode metadata entries present **in the same AniDB anime response** that match parsed source character references. This confirms a source-data join, **not** visual proof that the character appears in a specific video scene. `unresolvedReferences` means those referenced episodes were not listed by that anime payload; it does *not* prove the character is absent. If the source episode catalog is missing, `coverage` stays `unknown`. Raw input, unparsed tokens and source counts remain visible. Episode lists are never used as mandatory filters.
+
+The limited parser is informed by [AniDB's episode numbering documentation](https://wiki.anidb.net/AniDB_O%27Matic_-_Documentation%3A_Local_file_renaming) and [the independently maintained go-anidb episode-list examples](https://pkg.go.dev/github.com/jessidhia/go-anidb/misc). These references are **not** proof every live AniDB character-field grammar has been verified. [Synthetic offline regression tests](test/episode-appearance.test.ts) and [actual MCP client tests](test/mcp-find-character.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37981588599); real-source corpus validation and full grammar support remain future tasks.
 
 ## Plugin packaging
 
