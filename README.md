@@ -6,7 +6,7 @@
 
 ## Status
 
-Early scaffold. The first vertical slice is:
+Early scaffold with a verified live AniDB HTTP read path. The first vertical slice is:
 
 ```text
 ChatGPT / Codex
@@ -70,12 +70,26 @@ The public AniDB software project is registered as:
 - **Project URL:** https://github.com/Mark-Picknell/WeebMoeNexus
 - **Contact:** https://github.com/Mark-Picknell/WeebMoeNexus/issues
 
-AniDB still requires an API **client** to be added beneath that software project before live API requests are allowed. Once the client exists, configure its registered name/version locally:
+The AniDB **HTTP API client is registered**, active, and official:
+
+- **Client name:** `weebmoenexus`
+- **Client ID:** `32071`
+- **Registered version:** `1` (version ID `29661`)
+
+Configure your local `.env`:
 
 ```env
-ANIDB_CLIENT=your_registered_client_name
+ANIDB_CLIENT=weebmoenexus
 ANIDB_CLIENT_VERSION=1
 ```
+
+### First live API smoke test — passed
+
+On 2026-10-08 (US Central), the registered client made **one live HTTP API request** for AniDB anime ID `15437` (*Akudama Drive*) from GitHub Actions. The API returned XML that WeebMoeNexus parsed and validated as an `AnimeRecord`. The result contained 7 titles, 13 characters, 12 episodes, and provider provenance. These counts are a snapshot, not permanent assertions about the upstream catalog.
+
+[View the successful smoke-test run](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37867136270).
+
+The live check runs through `src/smoke/anidb-smoke.ts` and a separate GitHub workflow. Ordinary `npm test` / CI regression tests use mocks; they never call AniDB. Avoid rerunning live smoke checks unnecessarily.
 
 WeebMoeNexus intentionally does **not** scrape AniDB pages. Requests go through the documented API, are paced conservatively, and are cached. Tests must never contact the live AniDB API.
 
