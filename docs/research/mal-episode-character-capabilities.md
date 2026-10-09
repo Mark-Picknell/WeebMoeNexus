@@ -28,6 +28,36 @@ This is an **absence of verified API capability**, not a claim that MAL has no s
 5. Jikan.JS documentation of actual returned types: https://rpdjf.github.io/Jikan.js/all_symbols.html — `AnimeCharacterRole` includes character, role and voice actors; `AnimeEpisode` and `AnimeEpisodeFull` include episode metadata but no character list.
 6. Independent field inventory noting Jikan `/episodes` versus `/episodes/X` have different metadata: https://github.com/Fribb/MyAnimeList.bundle/issues/40
 
+## Primary-source recheck during continuity handoff (2026-10-09)
+
+The official MAL reference URL was attempted again and remained inaccessible to
+direct inspection. A targeted search for official MAL documentation did not
+recover an inspectable official schema. **Official MAL v2 episode-character
+support remains unverified**, not established as absent. Anime-wide character
+and voice-actor fields verified below are **Jikan fields**; this investigation
+has not directly verified their availability in the official MAL v2 API.
+
+Jikan's upstream OpenAPI document was directly inspected at pinned commit
+[`1e33a79bcc9161f1831e4428004e110c67a48676`](https://github.com/jikan-me/jikan-rest/blob/1e33a79bcc9161f1831e4428004e110c67a48676/storage/api-docs/api-docs.json)
+(OpenAPI information version `4.0.0`). Its own description identifies Jikan as
+unofficial, unaffiliated with MAL, and based on website parsing. Documented
+Jikan routes therefore **do not establish a MAL-sanctioned mechanism**.
+
+| Documented GET route | HTTP 200 schema | Relevant documented data |
+|---|---|---|
+| `/anime/{id}/characters` | `anime_characters` | `data[].character`, `role`, `voice_actors[].person`, `language`; no episode-membership field |
+| `/anime/{id}/episodes` | `anime_episodes` | `data[]` episode IDs, video URLs, titles, air dates, score, filler/recap flags and forum URL; no character list |
+| `/anime/{id}/episodes/{episode}` | wrapper containing `anime_episode` | Episode ID, URL, titles, duration, air date, filler/recap and synopsis; no character list |
+| `/characters/{id}/anime` | `character_anime` | `data[].role` and `anime`; work-level association only |
+| `/characters/{id}/voices` | `character_voice_actors` | `data[].language` and `person`; no episode-membership field |
+
+This inventory records **documentation properties**, not invented API responses
+or an assertion that an undocumented property cannot exist. The inspected
+schema does not document a character-to-episode appearance edge in these
+responses. No production or live data endpoint was called. Earlier secondary
+references remain above as the provenance of the first audit; this recheck's
+Jikan conclusions rely on its upstream schema.
+
 ## Graph design implication
 
 The following are **separate sourced edges**, not one implicit join:
@@ -49,3 +79,4 @@ Episode metadata coverage can be sparse, postponed or different across providers
 - Future `P4-06` remains Mark-owned: he chooses and authorizes any MAL or other provider integration before actual adapter/network work. Further validation against official MAL's spec remains desirable when directly accessible.
 
 The answer is intentionally modest: **no confirmed episode-to-character edge from MAL/Jikan was found**. It is not a proof of impossibility.
+

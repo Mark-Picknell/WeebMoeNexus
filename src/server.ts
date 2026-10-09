@@ -7,6 +7,8 @@ import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
 import { getRelatedAnimeFromRecord } from "./services/related-anime-service.js";
 import { findCharactersInAnime } from "./services/character-search-service.js";
 import { getCharacterInAnime } from "./services/character-detail-service.js";
+import { relationGraphInputSchema, relationGraphResultSchema } from "./domain/relation-graph.js";
+import { traverseAnimeRelations } from "./services/relation-graph-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
@@ -227,6 +229,43 @@ export function buildServer(): McpServer {
   );
 
   server.registerTool(
+    "traverse_anime_relations",
+    {
+      title: "Traverse source-reported anime relationships",
+      description:
+        "Follow outgoing AniDB work relationships breadth-first with explicit depth, node, edge and source-read budgets. Uses paced/cached sequential reads; never invents reverse links, shared character identities or canon. Boundary nodes are not fetched. Returns original directed edges with evidence, unread/partial frontier and truncation reason. Stops on source failure without retry. Missing relations are unknown metadata, not proof of absence.",
+      inputSchema: relationGraphInputSchema,
+      outputSchema: relationGraphResultSchema,
+      annotations: {
+        readOnlyHint: true,
+        idempotentHint: true,
+        destructiveHint: false,
+        openWorldHint: true
+      }
+    },
+    async input => {
+      try {
+        const output = await traverseAnimeRelations(input, service);
+        return {
+          content: [{
+            type: "text",
+            text: `Recovered ${output.edges.length} source-reported relation row(s) across ${output.nodes.length} distinct AniDB IDs; ${output.recordsRead} record(s) read. Termination: ${output.termination}. This is source metadata, not a complete franchise or character-identity graph.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: error instanceof Error ? error.message : "Unknown relation traversal failure"
+          }]
+        };
+      }
+    }
+  );
+
+  server.registerTool(
     "find_character",
     {
       title: "Find a character in a specific AniDB anime",
@@ -375,3 +414,4 @@ export function buildServer(): McpServer {
 
   return server;
 }
+

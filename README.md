@@ -24,6 +24,7 @@ The read-only MCP surface remains deliberately small:
 - `get_anime_by_anidb_id` — fetches one anime by AniDB ID, normalizes the XML, caches it, and returns structured content with provenance.
 - `search_anime` — searches the **previously downloaded local AniDB title index** for exact/normalized aliases and, when none match, conservative Latin/romaji typo candidates. Returns distinct AniDB IDs, original title/language/kind, match type, source URL and the measured edit distance for fuzzy matches. It does **not** search character names or make network calls.
 - `get_related_anime` — reads one anime’s **directed, source-reported** AniDB related-anime links, including provider relation type, optional target title, AniDB IDs, source evidence URL and retrieval time. It reuses the existing paced/cached anime service and does not guess reverse edges, fetch linked targets, or traverse an inferred franchise graph.
+- `traverse_anime_relations` — follows outgoing source-reported work links breadth-first, with explicit depth/node/edge/read budgets, cycle handling and per-edge evidence. Reads are sequential through the existing paced/cache boundary. Boundary nodes remain unverified; partial results expose their frontier and termination reason.
 - `find_character` — searches character names **within one explicitly specified AniDB anime**; exact/normalized names outrank prefix/substring matches. Returns distinct character IDs, source-work evidence, original names, roles, gender, raw episode appearance text and source-reported voice-actor credits. It does **not** globally search AniDB characters, infer species, or merge identically named characters across works.
 - `get_character` — resolves a selected AniDB character ID **in its specified source anime**, returning that exact record's source metadata, voice credits and evidence; unknown IDs are represented as **not reported in this anime**, not as globally nonexistent. It does not call a standalone character API.
 
@@ -133,7 +134,45 @@ Read-only MCP example:
 
 Unlike the offline title index, this tool needs the registered AniDB HTTP client to fetch the **source anime record** when it is not already cached (the existing pacing and in-memory 72-hour cache apply). It reports only direct `<relatedanime>` entries actually present in that one source response, with the original relationship labels, nullable titles, source anime/target anime IDs, a navigation URL for each target, and a separate **evidence URL/timestamp for the source assertion**. No target anime is fetched or validated solely because its ID appears as a relation. Missing links mean *nothing was reported in the response*, not proof there are no related works.
 
-**Evidence:** [Offline relation projection tests](test/related-anime.test.ts) and [real MCP client/transport integration with mocked AniDB](test/mcp-related-anime.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355). Cross-anime/global character search, cross-media historical equivalence, franchise traversal, hosted deployment, and co-watching are **not yet implemented**.
+**Evidence:** [Offline relation projection tests](test/related-anime.test.ts) and [real MCP client/transport integration with mocked AniDB](test/mcp-related-anime.test.ts) passed [CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/37978819355). Bounded traversal of these work links is described below. Cross-anime/global character search, cross-media historical equivalence, hosted deployment, and co-watching remain pending.
+
+### Bounded outgoing relation traversal (Phase 3, P3-08)
+
+```json
+{"name":"traverse_anime_relations","arguments":{"anidbId":501,"maxDepth":2,"maxNodes":20,"maxEdges":100,"maxReads":5}}
+```
+
+| Control | Default | Range | Meaning |
+|---|---:|---:|---|
+| `maxDepth` | 1 | 1–3 | Outgoing hops; the root has depth 0. Records at this boundary are not read. |
+| `maxNodes` | 20 | 1–50 | Distinct returned AniDB IDs, including the root |
+| `maxEdges` | 100 | 1–200 | Original source relationship rows, including repeated or differently typed links |
+| `maxReads` | 5 | 1–10 | Source-record read attempts, including the root, cached reads and failures |
+
+Traversal uses sequential breadth-first reads through `AnimeService`, preserving
+its request pacing and successful-record cache. Each source ID is read at most
+once per call; cycles, self-links and shared targets do not trigger duplicate
+reads. Original direction, relation labels, target titles and source evidence
+remain on each edge. An edge's target title is reported by its source, while a
+node's `title` remains null until that target's own record is read successfully.
+No reverse links, character identities, shared canon or transitive relationship
+labels are inferred from reachability.
+
+Results include `readAttempts`, `recordsRead`, `termination`, `truncated`, `nodes`,
+`edges`, `frontier` and `failures`. Each node distinguishes `recordRead` from
+`relationsComplete`: a read record may have truncated outgoing rows. Node/edge
+bounds retain a deterministic prefix in source order and stop expansion before
+returning a dangling edge. Read/edge budgets stop queued reads when exhausted;
+depth-boundary nodes stay in the frontier. `exhausted` means all discovered
+records' reported outgoing rows were examined, **not** a complete real-world
+franchise catalog or proof that missing links do not exist.
+
+A failed root read returns the existing MCP error response. A later source
+failure preserves recovered edges, reports a failed frontier item and stops all
+further reads without retry. Unit regressions and in-memory MCP tests use only
+synthetic/fake AniDB data; no live traversal, hosted endpoint, global character
+resolver or graph UI is claimed. Verification evidence is recorded in the
+[roadmap](docs/ROADMAP.md) after CI passes.
 
 ### Scoped character name lookup (Phase 3, P3-02)
 
@@ -209,3 +248,4 @@ Phase 2 local title search is approved and complete. Next: read-only source-grou
 ---
 
 Built by Mark + JayMe while going delightfully off-script.
+
