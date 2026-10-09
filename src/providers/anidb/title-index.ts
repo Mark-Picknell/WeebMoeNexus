@@ -3,6 +3,7 @@ import { gunzipSync } from "node:zlib";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 import { validateTitleGzip } from "./title-dump.js";
 import { aniDbTitleLookupKeys } from "./title-normalization.js";
+import { boundedTitleEditDistance, titleEditBudget } from "./title-fuzzy.js";
 
 /**
  * AniDB's officially published title-dump record. Keep the original spelling,
@@ -26,6 +27,10 @@ export interface AniDbExactTitleMatch {
   matchedTitle: AniDbTitle;
 }
 
+export interface AniDbFuzzyTitleMatch extends AniDbExactTitleMatch {
+  editDistance: number;
+}
+
 /**
  * In-memory index built entirely from the disk-cached dump.
  *
@@ -42,6 +47,7 @@ export class AniDbTitleIndex {
     private readonly byId: ReadonlyMap<number, AniDbTitleRecord>,
     private readonly byExactTitle: ReadonlyMap<string, readonly AniDbExactTitleMatch[]>,
     private readonly byNormalizedTitle: ReadonlyMap<string, readonly AniDbExactTitleMatch[]>,
+    private readonly normalizedKeysByLength: ReadonlyMap<number, readonly string[]>,
     titleCount: number
   ) {
     this.animeCount = byId.size;
@@ -73,6 +79,42 @@ export class AniDbTitleIndex {
       }
     }
     return matches;
+  }
+
+  /**
+   * Return candidate aliases with a small bounded edit distance.
+   * Search only nearby Unicode-codepoint length buckets, not every title on
+   * each query. Original source records remain untouched and distinguishable.
+   * The search service invokes this only if no deterministic alias matched.
+   */
+  findFuzzyTitle(value: string): readonly AniDbFuzzyTitleMatch[] {
+    const distanceByHit = new Map<AniDbExactTitleMatch, number>();
+    for (const queryKey of aniDbTitleLookupKeys(value)) {
+      const keyLength = [...queryKey].length;
+      const budget = titleEditBudget(keyLength);
+      if (budget === 0) continue;
+
+      for (let length = keyLength - budget; length <= keyLength + budget; length++) {
+        for (const candidateKey of this.normalizedKeysByLength.get(length) ?? []) {
+          if (candidateKey === queryKey) continue;
+          const distance = boundedTitleEditDistance(queryKey, candidateKey, budget);
+          if (distance === null || distance === 0) continue;
+          for (const hit of this.byNormalizedTitle.get(candidateKey) ?? []) {
+            const earlier = distanceByHit.get(hit);
+            if (earlier === undefined || distance < earlier) {
+              distanceByHit.set(hit, distance);
+            }
+          }
+        }
+      }
+    }
+    return [...distanceByHit.entries()]
+      .map(([hit, editDistance]) => ({ ...hit, editDistance }))
+      .sort((a, b) =>
+        a.editDistance - b.editDistance ||
+        a.anidbId - b.anidbId ||
+        a.matchedTitle.value.localeCompare(b.matchedTitle.value)
+      );
   }
 }
 
@@ -180,7 +222,14 @@ export function parseAniDbTitleXml(xml: string): AniDbTitleIndex {
   }
 
   if (byId.size === 0) throw new Error("AniDB title dump contains no anime");
-  return new AniDbTitleIndex(byId, exact, normalized, titleCount);
+  const lengthBuckets = new Map<number, string[]>();
+  for (const key of normalized.keys()) {
+    const length = [...key].length;
+    const bucket = lengthBuckets.get(length) ?? [];
+    bucket.push(key);
+    lengthBuckets.set(length, bucket);
+  }
+  return new AniDbTitleIndex(byId, exact, normalized, lengthBuckets, titleCount);
 }
 
 /**
