@@ -95,6 +95,7 @@ export function mapAniDbAnimeXml(
       role: attr(character, "type"),
       gender: nullableText(character.gender),
       picture: nullableText(character.picture),
+      episodeAppearancesRaw: nullableText(character.episodes),
       voiceActor: seiyuu
         ? {
             id: nullableInt(seiyuu["@_id"]),
