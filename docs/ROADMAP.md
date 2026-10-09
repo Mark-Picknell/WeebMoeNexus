@@ -12,7 +12,7 @@
 - The roadmap **Phase 5** means personal context (watchlists etc.). In [GQ-001's milestone progression](GOLDEN-QUERIES.md) **Step 5** means character **attribute search**. These numberings are independent.
 - **Critical path:** quality/data fixtures → local AniDB title index → `search_anime` → character/person/relationship search → cross-provider graph. Documentation/discovery can occur in parallel; do not promote a phase to ✅ while its runtime work remains unchecked.
 
-**Current register after conservative fuzzy title matching · 2026-10-09:** **35/87 completed** and **52 outstanding**. Phase 1 remains **5/7**; Phase 2 implementation is **6/6**, all with passing offline CI, **awaiting Mark's explicit phase exit acceptance** before the Phase 2 heading changes to ✅. Phase 0 remains the only phase with a ✅ heading. No live AniDB title-dump fetch or deployed ChatGPT integration is claimed. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
+**Current register after Phase 2 acceptance · 2026-10-09:** **35/87 completed** and **52 outstanding**. Phase 1 remains **5/7**; Phase 2 is now **6/6 ✅** after offline CI and Mark's explicit acceptance ("Reran and approved!"). Phase 0 is also ✅. No live AniDB title-dump fetch or deployed ChatGPT integration is claimed. The snapshot phase table below is the **original pre-slice phase-only baseline** retained for auditability.
 
 **Decision log · 2026-10-09:** Mark approved the proposed ownership split and next implementation slice (`R-03`, `R-04`), while reserving the right to alter task assignments later. This does **not** authorize future hosting, account connections, data writes, deployment, or final release—those remain separate open tasks. Immediately after this approval, before implementation work, the register had **25/87 tasks completed** and **62 outstanding**. The phase table below is the **original phase-only baseline**, with additional validation/delivery/rebase tasks tracked separately.
 
@@ -54,7 +54,7 @@
 - [ ] `P1-06` **JayMe** — Add structured error codes for not-found, banned, unavailable, outdated, and misconfigured states
 - [ ] `P1-07` **JayMe** — Persist cache across restarts
 
-## Phase 2 — Human title search
+## Phase 2 — Human title search ✅
 
 Use AniDB's sanctioned anime-title dump instead of scraping/searching pages.
 
@@ -70,6 +70,8 @@ This is the milestone that makes:
 > “find the hot pink-haired doctor with a scalpel”
 
 a plausible database workflow instead of a joke.
+
+**Phase 2 exit decision (2026-10-09):** Mark explicitly accepted Phase 2 after all six implementation tasks and passing offline CI. ✅ marks the approved **local title-search implementation scope**, not a live catalog accuracy audit, deployed ChatGPT plugin, or character resolution.
 
 ## Phase 3 — Relationship exploration
 
