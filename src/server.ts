@@ -12,6 +12,9 @@ import { relationGraphInputSchema, relationGraphResultSchema } from "./domain/re
 import { traverseAnimeRelations } from "./services/relation-graph-service.js";
 import { entityComparisonInputSchema, entityComparisonResultSchema } from "./domain/entity-comparison.js";
 import { compareAnimeEntities } from "./services/entity-comparison-service.js";
+import { providerRegistryResultSchema } from "./domain/provider-registry.js";
+import { aniDbCapabilityDeclaration } from "./providers/anidb/capabilities.js";
+import { getProviderRegistry } from "./services/provider-registry-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
@@ -46,7 +49,7 @@ export function buildServer(): McpServer {
     {
       title: "Check WeebMoeNexus health",
       description:
-        "Check whether the WeebMoeNexus MCP server is running and whether the AniDB provider is configured.",
+        "Check server liveness and whether an AniDB client name is set. Does not verify registration or upstream connectivity; use get_provider_status for passive operation observations and capability scopes.",
       inputSchema: z.object({}),
       outputSchema: z.object({
         name: z.literal("weeb-moe-nexus"),
@@ -71,6 +74,28 @@ export function buildServer(): McpServer {
         content: [{ type: "text", text: JSON.stringify(output) }],
         structuredContent: output
       };
+    }
+  );
+
+  server.registerTool(
+    "get_provider_status",
+    {
+      title: "Inspect provider capabilities and passive operation status",
+      description: "Inspect the explicitly registered adapters without contacting providers or reading caches. Separates implemented plugin capabilities from verified, unavailable, undocumented, unverified or unassessed native-provider knowledge. Returns scope, evidence, limitations, local configuration readiness and the last completed anime HTTP-read outcome with age/staleness. Cache hits never renew or clear HTTP observations. Local readiness is not proof of registration or availability; a lookup failure is not a provider-wide outage. No global discovery, active probes, credential checks or provider auto-connection.",
+      inputSchema: z.strictObject({}),
+      outputSchema: providerRegistryResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: false }
+    },
+    async () => {
+      try {
+        const output = getProviderRegistry([{ declaration: aniDbCapabilityDeclaration, health: () => service.getProviderHealth() }]);
+        return {
+          content: [{ type: "text", text: `${output.providers.length} registered provider adapter(s). Capabilities are scoped; readiness is local configuration and health reflects passive HTTP observations, not a live probe or catalog-wide guarantee.` }],
+          structuredContent: output
+        };
+      } catch {
+        return { isError: true, content: [{ type: "text", text: "Provider registry could not be assembled from local state." }] };
+      }
     }
   );
 

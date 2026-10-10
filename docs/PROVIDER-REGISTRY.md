@@ -25,8 +25,8 @@ Typed semantic-edge schemas do not count as a source adapter for those semantics
 
 Declarations do not read local caches, refresh title dumps, contact providers,
 validate external accounts or expose configuration values. Returned declarations
-are fresh copies. All new contract fixtures are synthetic. Operational health and
-MCP inspection are subsequent slices of P4-04; the task stays open until verified.
+are fresh copies. All new contract fixtures are synthetic. P4-04 completion is
+recorded in the roadmap only after all three implementation slices pass CI.
 
 ## Passive operation health
 
@@ -53,3 +53,29 @@ that the provider is down; there is no global `healthy` Boolean. Title dump refr
 local title-index availability, every past error, other processes and provider-wide
 service health are outside this observation's scope. Freshness is computed at
 inspection time and does not trigger background probes.
+
+## MCP inspection
+
+Call `get_provider_status` with `{}`. This read-only, closed-world tool returns
+`generatedAt`, `scope: registered_adapters_only`, and `providers`, each containing
+a capability `declaration` and passive `health`. Only the explicitly wired AniDB
+adapter is included. Missing provider entries do not imply native unavailability;
+MAL/AniList authorization and integration remain separate open tasks.
+
+The registry does not stat/load the title cache, test credentials, register
+clients, contact pending providers or initialize new accounts. It reports the
+title-index initialization prerequisite rather than claiming the index is ready.
+An invalid local snapshot produces a generic tool error instead of exposing raw
+diagnostics or silently returning a falsely complete partial registry.
+
+The original `health` output schema is unchanged. Its `status: ok` describes server
+liveness even after an AniDB request fails; `anidbConfigured` only means a client
+name is present. Use the new tool's separate readiness/observation fields to assess
+local preflight and recent HTTP operation evidence.
+
+Unit tests cover registry composition, duplicate-provider rejection and failed
+local readers. Actual in-memory MCP transport tests verify registered capability
+tool names, inspection without probes, sanitized status/error output, original
+health compatibility, a validated mocked read, a mocked ban and a subsequent
+cache hit retaining that failure. These are offline contracts; no new live AniDB
+test or end-to-end golden-query pass is implied.

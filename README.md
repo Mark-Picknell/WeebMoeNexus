@@ -20,7 +20,8 @@ AniDB HTTP API
 
 The read-only MCP surface remains deliberately small:
 
-- `health` — confirms the server is alive and whether AniDB client registration is configured.
+- `health` — reports server liveness and whether an AniDB client name is set; it does not verify registration or connectivity.
+- `get_provider_status` — inspects registered adapters locally: implemented capabilities, native-provider evidence/unknowns, limitations, configuration readiness and passive HTTP-read observations with age/staleness. It makes no provider requests; cached successes cannot clear a newer HTTP failure. See [the registry contract](docs/PROVIDER-REGISTRY.md).
 - `get_anime_by_anidb_id` — fetches one anime by AniDB ID, normalizes the XML, caches it, and returns structured content with provenance.
 - `search_anime` — searches the **previously downloaded local AniDB title index** for exact/normalized aliases and, when none match, conservative Latin/romaji typo candidates. Returns distinct AniDB IDs, original title/language/kind, match type, source URL and the measured edit distance for fuzzy matches. It does **not** search character names or make network calls.
 - `get_related_anime` — reads one anime’s **directed, source-reported** AniDB related-anime links, including provider relation type, optional target title, AniDB IDs, source evidence URL and retrieval time. It reuses the existing paced/cached anime service and does not guess reverse edges, fetch linked targets, or traverse an inferred franchise graph.

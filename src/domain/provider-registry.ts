@@ -1,4 +1,5 @@
 import * as z from "zod/v4";
+import { providerOperationHealthSchema } from "./provider-health.js";
 
 export const capabilityEvidenceSchema = z.strictObject({
   url: z.url({ protocol: /^https?$/ }),
@@ -38,3 +39,10 @@ export const providerDeclarationSchema = z.strictObject({
   capabilities: z.array(providerCapabilitySchema).min(1)
 }).refine(value => new Set(value.capabilities.map(c => c.id)).size === value.capabilities.length, "Capability IDs must be unique within a provider");
 export type ProviderDeclaration = z.infer<typeof providerDeclarationSchema>;
+
+export const providerRegistryResultSchema = z.strictObject({
+  generatedAt: z.iso.datetime({ offset: true }),
+  scope: z.literal("registered_adapters_only"),
+  providers: z.array(z.strictObject({ declaration: providerDeclarationSchema, health: providerOperationHealthSchema }))
+}).refine(value => new Set(value.providers.map(p => p.declaration.provider)).size === value.providers.length, "Registered provider IDs must be unique");
+export type ProviderRegistryResult = z.infer<typeof providerRegistryResultSchema>;
