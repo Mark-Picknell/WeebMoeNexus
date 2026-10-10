@@ -4,6 +4,7 @@ import { ProviderLookupError } from "../domain/provider-error.js";
 import { AniDbClient } from "../providers/anidb/client.js";
 import { mapAniDbAnimeXml } from "../providers/anidb/mapper.js";
 import { AniDbAnimeCache, type AnimeCacheEntry } from "../providers/anidb/anime-cache.js";
+import { ProviderOperationHealthTracker, type ProviderOperationHealth } from "../domain/provider-health.js";
 
 export class AnimeService {
   private readonly anidb: AniDbClient;
@@ -11,15 +12,22 @@ export class AnimeService {
   private readonly diskCache: AniDbAnimeCache | null;
   private readonly inFlight = new Map<number, Promise<AnimeRecord>>();
   private readonly now: () => number;
+  private readonly health: ProviderOperationHealthTracker;
 
   constructor(private readonly config: AniDbConfig, options: { now?: () => number } = {}) {
     this.anidb = new AniDbClient(config);
     this.diskCache = config.cacheDirectory?.trim() ? new AniDbAnimeCache(config) : null;
     this.now = options.now ?? Date.now;
+    this.health = new ProviderOperationHealthTracker(this.now);
   }
 
   get anidbConfigured(): boolean {
     return this.anidb.configured;
+  }
+
+  /** Inspection is passive: no provider request or cache read is triggered. */
+  getProviderHealth(): ProviderOperationHealth {
+    return this.health.snapshot(this.anidb.configurationState);
   }
 
   async getByAniDbId(anidbId: number): Promise<AnimeRecord> {
@@ -43,17 +51,23 @@ export class AnimeService {
       return persisted.value;
     }
 
-    const xml = await this.anidb.getAnimeXml(anidbId);
     let value: AnimeRecord;
     try {
-      value = animeRecordSchema.parse(mapAniDbAnimeXml(xml));
-      if (value.id !== anidbId) throw new Error("Source ID mismatch");
-    } catch {
-      throw new ProviderLookupError({
-        code: "unavailable", reason: "invalid_response",
-        message: "AniDB response could not be validated for the requested anime. No retry was attempted.",
-        httpStatus: null, apiCode: null
-      });
+      const xml = await this.anidb.getAnimeXml(anidbId);
+      try {
+        value = animeRecordSchema.parse(mapAniDbAnimeXml(xml));
+        if (value.id !== anidbId) throw new Error("Source ID mismatch");
+      } catch {
+        throw new ProviderLookupError({
+          code: "unavailable", reason: "invalid_response",
+          message: "AniDB response could not be validated for the requested anime. No retry was attempted.",
+          httpStatus: null, apiCode: null
+        });
+      }
+      this.health.recordSuccess();
+    } catch (error) {
+      this.health.recordFailure(error);
+      throw error;
     }
 
     const cachedAt = this.now();

@@ -2,6 +2,18 @@ import type { AniDbConfig } from "../../config.js";
 import { RateGate } from "../../infrastructure/rate-gate.js";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 import { ProviderLookupError, type ProviderError } from "../../domain/provider-error.js";
+import type { ProviderConfiguration } from "../../domain/provider-health.js";
+
+/** Same preflight used by reads and inspection; returns no configuration values. */
+export function aniDbConfigurationState(config: AniDbConfig): ProviderConfiguration {
+  if (!config.client.trim()) return "not_configured";
+  try {
+    const url = new URL(config.apiUrl);
+    if (!["http:", "https:"].includes(url.protocol) || url.username || url.password ||
+        !Number.isSafeInteger(config.clientVersion) || config.clientVersion <= 0) return "invalid_configuration";
+    return "ready";
+  } catch { return "invalid_configuration"; }
+}
 
 export class AniDbConfigurationError extends ProviderLookupError {
   constructor(message: string, reason: "missing_client" | "invalid_configuration" = "missing_client") {
@@ -57,24 +69,23 @@ export class AniDbClient {
     return this.config.client.trim().length > 0;
   }
 
+  get configurationState(): ProviderConfiguration {
+    return aniDbConfigurationState(this.config);
+  }
+
   async getAnimeXml(anidbId: number): Promise<string> {
-    if (!this.config.client.trim()) {
+    const configuration = this.configurationState;
+    if (configuration === "not_configured") {
       throw new AniDbConfigurationError(
         "ANIDB_CLIENT is not configured. Register an AniDB API client and set ANIDB_CLIENT."
       );
     }
-    let url: URL;
-    try {
-      url = new URL(this.config.apiUrl);
-      if (!["http:", "https:"].includes(url.protocol) || url.username || url.password ||
-          !Number.isSafeInteger(this.config.clientVersion) || this.config.clientVersion <= 0) {
-        throw new Error("Invalid provider configuration");
-      }
-    } catch {
+    if (configuration === "invalid_configuration") {
       throw new AniDbConfigurationError(
         "AniDB endpoint or client version is misconfigured. No request was made.", "invalid_configuration"
       );
     }
+    const url = new URL(this.config.apiUrl);
 
     return this.gate.run(async () => {
       url.searchParams.set("request", "anime");
@@ -137,4 +148,3 @@ export class AniDbClient {
     });
   }
 }
-
