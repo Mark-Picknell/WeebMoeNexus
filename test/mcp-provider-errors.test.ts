@@ -18,7 +18,8 @@ test("all AniDB-backed MCP read tools expose structured provider failures withou
     [7001, '<error code="9001">No such anime</error>'],
     [7002, '<error code="9002">Client banned</error>'],
     [7003, '<error code="9003">Client version outdated</error>'],
-    [7004, '<error code="9004">Unknown client</error>']
+    [7004, '<error code="9004">Unknown client</error>'],
+    [7006, '<error code="9999">Unclassified synthetic label</error>']
   ]);
   globalThis.fetch = async request => {
     const id = Number(new URL(String(request)).searchParams.get("aid"));
@@ -42,7 +43,8 @@ test("all AniDB-backed MCP read tools expose structured provider failures withou
       { name: "get_related_anime", arguments: { anidbId: 7002 }, code: "banned" },
       { name: "find_character", arguments: { anidbId: 7003, query: "Synthetic" }, code: "outdated" },
       { name: "get_character", arguments: { anidbId: 7004, characterId: 1 }, code: "misconfigured" },
-      { name: "traverse_anime_relations", arguments: { anidbId: 7005 }, code: "unavailable" }
+      { name: "traverse_anime_relations", arguments: { anidbId: 7005 }, code: "unavailable" },
+      { name: "compare_anime_entities", arguments: { anidbIds: [7006], query: "Synthetic" }, code: "unavailable" }
     ];
     for (const item of cases) {
       const result = await client.callTool({ name: item.name, arguments: item.arguments });
@@ -53,7 +55,7 @@ test("all AniDB-backed MCP read tools expose structured provider failures withou
       assert.equal(error.retried, false);
       assert.ok(result.content.some(c => c.type === "text" && c.text === error.message));
     }
-    assert.deepEqual(reads, [7001, 7002, 7003, 7004, 7005]);
+    assert.deepEqual(reads, [7001, 7002, 7003, 7004, 7005, 7006]);
   } finally {
     if (client) await client.close();
     if (server) await server.close();

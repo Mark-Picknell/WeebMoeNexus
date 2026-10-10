@@ -10,6 +10,8 @@ import { findCharactersInAnime } from "./services/character-search-service.js";
 import { getCharacterInAnime } from "./services/character-detail-service.js";
 import { relationGraphInputSchema, relationGraphResultSchema } from "./domain/relation-graph.js";
 import { traverseAnimeRelations } from "./services/relation-graph-service.js";
+import { entityComparisonInputSchema, entityComparisonResultSchema } from "./domain/entity-comparison.js";
+import { compareAnimeEntities } from "./services/entity-comparison-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
@@ -418,6 +420,28 @@ export function buildServer(): McpServer {
     }
   );
 
+  server.registerTool(
+    "compare_anime_entities",
+    {
+      title: "Compare source-scoped character or contributor candidates",
+      description: "Compare exact/normalized names in one to five explicitly selected AniDB anime records. Resolve work IDs with search_anime first. Optional workTitle uses reported titles; alias/species require explicit evidence and currently remain unknown because these AniDB fields are not mapped. Preserve distinct IDs, source occurrences, credit rows, conflicts and unresolved constraints. Contributor credits can describe people or companies. No global search, guessed aliases/species, name-order inversion, kinship inference or popularity ranking. Source reads are sequential and stop on failure without retry.",
+      inputSchema: entityComparisonInputSchema,
+      outputSchema: entityComparisonResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await compareAnimeEntities(input, service);
+        return {
+          content: [{ type: "text", text: `${output.totalNameCandidates} name candidate(s) across ${output.examinedAnimeIds.length} selected source record(s): ${output.matchedCount} matched, ${output.unverifiedCount} unverified, ${output.conflictingCount} conflicting. ${output.resolution}. Missing evidence is unknown; this is not global discovery.` }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError: true, content: [{ type: "text", text: error instanceof Error ? error.message : "Unknown source-scoped entity comparison failure" }] };
+      }
+    }
+  );
+
   return server;
 }
-
