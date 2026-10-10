@@ -53,3 +53,26 @@ reinterpret relation labels. Even a label reading `adaptation` remains a
 `reported_work_relation` until a separately evidenced adapter mapping exists.
 Portrayal, inherited-name, cameo and crossover contracts currently have synthetic
 contract coverage only; no AniDB fields for those assertions are invented.
+
+## Offline identity regression coverage
+
+[identity-regressions.test.ts](../test/identity-regressions.test.ts) exercises the
+real comparison, relation projection and bounded traversal code, plus the typed
+edge contract. It covers the past mistakes recorded in
+[GOLDEN-QUERIES.md](GOLDEN-QUERIES.md):
+
+| Case | Executable guardrail | Remaining capability |
+|---|---|---|
+| Carrera / Viper GTS | Reported work context ranks the correct occurrence; an absent species field stays unknown, even under output truncation. | Global character discovery, species ingestion and similarity ranking. |
+| Ogata name order | Two reported name orders under one source ID stay one contributor; different IDs with identical names remain separate. | Resolving unreported aliases or independent providers. |
+| Ogata / original Macross | A credit scoped to another work cannot migrate; missing credits do not emit negative edges. | A live, authoritative coverage audit and global person discovery. |
+| Shared Oda surname | Character names alone generate no voice, kinship or historical identity edges. | Source-backed historical relationships. |
+| Macross → Robotech | A synthetic explicit related-release row remains visible through direct projection and outgoing traversal, despite a different target title. Reported labels remain unchanged; missing titles are not guessed. | Automatic adaptation classification, relationship ranking and bidirectional source discovery. |
+| Nobunaga / Yoshimitsu / Plue | Explicit portrayal, inherited-name, cameo and crossover fixtures retain distinct typed references; voice credits cannot target historical people. | Provider adapters for those semantic assertions. |
+
+The fixtures are author-authored synthetic contracts, inspired by the existing
+research cases. All XML, IDs and credits in that test file are invented, clearly
+labeled data. They establish deterministic behavior under the stated inputs, not
+real catalog facts. No live network call or provider access is required. The
+golden-query corpus remains `pending_resolver`; these unit contracts do not claim
+the natural-language end-to-end golden queries pass.
