@@ -29,3 +29,27 @@ integration or cross-provider identity resolver. A schema can validate shape and
 evidence presence; it cannot authenticate an assertion's truth. Semantic types
 need explicit supporting source fields before a provider adapter may emit them.
 The initial contract tests use entirely synthetic evidence and references.
+
+## AniDB projection
+
+[relationship-edges.ts](../src/providers/anidb/relationship-edges.ts) is a pure
+projection of an already retrieved and validated normalized anime record.
+It emits production credits, character-attached voice credits, and uninterpreted
+work-relation rows. Every source row keeps its own evidence and index, including
+duplicate roles, repeated targets and self links. Evidence serializes the existing
+normalized row; this does not recover original XML formatting or discarded fields.
+The evidence URL identifies the asserting anime record, never an unread target.
+
+Contributors with missing source IDs retain separate unresolved credit rows with
+their original normalized evidence. Names cannot fabricate identities. Voice
+language remains null because the current mapper supplies no language field.
+Absent voice credits create no negative claim. The row count accounts for emitted
+edges plus unresolved credits; zero rows means no assertions were reported.
+
+The projector validates canonical matching AniDB work provenance, timestamps and
+safe IDs. It does not mutate records, perform network requests, fetch related
+targets, infer reverse edges, classify production contributors as people or
+reinterpret relation labels. Even a label reading `adaptation` remains a
+`reported_work_relation` until a separately evidenced adapter mapping exists.
+Portrayal, inherited-name, cameo and crossover contracts currently have synthetic
+contract coverage only; no AniDB fields for those assertions are invented.
