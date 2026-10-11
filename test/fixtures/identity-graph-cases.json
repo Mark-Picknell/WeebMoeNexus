@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Authored synthetic contracts, not live catalog mappings or provider responses.",
+  "licenseNote": "Original project test data; no third-party payloads copied.",
+  "cases": [
+    {
+      "id": "explicit_mapping",
+      "input": {
+        "nodes": [
+          {
+            "provider": "synthetic_a",
+            "kind": "character",
+            "id": "7"
+          },
+          {
+            "provider": "synthetic_b",
+            "kind": "character",
+            "id": "7"
+          }
+        ],
+        "assertions": [
+          {
+            "type": "same_entity",
+            "from": {
+              "provider": "synthetic_a",
+              "kind": "character",
+              "id": "7"
+            },
+            "to": {
+              "provider": "synthetic_b",
+              "kind": "character",
+              "id": "7"
+            },
+            "evidence": [
+              {
+                "sourceRecord": {
+                  "provider": "synthetic_a",
+                  "kind": "work",
+                  "id": "11"
+                },
+                "sourceUrl": "https://example.test/synthetic_a/11",
+                "retrievedAt": "2026-10-10T20:29:03-05:00",
+                "sourceField": "authored_fixture.mapping",
+                "reportedValue": "[\"same_entity\", {\"provider\": \"synthetic_a\", \"kind\": \"character\", \"id\": \"7\"}, {\"provider\": \"synthetic_b\", \"kind\": \"character\", \"id\": \"7\"}]",
+                "polarity": "positive"
+              }
+            ]
+          }
+        ],
+        "anchors": [
+          {
+            "canonicalId": "synthetic:character:carrera-a",
+            "entity": {
+              "provider": "synthetic_a",
+              "kind": "character",
+              "id": "7"
+            },
+            "evidence": [
+              {
+                "sourceRecord": {
+                  "provider": "synthetic_a",
+                  "kind": "work",
+                  "id": "11"
+                },
+                "sourceUrl": "https://example.test/synthetic_a/11",
+                "retrievedAt": "2026-10-10T20:29:03-05:00",
+                "sourceField": "authored_fixture.mapping",
+                "reportedValue": "[\"anchor\", {\"provider\": \"synthetic_a\", \"kind\": \"character\", \"id\": \"7\"}]",
+                "polarity": "positive"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "false_name_collision",
+      "input": {
+        "nodes": [
+          {
+            "provider": "synthetic_a",
+            "kind": "character",
+            "id": "7"
+          },
+          {
+            "provider": "synthetic_b",
+            "kind": "character",
+            "id": "7"
+          },
+          {
+            "provider": "synthetic_a",
+            "kind": "contributor",
+            "id": "7"
+          },
+          {
+            "provider": "synthetic_a",
+            "kind": "historical_person",
+            "id": "7"
+          }
+        ],
+        "assertions": [],
+        "anchors": []
+      },
+      "labels": [
+        {
+          "entity": {
+            "provider": "synthetic_a",
+            "kind": "character",
+            "id": "7"
+          },
+          "name": "Carrera"
+        },
+        {
+          "entity": {
+            "provider": "synthetic_b",
+            "kind": "character",
+            "id": "7"
+          },
+          "name": "Carrera"
+        },
+        {
+          "entity": {
+            "provider": "synthetic_a",
+            "kind": "contributor",
+            "id": "7"
+          },
+          "name": "Carrera"
+        },
+        {
+          "entity": {
+            "provider": "synthetic_a",
+            "kind": "historical_person",
+            "id": "7"
+          },
+          "name": "Carrera"
+        }
+      ]
+    },
+    {
+      "id": "contradictory_mapping",
+      "input": {
+        "nodes": [
+          {
+            "provider": "synthetic_a",
+            "kind": "character",
+            "id": "7"
+          },
+          {
+            "provider": "synthetic_b",
+            "kind": "character",
+            "id": "7"
+          },
+          {
+            "provider": "synthetic_c",
+            "kind": "character",
+            "id": "8"
+          }
+        ],
+        "assertions": [
+          {
+            "type": "same_entity",
+            "from": {
+              "provider": "synthetic_a",
+              "kind": "character",
+              "id": "7"
+            },
+            "to": {
+              "provider": "synthetic_b",
+              "kind": "character",
+              "id": "7"
+            },
+            "evidence": [
+              {
+                "sourceRecord": {
+                  "provider": "synthetic_a",
+                  "kind": "work",
+                  "id": "11"
+                },
+                "sourceUrl": "https://example.test/synthetic_a/11",
+                "retrievedAt": "2026-10-10T20:29:03-05:00",
+                "sourceField": "authored_fixture.mapping",
+                "reportedValue": "[\"same_entity\", {\"provider\": \"synthetic_a\", \"kind\": \"character\", \"id\": \"7\"}, {\"provider\": \"synthetic_b\", \"kind\": \"character\", \"id\": \"7\"}]",
+                "polarity": "positive"
+              }
+            ]
+          },
+          {
+            "type": "same_entity",
+            "from": {
+              "provider": "synthetic_b",
+              "kind": "character",
+              "id": "7"
+            },
+            "to": {
+              "provider": "synthetic_c",
+              "kind": "character",
+              "id": "8"
+            },
+            "evidence": [
+              {
+                "sourceRecord": {
+                  "provider": "synthetic_a",
+                  "kind": "work",
+                  "id": "11"
+                },
+                "sourceUrl": "https://example.test/synthetic_a/11",
+                "retrievedAt": "2026-10-10T20:29:03-05:00",
+                "sourceField": "authored_fixture.mapping",
+                "reportedValue": "[\"same_entity\", {\"provider\": \"synthetic_b\", \"kind\": \"character\", \"id\": \"7\"}, {\"provider\": \"synthetic_c\", \"kind\": \"character\", \"id\": \"8\"}]",
+                "polarity": "positive"
+              }
+            ]
+          },
+          {
+            "type": "different_entity",
+            "from": {
+              "provider": "synthetic_a",
+              "kind": "character",
+              "id": "7"
+            },
+            "to": {
+              "provider": "synthetic_c",
+              "kind": "character",
+              "id": "8"
+            },
+            "evidence": [
+              {
+                "sourceRecord": {
+                  "provider": "synthetic_a",
+                  "kind": "work",
+                  "id": "11"
+                },
+                "sourceUrl": "https://example.test/synthetic_a/11",
+                "retrievedAt": "2026-10-10T20:29:03-05:00",
+                "sourceField": "authored_fixture.mapping",
+                "reportedValue": "[\"different_entity\", {\"provider\": \"synthetic_a\", \"kind\": \"character\", \"id\": \"7\"}, {\"provider\": \"synthetic_c\", \"kind\": \"character\", \"id\": \"8\"}]",
+                "polarity": "positive"
+              }
+            ]
+          }
+        ],
+        "anchors": [
+          {
+            "canonicalId": "synthetic:character:carrera-a",
+            "entity": {
+              "provider": "synthetic_a",
+              "kind": "character",
+              "id": "7"
+            },
+            "evidence": [
+              {
+                "sourceRecord": {
+                  "provider": "synthetic_a",
+                  "kind": "work",
+                  "id": "11"
+                },
+                "sourceUrl": "https://example.test/synthetic_a/11",
+                "retrievedAt": "2026-10-10T20:29:03-05:00",
+                "sourceField": "authored_fixture.mapping",
+                "reportedValue": "[\"anchor\", {\"provider\": \"synthetic_a\", \"kind\": \"character\", \"id\": \"7\"}]",
+                "polarity": "positive"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cross_media_links",
+      "input": {
+        "nodes": [
+          {
+            "provider": "synthetic_a",
+            "kind": "work",
+            "id": "1"
+          },
+          {
+            "provider": "synthetic_b",
+            "kind": "work",
+            "id": "2"
+          },
+          {
+            "provider": "synthetic_a",
+            "kind": "character",
+            "id": "7"
+          },
+          {
+            "provider": "synthetic_history",
+            "kind": "historical_person",
+            "id": "7"
+          }
+        ],
+        "assertions": [],
+        "anchors": []
+      },
+      "relationships": [
+        {
+          "type": "adaptation_of",
+          "from": {
+            "provider": "synthetic_b",
+            "kind": "work",
+            "id": "2"
+          },
+          "to": {
+            "provider": "synthetic_a",
+            "kind": "work",
+            "id": "1"
+          },
+          "evidence": [
+            {
+              "sourceRecord": {
+                "provider": "synthetic_a",
+                "kind": "work",
+                "id": "11"
+              },
+              "sourceUrl": "https://example.test/synthetic_a/11",
+              "retrievedAt": "2026-10-10T20:29:03-05:00",
+              "sourceField": "authored_fixture.mapping",
+              "reportedValue": "[\"adaptation\", {\"provider\": \"synthetic_b\", \"kind\": \"work\", \"id\": \"2\"}, {\"provider\": \"synthetic_a\", \"kind\": \"work\", \"id\": \"1\"}]",
+              "polarity": "positive"
+            }
+          ]
+        },
+        {
+          "type": "portrayal_of",
+          "from": {
+            "provider": "synthetic_a",
+            "kind": "character",
+            "id": "7"
+          },
+          "to": {
+            "provider": "synthetic_history",
+            "kind": "historical_person",
+            "id": "7"
+          },
+          "work": {
+            "provider": "synthetic_a",
+            "kind": "work",
+            "id": "1"
+          },
+          "evidence": [
+            {
+              "sourceRecord": {
+                "provider": "synthetic_a",
+                "kind": "work",
+                "id": "11"
+              },
+              "sourceUrl": "https://example.test/synthetic_a/11",
+              "retrievedAt": "2026-10-10T20:29:03-05:00",
+              "sourceField": "authored_fixture.mapping",
+              "reportedValue": "[\"portrayal\", {\"provider\": \"synthetic_a\", \"kind\": \"character\", \"id\": \"7\"}, {\"provider\": \"synthetic_history\", \"kind\": \"historical_person\", \"id\": \"7\"}]",
+              "polarity": "positive"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fieldDisagreement": {
+    "request": {
+      "subjects": [
+        {
+          "provider": "synthetic_a",
+          "kind": "character",
+          "id": "7"
+        },
+        {
+          "provider": "synthetic_b",
+          "kind": "character",
+          "id": "7"
+        }
+      ],
+      "field": "species",
+      "context": {
+        "work": null,
+        "qualifiers": {}
+      },
+      "cardinality": "single"
+    },
+    "claims": [
+      {
+        "subject": {
+          "provider": "synthetic_a",
+          "kind": "character",
+          "id": "7"
+        },
+        "field": "species",
+        "context": {
+          "work": null,
+          "qualifiers": {}
+        },
+        "value": "succubus",
+        "polarity": "positive",
+        "evidence": {
+          "sourceRecord": {
+            "provider": "synthetic_a",
+            "kind": "work",
+            "id": "11"
+          },
+          "sourceUrl": "https://example.test/synthetic_a/11",
+          "retrievedAt": "2026-10-10T20:29:03-05:00",
+          "sourceField": "authored_fixture.species",
+          "representation": "normalized_scalar",
+          "reportedValue": "succubus"
+        }
+      },
+      {
+        "subject": {
+          "provider": "synthetic_b",
+          "kind": "character",
+          "id": "7"
+        },
+        "field": "species",
+        "context": {
+          "work": null,
+          "qualifiers": {}
+        },
+        "value": "human",
+        "polarity": "positive",
+        "evidence": {
+          "sourceRecord": {
+            "provider": "synthetic_b",
+            "kind": "work",
+            "id": "11"
+          },
+          "sourceUrl": "https://example.test/synthetic_b/11",
+          "retrievedAt": "2026-10-10T20:29:03-05:00",
+          "sourceField": "authored_fixture.species",
+          "representation": "normalized_scalar",
+          "reportedValue": "human"
+        }
+      }
+    ]
+  }
+}
