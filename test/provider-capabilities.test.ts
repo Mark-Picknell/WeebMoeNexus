@@ -95,3 +95,15 @@ test("guarded title-to-character bridge is implemented, not global discovery or 
   assert.ok(bridge.limitations.some(x => x.includes("previously initialized")));
   assert.equal(byId.get("global_character_discovery")?.implementation, "not_implemented");
 });
+
+test("scoped shared-contributor credit paths do not promote global identity resolution", () => {
+  const byId = new Map(aniDbCapabilityDeclaration().capabilities.map(c => [c.id, c]));
+  const shared = byId.get("shared_contributor_credit_paths")!;
+  assert.equal(shared.implementation, "implemented");
+  assert.deepEqual(shared.tools, ["find_shared_contributors"]);
+  assert.equal(shared.nativeProvider.assessment, "unverified");
+  assert.ok(shared.scope.includes("2–5 explicitly selected"));
+  assert.ok(shared.limitations.some(x => x.includes("Same display names")));
+  assert.equal(byId.get("cross_provider_identity")?.implementation, "not_implemented");
+  assert.equal(byId.get("semantic_relationships")?.implementation, "not_implemented");
+});

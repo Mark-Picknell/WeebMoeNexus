@@ -92,6 +92,24 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       scope: "One unique deterministic local title match to a single bounded character-name source read."
     }]
   });
+  capabilities.push({
+    ...capability(
+      "shared_contributor_credit_paths", "implemented",
+      ["find_shared_contributors"],
+      "Stable AniDB creator/voice-performer IDs repeated in at least two of 2–5 explicitly selected source anime records.",
+      "src/services/shared-contributors-service.ts",
+      [
+        "Includes creators that are companies as well as people; a shared credit ID is not proof of personhood or family relationship.",
+        "Same display names with different IDs are never merged; missing IDs remain unresolved.",
+        "No global people search, semantic role equivalence, provider federation, or scene evidence."
+      ]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/d470fabc1fab9345794e6b27a1a8321ff83fc61c/src/services/shared-contributors-service.ts",
+      checkedOn: "2026-10-11", basis: "implementation" as const,
+      scope: "Bounded cross-work source ID joins with original production/voice credit paths, name collision counts and no inferred identity from names."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",
