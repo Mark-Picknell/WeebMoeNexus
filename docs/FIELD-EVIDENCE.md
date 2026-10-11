@@ -33,3 +33,26 @@ not a new work or character identity. Empty arrays are not exhaustive denials.
 This is an additive domain/provider substrate; existing anime/MCP schemas are
 unchanged. All contract fixtures are authored synthetic data and make no live
 catalog claims.
+
+## Conflict assessment
+
+`assessFieldClaims` compares at most 1,000 claims and 1,000 unknown observations
+against explicitly selected subjects (at most ten, all of one kind), one field,
+one exact context and a declared `single` or `multiple` cardinality. Membership
+is a comparison request, **not an identity merge**. Other subjects, work scopes
+and qualifiers are excluded with counts. Future cross-provider comparisons need
+separately evidenced subject/context alignment; this service cannot establish it.
+
+Two distinct positive values conflict only for a single-valued field. Multiple
+names/aliases can coexist. Positive and explicit negative assertions of the
+same typed value always conflict. Negative assertions of a different value do
+not contradict a positive assertion. Nulls/unknowns never become negatives.
+States are `unknown`, `reported`, `negative_only` and `conflicting`; these are
+states of the selected evidence, not global truth, completeness or consensus.
+
+Each conflict points to indexes in the retained claim array. Repeated assertions
+and differing retrieval dates remain visible, without voting, deduplication or
+automatic newest-wins resolution. Scalar equality is exact and type-sensitive;
+case variants and differing labels can be flagged as single-value disagreement
+without claiming a taxonomy or natural-language contradiction has been proved.
+All comparison arrays are copied, and grouping is linear rather than pairwise.
