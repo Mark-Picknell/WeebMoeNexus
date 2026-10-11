@@ -67,3 +67,20 @@ test("registry calls are independent copies and perform no fetch", () => {
     assert.equal(calls, 0);
   } finally { globalThis.fetch = original; }
 });
+
+test("bounded name search and episode metadata ranking register exact tools without claiming global or scene identification", () => {
+  const byId = new Map(aniDbCapabilityDeclaration().capabilities.map(c => [c.id, c]));
+  const names = byId.get("selected_character_name_search")!;
+  assert.equal(names.implementation, "implemented");
+  assert.deepEqual(names.tools, ["search_characters_in_selected_anime"]);
+  assert.equal(names.nativeProvider.assessment, "unverified");
+  assert.match(names.scope, /one to five/);
+  assert.ok(names.limitations.some(x => x.includes("No global")));
+  const episodes = byId.get("episode_candidate_metadata_ranking")!;
+  assert.equal(episodes.implementation, "implemented");
+  assert.deepEqual(episodes.tools, ["rank_episode_characters"]);
+  assert.equal(episodes.nativeProvider.assessment, "unverified");
+  assert.ok(episodes.limitations.some(x => x.includes("No actual media")));
+  assert.equal(byId.get("global_character_discovery")?.implementation, "not_implemented");
+  assert.equal(byId.get("scene_character_presence")?.implementation, "not_implemented");
+});

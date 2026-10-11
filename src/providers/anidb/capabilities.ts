@@ -42,6 +42,38 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       { url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/main/src/services/anime-evidence-service.ts", checkedOn: inspected, basis: "implementation", scope: "Current one-record MCP composition and display preferences; this URL follows main." }
     ]
   });
+  // Registered, bounded features added after the pinned initial inventory.
+  // These are plugin implementation observations, not new AniDB-native API claims.
+  capabilities.push({
+    ...capability(
+      "selected_character_name_search", "implemented",
+      ["search_characters_in_selected_anime"],
+      "Name matching in one to five explicitly requested AniDB anime source records; optional reported work-title context.",
+      "src/services/selected-character-search-service.ts",
+      ["No global character catalog, automatic work discovery, source-guessed aliases/species, or identity joins.",
+       "All relevant reads use the existing paced cache; missing rows prove only unreported metadata in the examined works."]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/8be490331f0440fa49d7b75cad07e51e5bf10c0b/src/services/selected-character-search-service.ts",
+      checkedOn: "2026-10-11", basis: "implementation" as const,
+      scope: "Verified bounded selected-work character name matching, source-row provenance and no automatic discovery."
+    }]
+  });
+  capabilities.push({
+    ...capability(
+      "episode_candidate_metadata_ranking", "implemented",
+      ["rank_episode_characters"],
+      "Rank character rows for one selected source anime and listed EID based solely on positive episode-reference joins.",
+      "src/services/episode-character-ranking-service.ts",
+      ["Missing or partial episode information remains unverified, never an inferred absence.",
+       "No actual media frame examination, visual trait matching or scene observation."]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/8cb825ce7177609df80c6160c0f9052b3f3f02a7/src/services/episode-character-ranking-service.ts",
+      checkedOn: "2026-10-11", basis: "implementation" as const,
+      scope: "Verified source metadata ranking only; does not establish scene-character presence."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",
