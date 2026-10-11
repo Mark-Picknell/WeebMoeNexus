@@ -13,6 +13,8 @@ import { relationGraphInputSchema, relationGraphResultSchema } from "./domain/re
 import { traverseAnimeRelations } from "./services/relation-graph-service.js";
 import { entityComparisonInputSchema, entityComparisonResultSchema } from "./domain/entity-comparison.js";
 import { compareAnimeEntities } from "./services/entity-comparison-service.js";
+import { searchCharactersAcrossSelectedAnime } from "./services/selected-character-search-service.js";
+import { selectedCharacterSearchInputSchema, selectedCharacterSearchResultSchema } from "./domain/selected-character-search.js";
 import { providerRegistryResultSchema } from "./domain/provider-registry.js";
 import { aniDbCapabilityDeclaration } from "./providers/anidb/capabilities.js";
 import { getProviderRegistry } from "./services/provider-registry-service.js";
@@ -500,6 +502,36 @@ export function buildServer(): McpServer {
             text: error instanceof Error ? error.message : "Unknown source-scoped character lookup failure"
           }]
         };
+      }
+    }
+  );
+
+  server.registerTool(
+    "search_characters_in_selected_anime",
+    {
+      title: "Search character names across selected anime",
+      description:
+        "Search character-name rows reported by one to five EXPLICITLY selected AniDB anime IDs. Resolve work IDs using search_anime first. Exact/normalized/prefix/substring names are ranked with a supplied work-title constraint first; preserve provider IDs, source-row provenance, collisions, partial/unknown title evidence and truncation. This is not global character discovery, species/appearance search, fuzzy identity, aliases or cross-work identity resolution. Sequential bounded source reads stop on provider error.",
+      inputSchema: selectedCharacterSearchInputSchema,
+      outputSchema: selectedCharacterSearchResultSchema,
+      annotations: {
+        readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true
+      }
+    },
+    async input => {
+      try {
+        const output = await searchCharactersAcrossSelectedAnime(input, service);
+        return {
+          content: [{ type: "text",
+            text: `Found ${output.totalNameMatches} source character-name row(s) among ${output.totalReportedCharacterRows} reported character row(s) in ${output.examinedAnimeIds.length} selected AniDB work(s); showing ${output.results.length}. This is not a global search or a character-identity merge.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError: true, content: [{ type: "text",
+          text: error instanceof Error ? error.message : "Selected character search could not be completed."
+        }] };
       }
     }
   );
