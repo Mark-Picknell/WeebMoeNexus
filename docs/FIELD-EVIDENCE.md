@@ -56,3 +56,43 @@ automatic newest-wins resolution. Scalar equality is exact and type-sensitive;
 case variants and differing labels can be flagged as single-value disagreement
 without claiming a taxonomy or natural-language contradiction has been proved.
 All comparison arrays are copied, and grouping is linear rather than pairwise.
+
+## Non-destructive source preference and MCP inspection
+
+`preferFieldClaims` first performs the full assessment, then selects all claims
+whose **evidence source-record provider** has the best eligible priority. It does
+not rank by subject provider, row count, retrieval recency or positive polarity.
+All best-ranked ties are retained, including negatives and internal disagreement.
+Preferred and other indexes partition every claim exactly once. Conflict states,
+evidence, unknown observations and source order are unchanged.
+
+The policy is a unique ordered `providers` list (at most ten) and `allowUnlisted`.
+Defaults are an empty list and `true`, giving all sources equal display priority.
+Unlisted sources share a rank after listed sources when allowed. With
+`allowUnlisted:false` and no matching provider, `no_eligible_source` retains every
+assertion as other evidence. No claims produces `no_claims`, not a denial.
+Priority means **display preference**, never trusted truth, verified freshness,
+account authorization, a final product-wide conflict priority, or identity.
+
+Read-only, open-world MCP example (a cache miss may read the requested AniDB ID):
+
+```json
+{"name":"get_anime_evidence","arguments":{"anidbId":7,"sourcePreference":{"providers":["anidb"],"allowUnlisted":true}}}
+```
+
+The tool groups exact provider-local subjects/fields/contexts within one record.
+Names, titles and production roles are multi-valued. Known type, count, dates,
+description, image/URL, gender, character role, episode-reference text and
+episode metadata fields are single-valued per exact context. Unrecognized fields
+default to multiple values pending reviewed rules. Same-ID contributor names
+remain aliases/variants without claiming personhood; same-ID differing gender
+rows remain a visible conflict. Unknown-ID rows stay in the projection and their
+indexes are reported separately; they cannot be attached by matching a name.
+
+The service reads exactly one requested anime through the existing provider
+boundary, never related targets or providers named in the preference policy.
+It rejects mismatched records or more than 1,000 projected claims/unknowns rather
+than silently returning an incomplete successful assessment. Existing success
+schemas remain unchanged. This exposes the Phase 4 provenance/conflict/preference
+substrate; canonical cross-provider identity, additional adapters, temporal
+conflict resolution and Mark's final conflict priorities remain separate work.

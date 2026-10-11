@@ -34,6 +34,14 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
     capability("cross_provider_identity", "not_implemented", [], "No canonical identity resolver across providers.", "docs/ROADMAP.md", ["Only AniDB is integrated; pending provider approvals are separate tasks."]),
     capability("semantic_relationships", "not_implemented", [], "Typed portrayal/adaptation/inheritance/cameo/crossover contracts exist, but no source adapter emits those semantic edges.", "docs/RELATIONSHIP-EDGES.md", ["Raw source relation labels stay uninterpreted."])
   ];
+  capabilities.push({
+    ...capability("field_evidence", "implemented", ["get_anime_evidence"], "Normalized field claims, unknowns, exact scoped conflicts and non-destructive caller-selected source preference for one requested work.", "src/server.ts", ["Only AniDB is integrated; priorities cannot fetch or authorize another provider.", "Normalized scalars are not raw XML, source authenticity or global truth.", "No canonical cross-provider identity or automatic conflict resolution."]),
+    evidence: [
+      { url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/a94e2c4caa35dc540b8975e7630115c4fb5458c3/src/providers/anidb/field-claims.ts", checkedOn: inspected, basis: "implementation", scope: "Pinned normalized AniDB field projection and explicit unknowns." },
+      { url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/c5fd534853fec9ed0cd0777522270a9dc434136d/src/services/field-assessment-service.ts", checkedOn: inspected, basis: "implementation", scope: "Pinned exact-context conflict assessment; no winner or identity inference." },
+      { url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/main/src/services/anime-evidence-service.ts", checkedOn: inspected, basis: "implementation", scope: "Current one-record MCP composition and display preferences; this URL follows main." }
+    ]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",

@@ -15,6 +15,8 @@ import { compareAnimeEntities } from "./services/entity-comparison-service.js";
 import { providerRegistryResultSchema } from "./domain/provider-registry.js";
 import { aniDbCapabilityDeclaration } from "./providers/anidb/capabilities.js";
 import { getProviderRegistry } from "./services/provider-registry-service.js";
+import { animeEvidenceInputSchema, animeEvidenceResultSchema } from "./domain/anime-evidence.js";
+import { getAnimeEvidence } from "./services/anime-evidence-service.js";
 
 const service = new AnimeService(loadAniDbConfig());
 
@@ -464,6 +466,27 @@ export function buildServer(): McpServer {
       } catch (error) {
         if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return { isError: true, content: [{ type: "text", text: error instanceof Error ? error.message : "Unknown source-scoped entity comparison failure" }] };
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_anime_evidence",
+    {
+      title: "Inspect source field evidence and disagreements for one anime",
+      description: "Inspect normalized field claims, exact source paths/URLs/times, unknown or derived values and scoped conflicts in one explicitly selected AniDB record. Uses the existing paced success cache; no related targets or other providers are contacted. Source preference is caller-selected display priority, not truth or identity resolution; every competing assertion and conflict remains visible. Names/title variants are multi-valued; declared single fields compare exact typed values. Missing species/aliases and absent fields stay unknown. Evidence is normalized data, not original XML, scene proof, global discovery or cross-provider agreement. Returns an error rather than silently dropping evidence beyond 1,000 claims or 1,000 unknowns.",
+      inputSchema: animeEvidenceInputSchema,
+      outputSchema: animeEvidenceResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await getAnimeEvidence(input, service);
+        const conflicts = output.fields.filter(f => f.assessment.status === "conflicting").length;
+        return { content: [{ type: "text", text: `${output.projection.claims.length} normalized field assertion(s), ${output.projection.unknowns.length} unknown observation(s), ${conflicts} conflicting field group(s) in AniDB #${output.anidbId}. Display preference preserves all claims and disagreements; this is one source record, not a global or cross-provider conclusion.` }], structuredContent: output };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError: true, content: [{ type: "text", text: "Source field evidence could not be inspected." }] };
       }
     }
   );
