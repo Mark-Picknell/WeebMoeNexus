@@ -53,7 +53,7 @@ export async function searchCharactersInUniqueTitledAnime(
     titleMatchCount: titleHits.totalMatches,
     workCandidates: candidates,
     status,
-    selectedAnimeId: characterSearch?.sourceAnimeId ?? null,
+    selectedAnimeId: characterSearch?.examinedAnimeIds[0] ?? null,
     characterSearch
   });
 }

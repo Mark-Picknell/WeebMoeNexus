@@ -38,7 +38,7 @@ export const titledCharacterSearchResultSchema = z.strictObject({
   }
   if (unique && (data.titleMatchCount !== 1 || data.workCandidates[0]?.anidbId !== data.selectedAnimeId ||
     data.workCandidates[0]?.matchType === "fuzzy" ||
-    data.characterSearch?.sourceAnimeId !== data.selectedAnimeId)) {
+    data.characterSearch?.examinedAnimeIds[0] !== data.selectedAnimeId)) {
     ctx.addIssue({ code: "custom", message: "Selected work must be a unique non-fuzzy title match" });
   }
 });
