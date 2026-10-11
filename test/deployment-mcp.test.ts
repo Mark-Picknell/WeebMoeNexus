@@ -18,7 +18,8 @@ test("real loopback HTTP MCP client lists read-only tools and inspects status wi
     const address = server.address(); assert.ok(address && typeof address !== "string");
     await client.connect(new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${address.port}/mcp`)));
     const listing = await client.listTools();
-    assert.equal(listing.tools.length, 10);
+    assert.equal(listing.tools.length, 11);
+    assert.ok(listing.tools.some(tool => tool.name === "rank_episode_characters"));
     assert.ok(listing.tools.every(tool => tool.annotations?.readOnlyHint === true));
     const health = await client.callTool({ name: "health", arguments: {} });
     assert.deepEqual(health.structuredContent, { name: "weeb-moe-nexus", status: "ok", anidbConfigured: false });
