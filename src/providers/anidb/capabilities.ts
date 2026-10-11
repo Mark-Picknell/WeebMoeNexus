@@ -74,6 +74,24 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       scope: "Verified source metadata ranking only; does not establish scene-character presence."
     }]
   });
+  capabilities.push({
+    ...capability(
+      "title_to_character_lookup", "implemented",
+      ["find_character_by_anime_title"],
+      "Local AniDB title-index match followed by ONE source anime character-name search, only when work-title ID is uniquely exact/normalized.",
+      "src/services/titled-character-search-service.ts",
+      [
+        "Fuzzy-only and ambiguous title matches require user selection; no source anime is fetched in those states.",
+        "Requires a previously initialized local title dump and the existing configured source reader.",
+        "No global character discovery, cross-work identity resolution or scene-level recognition."
+      ]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/7d3851a79ab9fb47d2f7d7039cc269fa36dfa111/src/services/titled-character-search-service.ts",
+      checkedOn: "2026-10-11", basis: "implementation" as const,
+      scope: "One unique deterministic local title match to a single bounded character-name source read."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",

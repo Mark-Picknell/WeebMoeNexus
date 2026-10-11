@@ -84,3 +84,14 @@ test("bounded name search and episode metadata ranking register exact tools with
   assert.equal(byId.get("global_character_discovery")?.implementation, "not_implemented");
   assert.equal(byId.get("scene_character_presence")?.implementation, "not_implemented");
 });
+
+test("guarded title-to-character bridge is implemented, not global discovery or fuzzy source selection", () => {
+  const byId = new Map(aniDbCapabilityDeclaration().capabilities.map(c => [c.id, c]));
+  const bridge = byId.get("title_to_character_lookup")!;
+  assert.equal(bridge.implementation, "implemented");
+  assert.deepEqual(bridge.tools, ["find_character_by_anime_title"]);
+  assert.equal(bridge.nativeProvider.assessment, "unverified");
+  assert.ok(bridge.limitations.some(x => x.includes("Fuzzy-only")));
+  assert.ok(bridge.limitations.some(x => x.includes("previously initialized")));
+  assert.equal(byId.get("global_character_discovery")?.implementation, "not_implemented");
+});
