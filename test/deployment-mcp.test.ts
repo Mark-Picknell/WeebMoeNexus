@@ -18,7 +18,8 @@ test("real loopback HTTP MCP client lists read-only tools and inspects status wi
     const address = server.address(); assert.ok(address && typeof address !== "string");
     await client.connect(new StreamableHTTPClientTransport(new URL(`http://127.0.0.1:${address.port}/mcp`)));
     const listing = await client.listTools();
-    assert.equal(listing.tools.length, 13);
+    assert.equal(listing.tools.length, 14);
+    assert.ok(listing.tools.some(tool => tool.name === "find_shared_contributors"));
     assert.ok(listing.tools.some(tool => tool.name === "find_character_by_anime_title"));
     assert.ok(listing.tools.some(tool => tool.name === "search_characters_in_selected_anime"));
     assert.ok(listing.tools.some(tool => tool.name === "rank_episode_characters"));

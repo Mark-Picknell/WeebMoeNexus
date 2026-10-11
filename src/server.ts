@@ -13,6 +13,8 @@ import { relationGraphInputSchema, relationGraphResultSchema } from "./domain/re
 import { traverseAnimeRelations } from "./services/relation-graph-service.js";
 import { entityComparisonInputSchema, entityComparisonResultSchema } from "./domain/entity-comparison.js";
 import { compareAnimeEntities } from "./services/entity-comparison-service.js";
+import { sharedContributorInputSchema, sharedContributorResultSchema } from "./domain/shared-contributors.js";
+import { findSharedContributors } from "./services/shared-contributors-service.js";
 import { searchCharactersAcrossSelectedAnime } from "./services/selected-character-search-service.js";
 import { selectedCharacterSearchInputSchema, selectedCharacterSearchResultSchema } from "./domain/selected-character-search.js";
 import { titledCharacterSearchInputSchema, titledCharacterSearchResultSchema } from "./domain/titled-character-search.js";
@@ -560,6 +562,36 @@ export function buildServer(): McpServer {
         return { isError: true, content: [{ type: "text",
           text: error instanceof Error ? error.message : "Selected character search could not be completed."
         }] };
+      }
+    }
+  );
+
+  server.registerTool(
+    "find_shared_contributors",
+    {
+      title: "Find source-reported shared contributors across anime",
+      description:
+        "Inspect TWO to FIVE explicitly supplied AniDB source anime IDs. Join only the SAME positive AniDB contributor ID reported in at least two selected works, across source production and character-attached voice-actor credits. Preserve exact original names, role/character credit row evidence, retrieved times, separate ID collisions, unknown IDs, disagreements and truncated counts. Contributor may be a person or organization; an identical name with distinct IDs is NOT identity evidence. No unrelated anime fetch, global staff search, user data, inferred kinship, source-independent truth or cross-provider merge.",
+      inputSchema: sharedContributorInputSchema,
+      outputSchema: sharedContributorResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await findSharedContributors(input, service);
+        return {
+          content: [{
+            type: "text",
+            text: `Found ${output.sharedContributorCount} source contributor ID(s) repeated across ${output.examinedAnimeIds.length} selected works (${output.unresolvedIdCreditRows} credit rows lack usable source IDs; ${output.distinctNamedIdCollisionCount} normalized name(s) belong to more than one distinct known ID). Same names alone do not establish identity; this is not global contributor discovery.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return {
+          isError: true,
+          content: [{ type: "text", text: error instanceof Error ? error.message : "Selected contributor comparison failed" }]
+        };
       }
     }
   );
