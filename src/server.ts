@@ -15,6 +15,8 @@ import { entityComparisonInputSchema, entityComparisonResultSchema } from "./dom
 import { compareAnimeEntities } from "./services/entity-comparison-service.js";
 import { searchCharactersAcrossSelectedAnime } from "./services/selected-character-search-service.js";
 import { selectedCharacterSearchInputSchema, selectedCharacterSearchResultSchema } from "./domain/selected-character-search.js";
+import { titledCharacterSearchInputSchema, titledCharacterSearchResultSchema } from "./domain/titled-character-search.js";
+import { searchCharactersInUniqueTitledAnime } from "./services/titled-character-search-service.js";
 import { providerRegistryResultSchema } from "./domain/provider-registry.js";
 import { aniDbCapabilityDeclaration } from "./providers/anidb/capabilities.js";
 import { getProviderRegistry } from "./services/provider-registry-service.js";
@@ -198,6 +200,32 @@ export function buildServer(): McpServer {
             text: error instanceof Error ? error.message : "Unknown title search failure"
           }]
         };
+      }
+    }
+  );
+
+  server.registerTool(
+    "find_character_by_anime_title",
+    {
+      title: "Find characters by a uniquely resolved anime title",
+      description:
+        "Combine the local AniDB anime-title index with a bounded character-name lookup inside exactly ONE source anime. Automatically reads one anime ONLY when the indexed anime title has exactly one exact or normalized match. Unmatched, homonymous or fuzzy-only titles return source title choices without fetching an anime or claiming a character identity; use search_anime and a selected AniDB ID for those cases. Requires the preinitialized local title index and the configured AniDB source reader; no global character search, species inference, guessed character aliases or cross-work identity merging.",
+      inputSchema: titledCharacterSearchInputSchema,
+      outputSchema: titledCharacterSearchResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await searchCharactersInUniqueTitledAnime(input, titleSearch, service);
+        const text = output.status === "unique_work_searched"
+          ? `Searched the uniquely matched source anime AniDB #${output.selectedAnimeId}: ${output.characterSearch?.totalNameMatches ?? 0} reported character-name match row(s). This is a source-scoped lookup, not global character discovery.`
+          : output.status === "no_local_work_match"
+          ? "No locally indexed anime title match. This is not proof the anime does not exist."
+          : `Title selection required: ${output.titleMatchCount} local title candidate(s), status ${output.status}. No anime source was fetched and no character identity was selected.`;
+        return { content: [{ type: "text", text }], structuredContent: output };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError: true, content: [{ type: "text", text: error instanceof Error ? error.message : "Title-to-character lookup could not complete." }] };
       }
     }
   );
