@@ -20,6 +20,8 @@
 
 **Subsequent bounded progress · 2026-10-11:** A first P6-02 source-metadata-only episode-ranking function and the read-only `rank_episode_characters` MCP tool are implemented. [Corrected CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38106503911) passed the build and **227 offline tests**. This does not identify a character from a frame or implement global discovery; **P6-02 remains unchecked and the register remains 54/87 complete, 33 outstanding**. Earlier 220-test checkpoints are historical, not current test counts.
 
+**Further scoped 3XC/TTDLAGG implementation · 2026-10-11:** three sequential source/observer evidence slices added time-coded reports, conflict-preserving review and a read-only *pure preview function* that keeps observer proposals separate from source-ranked anime characters. [Full CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38107449164) passed **246/246 offline tests**, TypeScript build, container build and passive liveness. No new MCP tool or media upload; all new code is pure local library. P6-02/03/04 remain unchecked and the register stays **54/87 completed, 33 outstanding**. [Design and boundaries](SCENE-OBSERVATIONS.md). Historical 220/227-test checkpoints retain their original meaning.
+
 ## Current verified baseline (2026-10-09)
 
 | Phase | Existing completed / existing tasks | State |
@@ -152,8 +154,8 @@ Once the boring substrate is trustworthy:
 
 - [ ] `P6-01` **JayMe** — character appearance/aesthetic search
 - [ ] `P6-02` **JayMe** — Episode-aware candidate ranking for pause-frame recognition; missing episode metadata must never exclude a character **First source-metadata slice verified 2026-10-11:** `rank_episode_characters` ranks source-report-positive episode references for one explicitly selected AniDB work + EID, retaining unknown/partial evidence and all candidate counts before truncation. No media observation, global discovery, actual scene identification or P6-02 phase-level completion. [Contract](EPISODE-CHARACTER-RANKING.md); [pure ranking](https://github.com/Mark-Picknell/WeebMoeNexus/commit/8cb825ce7177609df80c6160c0f9052b3f3f02a7); [MCP integration](https://github.com/Mark-Picknell/WeebMoeNexus/commit/5b946873049198d764de808d0c475ac2d750faf7); [227 passing offline tests and build](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38106503911).
-- [ ] `P6-03` **JayMe** — User-confirmed identification/correction and optional permitted reference-image uploads; retain evidence, provenance, consent/licensing and review status
-- [ ] `P6-04` **JayMe** — Feedback quality controls so a single mistaken submission does not silently alter canonical character identities
+- [ ] `P6-03` **JayMe** — User-confirmed identification/correction and optional permitted reference-image uploads; retain evidence, provenance, consent/licensing and review status **Partial implementation 2026-10-11:** strict time-coded local report contract, explicit uncertainty, consent-limited digest-only media reference (no upload) and unauthenticated review-state provenance. [Contract](SCENE-OBSERVATIONS.md). No user authentication, durable storage, actual corrections workflow or rights verification; task stays open.
+- [ ] `P6-04` **JayMe** — Feedback quality controls so a single mistaken submission does not silently alter canonical character identities **Partial implementation 2026-10-11:** bounded append-only local review event replay preserves disagreement, request-for-evidence and terminal withdrawal. Neither observer majority nor most recent review may assert canonical truth; no durable moderation/anti-abuse yet. [Contract](SCENE-OBSERVATIONS.md). Task stays open.
 - [ ] `P6-05` **JayMe** — trope/theme search
 - [ ] `P6-06` **JayMe** — “what was that scene/character/anime?” memory reconstruction
 - [ ] `P6-07` **JayMe** — relationship-path queries across characters, creators, studios, and works
