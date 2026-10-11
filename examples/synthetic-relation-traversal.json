@@ -1,0 +1,72 @@
+{
+  "rootAnimeId": 7001,
+  "limits": {
+    "maxDepth": 1,
+    "maxNodes": 20,
+    "maxEdges": 100,
+    "maxReads": 5
+  },
+  "readAttempts": 1,
+  "recordsRead": 1,
+  "termination": "depth_limit",
+  "truncated": true,
+  "nodes": [
+    {
+      "anidbId": 7001,
+      "depth": 0,
+      "title": "Synthetic Observatory",
+      "url": "https://anidb.net/anime/7001",
+      "recordRead": true,
+      "relationsComplete": true
+    },
+    {
+      "anidbId": 7002,
+      "depth": 1,
+      "title": null,
+      "url": "https://anidb.net/anime/7002",
+      "recordRead": false,
+      "relationsComplete": false
+    },
+    {
+      "anidbId": 7003,
+      "depth": 1,
+      "title": null,
+      "url": "https://anidb.net/anime/7003",
+      "recordRead": false,
+      "relationsComplete": false
+    }
+  ],
+  "edges": [
+    {
+      "sourceAnimeId": 7001,
+      "targetAnimeId": 7002,
+      "relationType": "sequel",
+      "targetTitle": "Synthetic Lantern City",
+      "targetUrl": "https://anidb.net/anime/7002",
+      "evidenceSourceUrl": "https://anidb.net/anime/7001",
+      "retrievedAt": "2026-10-11T22:40:00.000Z"
+    },
+    {
+      "sourceAnimeId": 7001,
+      "targetAnimeId": 7003,
+      "relationType": "alternative version",
+      "targetTitle": "Synthetic Second Story",
+      "targetUrl": "https://anidb.net/anime/7003",
+      "evidenceSourceUrl": "https://anidb.net/anime/7001",
+      "retrievedAt": "2026-10-11T22:40:00.000Z"
+    }
+  ],
+  "frontier": [
+    {
+      "anidbId": 7002,
+      "depth": 1,
+      "reason": "depth_limit"
+    },
+    {
+      "anidbId": 7003,
+      "depth": 1,
+      "reason": "depth_limit"
+    }
+  ],
+  "failures": []
+}

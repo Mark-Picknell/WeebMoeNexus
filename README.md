@@ -10,6 +10,23 @@ is claimed; real deployment/client/review gates are tracked in the roadmap.
 
 **WeebMoeNexus** is an anime knowledge plugin for ChatGPT and Codex. The first provider is **AniDB**; the architecture is intentionally provider-independent so future integrations can add MyAnimeList, AniList, streaming providers, personal watch state, and whatever strange relational perversion happens next.
 
+## Optional offline relationship graph viewer (P3-09)
+
+Visualize an existing `traverse_anime_relations` MCP response locally, without
+a host, API request, credentials, or external JavaScript:
+
+```bash
+npm install
+npm run graph:export -- --input examples/synthetic-relation-traversal.json --output graph.html
+```
+
+Open `graph.html` in your browser. To use your own graph, save the MCP tool's
+`structuredContent` JSON to a local file and supply that file as `--input`.
+The browser has selectable directed nodes/edges, source provenance, partial
+frontier warnings, zoom/pan and accessible searchable lists. The example is
+synthetic; the UI is **not** the hosted ChatGPT integration.
+[Instructions and evidence](docs/RELATION-EXPLORER.md).
+
 ## Status
 
 Early scaffold with a verified live AniDB HTTP read path. The first vertical slice is:
