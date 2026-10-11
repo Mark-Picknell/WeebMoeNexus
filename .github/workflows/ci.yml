@@ -23,10 +23,17 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build and test
         run: npm run check
+
+      - name: Build production container and check passive liveness
+        run: |
+          docker build --tag weeb-moe-nexus:ci .
+          docker run --detach --name weeb-moe-nexus-ci weeb-moe-nexus:ci
+          trap 'docker rm --force weeb-moe-nexus-ci' EXIT
+          docker exec weeb-moe-nexus-ci node -e "let attempts=0;async function check(){try{const r=await fetch('http://127.0.0.1:3000/healthz');if(!r.ok)throw Error();process.exit(0)}catch{if(++attempts>=20)process.exit(1);setTimeout(check,500)}}check()"
 
       - name: Retain scoped offline validation status
         if: always()

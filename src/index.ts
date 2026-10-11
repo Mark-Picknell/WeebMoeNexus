@@ -1,37 +1,33 @@
 import "dotenv/config";
-import { createServer } from "node:http";
-import {
-  localhostHostValidation,
-  localhostOriginValidation,
-  toNodeHandler
-} from "@modelcontextprotocol/node";
 import { createMcpHandler } from "@modelcontextprotocol/server";
-import { loadPort } from "./config.js";
+import { loadHttpConfig } from "./http/config.js";
+import { createHttpServer, HTTP_BODY_MAX_BYTES } from "./http/server.js";
 import { buildServer } from "./server.js";
 
-const port = loadPort();
-const handler = createMcpHandler(buildServer);
-const nodeHandler = toNodeHandler(handler);
-
-const validateHost = localhostHostValidation();
-const validateOrigin = localhostOriginValidation();
-
-const httpServer = createServer((req, res) => {
-  if (!validateHost(req, res) || !validateOrigin(req, res)) return;
-  void nodeHandler(req, res);
+const config = loadHttpConfig();
+const handler = createMcpHandler(buildServer, {
+  maxRequestBodySize: HTTP_BODY_MAX_BYTES, maxSubscriptions: 16,
+  onerror: () => console.error(JSON.stringify({ event: "mcp_error" }))
+});
+const httpServer = createHttpServer(config, handler, {
+  diagnostic: event => console.error(JSON.stringify(event))
+});
+httpServer.listen(config.port, config.bindHost, () => {
+  console.error(JSON.stringify({ event: "listening", mode: config.mode, port: config.port }));
 });
 
-httpServer.listen(port, "127.0.0.1", () => {
-  console.error(
-    `[WeebMoeNexus] MCP listening on http://127.0.0.1:${port}/mcp`
-  );
-});
-
-async function shutdown(signal: string): Promise<void> {
-  console.error(`[WeebMoeNexus] ${signal}; shutting down.`);
+let stopping = false;
+async function shutdown(): Promise<void> {
+  if (stopping) return;
+  stopping = true;
+  console.error(JSON.stringify({ event: "shutdown" }));
+  const timeout = setTimeout(() => { httpServer.closeAllConnections(); process.exit(1); }, 10_000);
+  timeout.unref();
+  const closed = new Promise<void>(resolve => httpServer.close(() => resolve()));
   await handler.close();
-  httpServer.close(() => process.exit(0));
+  await closed;
+  clearTimeout(timeout);
 }
 
-process.on("SIGINT", () => void shutdown("SIGINT"));
-process.on("SIGTERM", () => void shutdown("SIGTERM"));
+process.on("SIGINT", () => void shutdown());
+process.on("SIGTERM", () => void shutdown());

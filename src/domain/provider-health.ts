@@ -53,7 +53,7 @@ export class ProviderOperationHealthTracker {
       const safe = safeFailureSchema.safeParse({ code, reason, httpStatus, apiCode, retried: false });
       if (safe.success) {
         this.last = { outcome: "failed", observedAt,
-          networkAttempted: reason === "missing_client" || reason === "invalid_configuration" ? "no" : "yes",
+        networkAttempted: ["missing_client", "invalid_configuration", "local_backoff", "local_capacity"].includes(reason) ? "no" : "yes",
           error: safe.data
         };
         return;

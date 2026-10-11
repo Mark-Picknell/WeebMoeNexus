@@ -40,11 +40,11 @@ test("all AniDB-backed MCP read tools expose structured provider failures withou
     await client.connect(ct);
     const cases = [
       { name: "get_anime_by_anidb_id", arguments: { anidbId: 7001 }, code: "not_found" },
-      { name: "get_related_anime", arguments: { anidbId: 7002 }, code: "banned" },
       { name: "find_character", arguments: { anidbId: 7003, query: "Synthetic" }, code: "outdated" },
       { name: "get_character", arguments: { anidbId: 7004, characterId: 1 }, code: "misconfigured" },
       { name: "traverse_anime_relations", arguments: { anidbId: 7005 }, code: "unavailable" },
-      { name: "compare_anime_entities", arguments: { anidbIds: [7006], query: "Synthetic" }, code: "unavailable" }
+      { name: "compare_anime_entities", arguments: { anidbIds: [7006], query: "Synthetic" }, code: "unavailable" },
+      { name: "get_related_anime", arguments: { anidbId: 7002 }, code: "banned" }
     ];
     for (const item of cases) {
       const result = await client.callTool({ name: item.name, arguments: item.arguments });
@@ -55,7 +55,10 @@ test("all AniDB-backed MCP read tools expose structured provider failures withou
       assert.equal(error.retried, false);
       assert.ok(result.content.some(c => c.type === "text" && c.text === error.message));
     }
-    assert.deepEqual(reads, [7001, 7002, 7003, 7004, 7005, 7006]);
+    assert.deepEqual(reads, [7001, 7003, 7004, 7005, 7006, 7002]);
+    const blocked = await client.callTool({ name: "find_character", arguments: { anidbId: 7003, query: "Synthetic" } });
+    assert.equal(providerErrorSchema.parse(blocked.structuredContent?.error).reason, "local_backoff");
+    assert.equal(reads.length, 6, "subsequent tool calls cannot bypass process-wide provider backoff");
   } finally {
     if (client) await client.close();
     if (server) await server.close();

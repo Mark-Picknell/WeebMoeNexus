@@ -1,5 +1,11 @@
 # WeebMoeNexus
 
+Deployment preparation: [HTTP controls and production runbook](docs/DEPLOYMENT.md),
+[current ChatGPT/Codex publication path](docs/PUBLICATION.md),
+[scoped offline validation reporting](docs/VALIDATION-STATUS.md).
+The default server remains local. No hosted endpoint or directory publication
+is claimed; real deployment/client/review gates are tracked in the roadmap.
+
 > _Because apparently “find the hot pink-haired doctor with a scalpel” is a legitimate database query. 😂💋🔪_
 
 **WeebMoeNexus** is an anime knowledge plugin for ChatGPT and Codex. The first provider is **AniDB**; the architecture is intentionally provider-independent so future integrations can add MyAnimeList, AniList, streaming providers, personal watch state, and whatever strange relational perversion happens next.

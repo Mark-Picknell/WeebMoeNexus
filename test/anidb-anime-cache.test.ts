@@ -184,12 +184,16 @@ test("failed atomic replacement preserves the previous file and cleans temporary
 test("a shared failed read is evicted so a later explicit call can succeed", async () => {
   await fixture(async config => {
     let calls = 0;
+    let now = Date.now();
     globalThis.fetch = async () => { calls++; return new Response('<error>Client banned</error>'); };
-    const service = new AnimeService(config);
+    const service = new AnimeService(config, { now: () => now });
     const results = await Promise.allSettled([service.getByAniDbId(15437), service.getByAniDbId(15437)]);
     assert.ok(results.every(result => result.status === "rejected" && result.reason instanceof ProviderLookupError));
     assert.equal(calls, 1);
     globalThis.fetch = async () => { calls++; return new Response(xml); };
+    await assert.rejects(() => service.getByAniDbId(15437), (error: unknown) => error instanceof ProviderLookupError && error.details.reason === "local_backoff");
+    assert.equal(calls, 1);
+    now += 5 * 60_000;
     assert.equal((await service.getByAniDbId(15437)).id, 15437);
     assert.equal(calls, 2, "this is a new explicit call, not an automatic retry");
   });

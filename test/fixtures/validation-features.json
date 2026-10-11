@@ -107,6 +107,24 @@
       "testFiles": [
         "test/validation-status.test.ts"
       ]
+    },
+    {
+      "id": "deployment_http_boundary",
+      "implementation": "implemented",
+      "scope": "Loopback HTTP/MCP and synthetic provider safeguards; not hosted connectivity or client acceptance",
+      "testFiles": [
+        "test/deployment-http.test.ts",
+        "test/deployment-mcp.test.ts",
+        "test/deployment-provider.test.ts"
+      ]
+    },
+    {
+      "id": "plugin_package_preparation",
+      "implementation": "implemented",
+      "scope": "Manifest preparation contracts; real endpoint, publisher metadata and review remain pending",
+      "testFiles": [
+        "test/plugin-package.test.ts"
+      ]
     }
   ]
 }

@@ -96,9 +96,7 @@ test("network, timeout and response-body failures are sanitized and never retrie
         calls++;
         if (mode === "network") throw new Error("private-url-and-material");
         if (mode === "timeout") throw new DOMException("private timeout", "TimeoutError");
-        const response = new Response("unused");
-        response.text = async () => { throw new Error("private transfer failure"); };
-        return response;
+        return new Response(new ReadableStream({ start(controller) { controller.error(new Error("private transfer failure")); } }));
       };
       const failure = await capture(() => new AniDbClient(config).getAnimeXml(1));
       assert.equal(failure.details.code, "unavailable");

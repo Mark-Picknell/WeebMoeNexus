@@ -1,0 +1,12 @@
+node_modules
+dist
+.git
+.cache
+.env
+.env.*
+artifacts
+test
+docs
+scripts
+packaging
+assets

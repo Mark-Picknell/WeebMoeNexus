@@ -2,7 +2,38 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "weeb-moe-nexus",
   "version": "0.1.0",
-  "description": "Anime knowledge and discovery through a normalized, provenance-preserving MCP layer.",
+  "description": "Read-only AniDB title search, anime metadata, scoped character credits and source-reported work relationships with provenance.",
   "repository": "https://github.com/Mark-Picknell/WeebMoeNexus",
-  "keywords": ["anime", "anidb", "mcp", "chatgpt", "codex", "metadata", "knowledge"]
+  "keywords": ["anime", "anidb", "mcp", "chatgpt", "codex", "metadata", "knowledge"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "WeebMoeNexus",
+        "shortDescription": "Anime credits and connections",
+        "longDescription": "Find anime by source-supplied titles, inspect AniDB metadata, explore bounded outgoing work relationships and look up characters within a known anime. Credits and field evidence preserve source IDs, timestamps, unknown values and disagreements. Reads are cached and conservatively paced. Only AniDB is integrated. Global character/attribute search, scene recognition, personal watchlists and automatic cross-provider identity resolution are not available.",
+        "capabilities": ["AniDB title search", "Anime metadata", "Scoped character lookup", "Source-backed credits", "Directed work relations", "Field evidence"],
+        "defaultPrompt": ["Find the anime Akudama Drive by title.", "Inspect the source-reported character credits for AniDB anime 15437.", "Show the direct related-anime links for AniDB anime 15437."],
+        "logo": "./assets/icon.svg",
+        "composerIcon": "./assets/icon.svg"
+      },
+      "review": {
+        "commerce": false,
+        "commerce_description": "Read-only catalog metadata; no purchases or payments.",
+        "test_cases": {
+          "positive": [
+            { "description": "Passive provider capability inspection", "prompt": "Inspect the registered providers and tell me which discovery capabilities are implemented, without probing upstream services.", "tools_triggered": "get_provider_status", "expected_behavior": "Reports AniDB declarations with evidence scopes, local readiness and passive operation observations. Does not contact providers or claim global discovery." },
+            { "description": "Local source title search", "prompt": "Find Akudama Drive by anime title and show the source ID and match evidence.", "tools_triggered": "search_anime", "expected_behavior": "Uses the populated sanctioned title cache and returns distinct AniDB candidates with original alias and match evidence. Does not search character attributes or download titles during the call." },
+            { "description": "Known anime metadata", "prompt": "Read AniDB anime 15437 and show its title and source attribution.", "tools_triggered": "get_anime_by_anidb_id", "expected_behavior": "Returns validated cached or paced AniDB metadata for the requested ID with original provenance. Provider failures remain safe typed errors; no fabricated record." },
+            { "description": "Characters within an explicit anime", "prompt": "Within AniDB anime 15437, find characters named Doctor and preserve each source character ID and reported role.", "tools_triggered": "find_character", "expected_behavior": "Matches only the requested anime's reported characters. Does not equate a name with a historical person or claim global occupation/appearance discovery." },
+            { "description": "Directed relationship evidence", "prompt": "Show the direct source-reported related-anime links for AniDB anime 15437; preserve the provider labels and explain any empty result.", "tools_triggered": "get_related_anime", "expected_behavior": "Returns only reported outgoing rows and their source evidence without fetching targets or inventing inverse edges. Empty rows mean no links reported by this record, not proof no relationships exist." }
+          ],
+          "negative": [
+            { "description": "Unsupported personal account write", "prompt": "Mark this anime completed on my personal watchlist." },
+            { "description": "Unsupported scene identification", "prompt": "Tell me exactly which character appears at 12:34 in an episode I have not supplied." },
+            { "description": "Unrelated request", "prompt": "Translate this sentence into French: The train leaves at noon." }
+          ]
+        }
+      }
+    }
+  }
 }

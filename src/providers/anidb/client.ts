@@ -1,5 +1,5 @@
 import type { AniDbConfig } from "../../config.js";
-import { RateGate } from "../../infrastructure/rate-gate.js";
+import { RateGate, RateGateCapacityError } from "../../infrastructure/rate-gate.js";
 import { XMLParser, XMLValidator } from "fast-xml-parser";
 import { ProviderLookupError, type ProviderError } from "../../domain/provider-error.js";
 import type { ProviderConfiguration } from "../../domain/provider-health.js";
@@ -58,10 +58,37 @@ const apiMessages: Record<ProviderError["code"], string> = {
   unavailable: "AniDB returned an unclassified API error. No retry was attempted."
 };
 
+export const ANIDB_RESPONSE_MAX_BYTES = 8 * 1024 * 1024;
+export const ANIDB_BACKOFF_MS = 5 * 60_000;
+
+async function boundedBody(response: Response): Promise<string> {
+  const oversized = () => new AniDbUpstreamError("AniDB response exceeded the configured byte limit. No retry was attempted.", "unavailable", "invalid_response", response.status);
+  if (Number(response.headers.get("content-length")) > ANIDB_RESPONSE_MAX_BYTES) {
+    await response.body?.cancel();
+    throw oversized();
+  }
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      size += chunk.value.byteLength;
+      if (size > ANIDB_RESPONSE_MAX_BYTES) { await reader.cancel(); throw oversized(); }
+      chunks.push(chunk.value);
+    }
+  } finally { reader.releaseLock(); }
+  return Buffer.concat(chunks, size).toString("utf8");
+}
+
 export class AniDbClient {
   private readonly gate: RateGate;
+  private blockedUntil = 0;
+  private blockedCode: ProviderError["code"] = "unavailable";
 
-  constructor(private readonly config: AniDbConfig) {
+  constructor(private readonly config: AniDbConfig, private readonly now: () => number = Date.now) {
     this.gate = new RateGate(config.minIntervalMs);
   }
 
@@ -87,7 +114,15 @@ export class AniDbClient {
     }
     const url = new URL(this.config.apiUrl);
 
-    return this.gate.run(async () => {
+    const assertNotBlocked = () => {
+      if (this.now() < this.blockedUntil) throw new AniDbUpstreamError(
+        "AniDB reads are paused after a ban or rate limit. No network request or retry was attempted.", this.blockedCode, "local_backoff"
+      );
+    };
+    assertNotBlocked();
+    try { return await this.gate.run(async () => {
+      // A preceding queued operation may have triggered backoff.
+      assertNotBlocked();
       url.searchParams.set("request", "anime");
       url.searchParams.set("client", this.config.client);
       url.searchParams.set("clientver", String(this.config.clientVersion));
@@ -102,12 +137,15 @@ export class AniDbClient {
           signal: AbortSignal.timeout(15_000)
         });
         if (response.status === 429) {
+          this.blockedUntil = this.now() + ANIDB_BACKOFF_MS;
+          this.blockedCode = "unavailable";
+          await response.body?.cancel();
           throw new AniDbUpstreamError(
             "AniDB rate-limited this request; back off. No retry was attempted.",
             "unavailable", "rate_limited", 429
           );
         }
-        body = await response.text();
+        body = await boundedBody(response);
       } catch (error) {
         if (error instanceof ProviderLookupError) throw error;
         throw new AniDbUpstreamError(
@@ -127,6 +165,10 @@ export class AniDbClient {
           const parsedCode = typeof rawCode === "string" && /^\d+$/.test(rawCode) ? Number(rawCode) : NaN;
           const apiCode = Number.isSafeInteger(parsedCode) ? parsedCode : null;
           const code = classifyApiError(label);
+          if (code === "banned") {
+            this.blockedUntil = this.now() + ANIDB_BACKOFF_MS;
+            this.blockedCode = "banned";
+          }
           throw new AniDbUpstreamError(apiMessages[code], code, "api_error", response.status, apiCode);
         }
       }
@@ -145,6 +187,11 @@ export class AniDbClient {
       }
 
       return body;
-    });
+    }); } catch (error) {
+      if (error instanceof RateGateCapacityError) throw new AniDbUpstreamError(
+        "AniDB request queue is full. No network request or retry was attempted.", "unavailable", "local_capacity"
+      );
+      throw error;
+    }
   }
 }

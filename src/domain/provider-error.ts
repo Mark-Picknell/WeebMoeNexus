@@ -5,7 +5,7 @@ export const providerErrorSchema = z.object({
   code: z.enum(["not_found", "banned", "unavailable", "outdated", "misconfigured"]),
   reason: z.enum([
     "missing_client", "invalid_configuration", "api_error", "rate_limited",
-    "http_error", "network_error", "invalid_response"
+    "http_error", "network_error", "invalid_response", "local_backoff", "local_capacity"
   ]),
   message: z.string(),
   httpStatus: z.number().int().min(100).max(599).nullable(),

@@ -9,15 +9,30 @@ import { ProviderOperationHealthTracker, type ProviderOperationHealth } from "..
 export class AnimeService {
   private readonly anidb: AniDbClient;
   private readonly cache = new Map<number, AnimeCacheEntry>();
+  private readonly cacheSizes = new Map<number, number>();
+  private cacheBytes = 0;
   private readonly diskCache: AniDbAnimeCache | null;
   private readonly inFlight = new Map<number, Promise<AnimeRecord>>();
   private readonly now: () => number;
   private readonly health: ProviderOperationHealthTracker;
 
+  private remember(anidbId: number, entry: AnimeCacheEntry): void {
+    const size = Buffer.byteLength(JSON.stringify(entry), "utf8");
+    const previous = this.cacheSizes.get(anidbId) ?? 0;
+    this.cache.delete(anidbId); this.cacheSizes.delete(anidbId); this.cacheBytes -= previous;
+    if (size > 16 * 1024 * 1024) return;
+    while (this.cache.size >= 256 || this.cacheBytes + size > 16 * 1024 * 1024) {
+      const oldest = this.cache.keys().next().value!;
+      this.cacheBytes -= this.cacheSizes.get(oldest)!;
+      this.cache.delete(oldest); this.cacheSizes.delete(oldest);
+    }
+    this.cache.set(anidbId, entry); this.cacheSizes.set(anidbId, size); this.cacheBytes += size;
+  }
+
   constructor(private readonly config: AniDbConfig, options: { now?: () => number } = {}) {
-    this.anidb = new AniDbClient(config);
-    this.diskCache = config.cacheDirectory?.trim() ? new AniDbAnimeCache(config) : null;
     this.now = options.now ?? Date.now;
+    this.anidb = new AniDbClient(config, this.now);
+    this.diskCache = config.cacheDirectory?.trim() ? new AniDbAnimeCache(config) : null;
     this.health = new ProviderOperationHealthTracker(this.now);
   }
 
@@ -35,6 +50,9 @@ export class AnimeService {
     if (cached && cached.expiresAt > this.now() && cached.cachedAt <= this.now()) {
       return cached.value;
     }
+    if (cached) {
+      this.cache.delete(anidbId); this.cacheBytes -= this.cacheSizes.get(anidbId)!; this.cacheSizes.delete(anidbId);
+    }
 
     const pending = this.inFlight.get(anidbId);
     if (pending) return pending;
@@ -47,7 +65,7 @@ export class AnimeService {
     const persisted = await this.diskCache?.read(anidbId, this.now());
     // Recheck after asynchronous I/O; an entry can expire during a read.
     if (persisted && persisted.expiresAt > this.now() && persisted.cachedAt <= this.now()) {
-      this.cache.set(anidbId, persisted);
+      this.remember(anidbId, persisted);
       return persisted.value;
     }
 
@@ -72,7 +90,7 @@ export class AnimeService {
 
     const cachedAt = this.now();
     const entry = { cachedAt, expiresAt: cachedAt + this.config.cacheTtlMs, value };
-    this.cache.set(anidbId, entry);
+    this.remember(anidbId, entry);
     if (this.diskCache && !await this.diskCache.write(anidbId, entry)) {
       console.warn("AniDB disk cache write failed; validated result remains available in memory.");
     }

@@ -85,6 +85,10 @@ test("a ban or HTTP failure remains visible while an older cached anime is serve
     assert.deepEqual(service.getProviderHealth().observation, failure);
     assert.equal(calls, 2);
     globalThis.fetch = async () => { calls++; return new Response(xml.replace('id="11"', 'id="13"')); };
+    await assert.rejects(() => service.getByAniDbId(13), (error: unknown) => error instanceof ProviderLookupError && error.details.reason === "local_backoff");
+    assert.equal(service.getProviderHealth().observation!.networkAttempted, "no");
+    assert.equal(calls, 2);
+    now += 5 * 60_000;
     await service.getByAniDbId(13);
     assert.equal(service.getProviderHealth().observation!.outcome, "validated_success");
     assert.equal(calls, 3, "recovery is a later explicit read, not a health probe or retry");
