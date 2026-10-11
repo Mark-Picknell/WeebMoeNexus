@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "features": [
+    {
+      "id": "anime_read",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/anidb-client.test.ts",
+        "test/anidb-mapper.test.ts",
+        "test/anidb-edge-cases.test.ts",
+        "test/provider-errors.test.ts",
+        "test/mcp-provider-errors.test.ts",
+        "test/anidb-anime-cache.test.ts"
+      ]
+    },
+    {
+      "id": "local_title_search",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/anidb-title-dump.test.ts",
+        "test/anidb-title-index.test.ts",
+        "test/anidb-title-normalization.test.ts",
+        "test/anidb-title-search.test.ts",
+        "test/anidb-title-fuzzy.test.ts",
+        "test/mcp-search-anime.test.ts"
+      ]
+    },
+    {
+      "id": "work_relationships",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/related-anime.test.ts",
+        "test/mcp-related-anime.test.ts",
+        "test/relation-graph.test.ts",
+        "test/mcp-relation-graph.test.ts"
+      ]
+    },
+    {
+      "id": "scoped_character_lookup",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/character-search.test.ts",
+        "test/character-detail.test.ts",
+        "test/episode-appearance.test.ts",
+        "test/mcp-find-character.test.ts"
+      ]
+    },
+    {
+      "id": "scoped_entity_comparison",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/entity-comparison.test.ts",
+        "test/mcp-entity-comparison.test.ts"
+      ]
+    },
+    {
+      "id": "field_evidence",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/field-claims.test.ts",
+        "test/field-assessment.test.ts",
+        "test/source-preference.test.ts",
+        "test/anime-evidence.test.ts",
+        "test/mcp-anime-evidence.test.ts"
+      ]
+    },
+    {
+      "id": "identity_graph_contract",
+      "implementation": "implemented",
+      "scope": "Supplied mapping evidence and synthetic regressions; no global identity resolver",
+      "testFiles": [
+        "test/identity-graph.test.ts",
+        "test/identity-regressions.test.ts",
+        "test/relationship-edge.test.ts",
+        "test/anidb-relationship-edges.test.ts"
+      ]
+    },
+    {
+      "id": "passive_provider_status",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/provider-capabilities.test.ts",
+        "test/provider-health.test.ts",
+        "test/provider-registry.test.ts",
+        "test/mcp-provider-status.test.ts"
+      ]
+    },
+    {
+      "id": "golden_fixture_integrity",
+      "implementation": "implemented",
+      "scope": "Fixture structure and guardrails only; not semantic query resolution",
+      "testFiles": [
+        "test/golden-query-matrix.test.ts"
+      ]
+    },
+    {
+      "id": "validation_status_contract",
+      "implementation": "implemented",
+      "scope": "Offline unit/service/MCP contracts, not live catalog or client acceptance",
+      "testFiles": [
+        "test/validation-status.test.ts"
+      ]
+    }
+  ]
+}

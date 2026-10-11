@@ -27,3 +27,11 @@ jobs:
 
       - name: Build and test
         run: npm run check
+
+      - name: Retain scoped offline validation status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-validation-status
+          path: artifacts/validation-report.*
+          if-no-files-found: warn
