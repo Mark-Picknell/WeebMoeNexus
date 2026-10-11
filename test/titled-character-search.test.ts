@@ -53,6 +53,25 @@ test("normalization is permitted but reported same-name works must not trigger s
   assert.equal(reads, 1);
 });
 
+test("loose title normalization and loose character substring remain bounded to one proven work", async () => {
+  const reads: number[] = [];
+  const result = await searchCharactersInUniqueTitledAnime(
+    { animeTitle: "VIPER_GTS", characterName: "rrer" }, titleReader,
+    { getByAniDbId: async id => { reads.push(id); return anime; } }
+  );
+
+  assert.deepEqual(reads, [1725]);
+  assert.equal(result.status, "unique_work_searched");
+  assert.equal(result.titleMatchCount, 1);
+  assert.equal(result.workCandidates[0]!.matchType, "normalized");
+  assert.equal(result.selectedAnimeId, 1725);
+  assert.equal(result.characterSearch!.totalNameMatches, 3);
+  assert.deepEqual(
+    result.characterSearch!.results.map(x => [x.characterName, x.nameMatch]),
+    [["Carrera", "contains"], ["Carrera", "contains"], ["Carrera Child", "contains"]]
+  );
+});
+
 test("no title match remains unverified, not a global nonexistence claim", async () => {
   let reads = 0;
   const result = await searchCharactersInUniqueTitledAnime(
