@@ -13,7 +13,8 @@
     "build": "tsc -p tsconfig.json",
     "test": "node scripts/test.mjs",
     "check": "npm run build && npm test",
-    "titles:refresh": "tsx src/cli/refresh-anidb-titles.ts"
+    "titles:refresh": "tsx src/cli/refresh-anidb-titles.ts",
+    "graph:export": "tsx src/cli/export-relationship-graph.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/node": "^2.1.1",
