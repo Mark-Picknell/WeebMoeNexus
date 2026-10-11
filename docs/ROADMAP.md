@@ -18,6 +18,8 @@
 
 **Approval log · 2026-10-10:** Mark said “Ya Changes approved BTW” after reviewing the preceding NDS increment: typed relationship contracts (`665c710`), AniDB relationship projection (`0b02b2f`) and identity regression contracts (`c029534`). This records approval of those changes and the continuing sequential workflow. It does not complete phase exit acceptance, global golden-query review, provider authorizations or presentation acceptance.
 
+**Subsequent bounded progress · 2026-10-11:** A first P6-02 source-metadata-only episode-ranking function and the read-only `rank_episode_characters` MCP tool are implemented. [Corrected CI](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38106503911) passed the build and **227 offline tests**. This does not identify a character from a frame or implement global discovery; **P6-02 remains unchecked and the register remains 54/87 complete, 33 outstanding**. Earlier 220-test checkpoints are historical, not current test counts.
+
 ## Current verified baseline (2026-10-09)
 
 | Phase | Existing completed / existing tasks | State |
@@ -149,7 +151,7 @@ Only after authentication is designed properly:
 Once the boring substrate is trustworthy:
 
 - [ ] `P6-01` **JayMe** — character appearance/aesthetic search
-- [ ] `P6-02` **JayMe** — Episode-aware candidate ranking for pause-frame recognition; missing episode metadata must never exclude a character
+- [ ] `P6-02` **JayMe** — Episode-aware candidate ranking for pause-frame recognition; missing episode metadata must never exclude a character **First source-metadata slice verified 2026-10-11:** `rank_episode_characters` ranks source-report-positive episode references for one explicitly selected AniDB work + EID, retaining unknown/partial evidence and all candidate counts before truncation. No media observation, global discovery, actual scene identification or P6-02 phase-level completion. [Contract](EPISODE-CHARACTER-RANKING.md); [pure ranking](https://github.com/Mark-Picknell/WeebMoeNexus/commit/8cb825ce7177609df80c6160c0f9052b3f3f02a7); [MCP integration](https://github.com/Mark-Picknell/WeebMoeNexus/commit/5b946873049198d764de808d0c475ac2d750faf7); [227 passing offline tests and build](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38106503911).
 - [ ] `P6-03` **JayMe** — User-confirmed identification/correction and optional permitted reference-image uploads; retain evidence, provenance, consent/licensing and review status
 - [ ] `P6-04` **JayMe** — Feedback quality controls so a single mistaken submission does not silently alter canonical character identities
 - [ ] `P6-05` **JayMe** — trope/theme search
