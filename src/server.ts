@@ -8,6 +8,7 @@ import { LocalAnimeTitleSearch } from "./services/title-search-service.js";
 import { getRelatedAnimeFromRecord } from "./services/related-anime-service.js";
 import { findCharactersInAnime } from "./services/character-search-service.js";
 import { getCharacterInAnime } from "./services/character-detail-service.js";
+import { rankEpisodeCharacters } from "./services/episode-character-ranking-service.js";
 import { relationGraphInputSchema, relationGraphResultSchema } from "./domain/relation-graph.js";
 import { traverseAnimeRelations } from "./services/relation-graph-service.js";
 import { entityComparisonInputSchema, entityComparisonResultSchema } from "./domain/entity-comparison.js";
@@ -373,6 +374,62 @@ export function buildServer(): McpServer {
               ? error.message : "Unknown scoped character search failure"
           }]
         };
+      }
+    }
+  );
+
+  server.registerTool(
+    "rank_episode_characters",
+    {
+      title: "Rank episode character candidates from source evidence",
+      description:
+        "Given one known AniDB anime ID and a source-reported episode ID, rank its character rows using ONLY explicit positive AniDB episode references. Unknown, missing, partial and unlisted metadata never excludes a character or proves nonappearance. No image, audio, scene observation, global character search, name matching or cross-provider inference is performed.",
+      inputSchema: z.object({
+        anidbId: z.number().int().positive().safe().describe("Known source AniDB work ID"),
+        episodeId: z.number().int().positive().safe().describe("Episode EID reported in the source work"),
+        limit: z.number().int().min(1).max(100).default(25)
+      }),
+      outputSchema: z.object({
+        scope: z.literal("one_anidb_anime_episode"),
+        sourceAnimeId: z.number().int().positive(),
+        sourceAnimeTitle: z.string(),
+        sourceUrl: z.string().url(),
+        retrievedAt: z.string(),
+        requestedEpisodeId: z.number().int().positive(),
+        sourceEpisodeFound: z.boolean(),
+        reportedCharacterRows: z.number().int().nonnegative(),
+        totalCandidates: z.number().int().nonnegative(),
+        positiveReferenceCount: z.number().int().nonnegative(),
+        unverifiedCount: z.number().int().nonnegative(),
+        truncated: z.boolean(),
+        candidates: z.array(z.object({
+          sourceRowIndex: z.number().int().nonnegative(),
+          anidbCharacterId: z.number().int().positive(),
+          displayName: z.string(),
+          nameIsSourceReported: z.boolean(),
+          appearance: z.enum(["reported_positive", "unverified"]),
+          episodeEvidence: episodeEvidenceSchema
+        }))
+      }),
+      annotations: {
+        readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true
+      }
+    },
+    async ({ anidbId, episodeId, limit }) => {
+      try {
+        const anime = await service.getByAniDbId(anidbId);
+        const output = rankEpisodeCharacters(anime, episodeId, limit);
+        return {
+          content: [{ type: "text", text: output.sourceEpisodeFound
+            ? `Ranked ${output.totalCandidates} source character row(s) for AniDB episode EID ${episodeId}; ${output.positiveReferenceCount} have positive linked source references. Other rows remain unverified, NOT absent. No scene recognition was attempted.`
+            : `AniDB episode EID ${episodeId} was not reported in anime #${anidbId}'s episode metadata. No character candidates were inferred.` }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError: true, content: [{ type: "text", text:
+          error instanceof Error ? error.message : "Unknown episode character ranking failure"
+        }] };
       }
     }
   );
