@@ -17,6 +17,8 @@ import { sharedContributorInputSchema, sharedContributorResultSchema } from "./d
 import { findSharedContributors } from "./services/shared-contributors-service.js";
 import { searchCharactersAcrossSelectedAnime } from "./services/selected-character-search-service.js";
 import { selectedCharacterSearchInputSchema, selectedCharacterSearchResultSchema } from "./domain/selected-character-search.js";
+import { selectedThemeSearchInputSchema, selectedThemeSearchResultSchema } from "./domain/selected-theme-search.js";
+import { searchThemesAcrossSelectedAnime } from "./services/selected-theme-search-service.js";
 import { titledCharacterSearchInputSchema, titledCharacterSearchResultSchema } from "./domain/titled-character-search.js";
 import { searchCharactersInUniqueTitledAnime } from "./services/titled-character-search-service.js";
 import { providerRegistryResultSchema } from "./domain/provider-registry.js";
@@ -532,6 +534,34 @@ export function buildServer(): McpServer {
             text: error instanceof Error ? error.message : "Unknown source-scoped character lookup failure"
           }]
         };
+      }
+    }
+  );
+
+  server.registerTool(
+    "search_themes_in_selected_anime",
+    {
+      title: "Search reported anime tags and categories in selected works",
+      description:
+        "Search only AniDB anime-wide source TAG and CATEGORY name rows among one to five explicitly selected AniDB work IDs. Resolve IDs first using search_anime. Exact/normalized/prefix/substring source-label matches preserve tag/category IDs separately, source-row paths, retrieval timestamps, approval/weight, spoiler/age-sensitive flags, missing-array coverage, and pre-limit counts. Known spoiler tags are omitted by default unless includeKnownSpoilers=true. Unknown spoiler flags remain unknown. No inferred synopsis tropes, global tag index, source ontology alignment, cross-provider identity, or arbitrary catalog scan. Read-only sequential cached source lookups stop on source error.",
+      inputSchema: selectedThemeSearchInputSchema,
+      outputSchema: selectedThemeSearchResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await searchThemesAcrossSelectedAnime(input, service);
+        return {
+          content: [{ type: "text", text:
+            `Found ${output.totalLabelMatches} source-reported tag/category label match row(s) across ${output.examinedAnimeIds.length} explicitly selected anime, showing ${output.results.length}. Excluded ${output.excludedKnownSpoilerRows} known spoiler row(s); ${output.coverageGaps.length} source record(s) have missing normalized label arrays. No global trope or semantic discovery is claimed.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError: true, content: [{type: "text",
+          text: error instanceof Error ? error.message : "Selected source theme lookup failed."
+        }] };
       }
     }
   );
