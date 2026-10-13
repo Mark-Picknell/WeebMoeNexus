@@ -14,6 +14,8 @@ import { traverseAnimeRelations } from "./services/relation-graph-service.js";
 import { entityComparisonInputSchema, entityComparisonResultSchema } from "./domain/entity-comparison.js";
 import { compareAnimeEntities } from "./services/entity-comparison-service.js";
 import { sharedContributorInputSchema, sharedContributorResultSchema } from "./domain/shared-contributors.js";
+import { sourceRelationshipPathInputSchema, sourceRelationshipPathResultSchema } from "./domain/source-relationship-path.js";
+import { findSourceRelationshipPath } from "./services/source-relationship-path-service.js";
 import { findSharedContributors } from "./services/shared-contributors-service.js";
 import { searchCharactersAcrossSelectedAnime } from "./services/selected-character-search-service.js";
 import { selectedCharacterSearchInputSchema, selectedCharacterSearchResultSchema } from "./domain/selected-character-search.js";
@@ -591,6 +593,35 @@ export function buildServer(): McpServer {
         if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return { isError: true, content: [{ type: "text",
           text: error instanceof Error ? error.message : "Selected character search could not be completed."
+        }] };
+      }
+    }
+  );
+
+  server.registerTool(
+    "trace_selected_anime_relationship_path",
+    {
+      title: "Trace a source-backed character, contributor, or anime path",
+      description:
+        "Explore shortest source-backed navigation paths among explicitly selected 1–5 AniDB anime records through source-listed characters, stable contributor/voice-actor IDs and original typed source work relations. Specify from/to kind (work, character or contributor), source-local positive IDs and a bounded hop limit. Reverse traversal is labelled NAVIGATION AGAINST reported direction, never a new reverse source fact. Original contributor roles, source-row paths, retrieval timestamps and source link evidence remain intact. No personhood/studio classification, inferred relationships, global catalog, missing-edge negatives, provider federation, or unselected source fetches.",
+      inputSchema: sourceRelationshipPathInputSchema,
+      outputSchema: sourceRelationshipPathResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await findSourceRelationshipPath(input, service);
+        return {
+          content: [{ type: "text", text: output.status === "found"
+            ? `Found a ${output.pathHops}-hop source-evidence navigation path among ${output.examinedAnimeIds.length} selected AniDB works. Reverse navigation is not an inverse source assertion. Contributor IDs are not guaranteed people/studios.`
+            : `No source path established within ${output.maxHops} hops in ${output.examinedAnimeIds.length} explicitly selected work(s): ${output.status}. This is not global nonexistence or evidence of unrelated entities.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError: true, content: [{type:"text",
+          text:"A source-scoped relationship path could not be established from the selected records."
         }] };
       }
     }
