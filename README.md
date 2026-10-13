@@ -10,6 +10,16 @@ is claimed; real deployment/client/review gates are tracked in the roadmap.
 
 **WeebMoeNexus** is an anime knowledge plugin for ChatGPT and Codex. The first provider is **AniDB**; the architecture is intentionally provider-independent so future integrations can add MyAnimeList, AniList, streaming providers, personal watch state, and whatever strange relational perversion happens next.
 
+## Source-backed relationship paths (P6-07 partial)
+
+Read-only MCP `trace_selected_anime_relationship_path` finds the shortest
+navigation route between source-scoped work, character and credited
+contributor IDs across up to five selected AniDB anime. It exposes original
+edge direction, field provenance, reverse navigation markers and explicit
+bounds. **A contributor is not automatically a studio or a person.** No
+global or semantic/federated relationship graph is claimed.
+[Tool scope, examples and verified evidence](docs/SOURCE-RELATIONSHIP-PATHS.md).
+
 ## Source-reported theme and trope labels (P6-05)
 
 The read-only MCP tool `search_themes_in_selected_anime` searches

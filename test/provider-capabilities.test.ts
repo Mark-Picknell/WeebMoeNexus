@@ -118,3 +118,14 @@ test("source theme label matching is registered without claiming a global semant
   assert.ok(themes.limitations.some(x => x.includes("No global trope")));
   assert.equal(byId.get("global_character_discovery")?.implementation, "not_implemented");
 });
+
+test("relationship-path traversal does not masquerade as verified studios or global identity", () => {
+  const byId = new Map(aniDbCapabilityDeclaration().capabilities.map(c => [c.id,c]));
+  const source = byId.get("source_credited_relationship_navigation")!;
+  assert.equal(source.implementation,"implemented");
+  assert.deepEqual(source.tools,["trace_selected_anime_relationship_path"]);
+  assert.equal(source.nativeProvider.assessment,"unverified");
+  assert.ok(source.limitations.some(x=>x.includes("studio/personhood")));
+  assert.ok(source.limitations.some(x=>x.includes("global nonexistence")));
+  assert.equal(byId.get("cross_provider_identity")?.implementation,"not_implemented");
+});

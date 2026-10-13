@@ -128,6 +128,24 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       scope: "Bounded original AniDB tag/category label matching, rank, source provenance, spoiler and missing coverage handling; fully passing offline MCP validation."
     }]
   });
+  capabilities.push({
+    ...capability(
+      "source_credited_relationship_navigation", "implemented",
+      ["trace_selected_anime_relationship_path"],
+      "Shortest paths among source-reported work, character and contributor IDs in 1–5 explicitly selected AniDB anime records.",
+      "src/services/source-relationship-path-service.ts",
+      [
+        "Navigation against source direction does not assert an inverse relation.",
+        "No automatic studio/personhood classification, name-identity joins, provider federation or full semantic graph.",
+        "No source reads outside selected works; missing paths do not establish global nonexistence."
+      ]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/67f1230c707f5b567d188ced107cf0dd63ca9790/src/services/source-relationship-path-service.ts",
+      checkedOn: "2026-10-13", basis: "implementation" as const,
+      scope: "Bounded typed source-edge graph navigation, provenance, no inferred reverse facts, synthetic MCP tests and source-read boundaries."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",
