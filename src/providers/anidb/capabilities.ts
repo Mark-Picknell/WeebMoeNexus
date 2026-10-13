@@ -110,6 +110,24 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       scope: "Bounded cross-work source ID joins with original production/voice credit paths, name collision counts and no inferred identity from names."
     }]
   });
+  capabilities.push({
+    ...capability(
+      "selected_anime_theme_labels", "implemented",
+      ["search_themes_in_selected_anime"],
+      "Source tag and category name matching across one to five explicitly chosen AniDB anime records.",
+      "src/services/selected-theme-search-service.ts",
+      [
+        "No global trope catalog, ontology, semantic inference, synonym matching or character-level theme evidence.",
+        "Unknown/old cached theme arrays are reported as coverage gaps; absent rows are not confirmed absence.",
+        "Known spoiler tag flags are respected by default, but unknown spoiler metadata cannot guarantee spoiler-free results."
+      ]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/2566a8c2928050a84fd45d0f4e745feed5d61195/src/services/selected-theme-search-service.ts",
+      checkedOn: "2026-10-13", basis: "implementation" as const,
+      scope: "Bounded original AniDB tag/category label matching, rank, source provenance, spoiler and missing coverage handling; fully passing offline MCP validation."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",

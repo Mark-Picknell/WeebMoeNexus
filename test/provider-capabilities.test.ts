@@ -107,3 +107,14 @@ test("scoped shared-contributor credit paths do not promote global identity reso
   assert.equal(byId.get("cross_provider_identity")?.implementation, "not_implemented");
   assert.equal(byId.get("semantic_relationships")?.implementation, "not_implemented");
 });
+
+test("source theme label matching is registered without claiming a global semantic trope search", () => {
+  const byId = new Map(aniDbCapabilityDeclaration().capabilities.map(c => [c.id, c]));
+  const themes = byId.get("selected_anime_theme_labels")!;
+  assert.equal(themes.implementation, "implemented");
+  assert.deepEqual(themes.tools, ["search_themes_in_selected_anime"]);
+  assert.equal(themes.nativeProvider.assessment, "unverified");
+  assert.ok(themes.scope.includes("one to five"));
+  assert.ok(themes.limitations.some(x => x.includes("No global trope")));
+  assert.equal(byId.get("global_character_discovery")?.implementation, "not_implemented");
+});
