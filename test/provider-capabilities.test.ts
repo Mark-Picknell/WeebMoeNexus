@@ -129,3 +129,15 @@ test("relationship-path traversal does not masquerade as verified studios or glo
   assert.ok(source.limitations.some(x=>x.includes("global nonexistence")));
   assert.equal(byId.get("cross_provider_identity")?.implementation,"not_implemented");
 });
+
+test("character description cue search advertises source mentions rather than semantic appearance assertions",()=>{
+  const byId=new Map(aniDbCapabilityDeclaration().capabilities.map(c=>[c.id,c]));
+  const descriptions=byId.get("character_source_description_mentions")!;
+  assert.equal(descriptions.implementation,"implemented");
+  assert.deepEqual(descriptions.tools,["search_character_descriptions_in_selected_anime"]);
+  assert.equal(descriptions.nativeProvider.assessment,"unverified");
+  assert.ok(descriptions.limitations.some(x=>x.includes("negated")));
+  assert.ok(descriptions.limitations.some(x=>x.includes("visual analysis")));
+  assert.equal(byId.get("character_species")?.implementation,"not_implemented");
+  assert.equal(byId.get("character_aliases")?.implementation,"not_implemented");
+});

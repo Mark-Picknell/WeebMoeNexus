@@ -146,6 +146,24 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       scope: "Bounded typed source-edge graph navigation, provenance, no inferred reverse facts, synthetic MCP tests and source-read boundaries."
     }]
   });
+  capabilities.push({
+    ...capability(
+      "character_source_description_mentions", "implemented",
+      ["search_character_descriptions_in_selected_anime"],
+      "Literal normalized phrase mentions in AniDB character descriptions, for 1–5 explicitly selected anime source records.",
+      "src/services/selected-character-description-service.ts",
+      [
+        "A source text mention may be negated or figurative; it is never a verified positive appearance trait.",
+        "No character appearance-tag index, species or aliases, global character search, visual analysis or semantic synonym inference.",
+        "Older cached character rows without descriptions remain unknown, never confirmed to have no relevant traits."
+      ]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/16650f589f30dd4510495911ef61abfedcd4907b/src/services/selected-character-description-service.ts",
+      checkedOn: "2026-10-13", basis: "implementation" as const,
+      scope: "Source character-description ingestion and bounded literal text mentions; source row/provenance preservation and negation-safe synthetic MCP tests."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",

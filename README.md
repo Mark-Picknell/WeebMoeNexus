@@ -10,6 +10,16 @@ is claimed; real deployment/client/review gates are tracked in the roadmap.
 
 **WeebMoeNexus** is an anime knowledge plugin for ChatGPT and Codex. The first provider is **AniDB**; the architecture is intentionally provider-independent so future integrations can add MyAnimeList, AniList, streaming providers, personal watch state, and whatever strange relational perversion happens next.
 
+## Source-scoped character description cue search (P6-01 partial)
+
+The read-only MCP tool `search_character_descriptions_in_selected_anime`
+searches **literal phrases in source-reported character descriptions**
+across up to five explicitly selected AniDB works. It retains source
+provenance and excludes semantic inferences: a textual mention (including
+negation) is NOT proof of a positive appearance trait. No image or
+scene inspection is performed.
+[Precise contract, example and evidence](docs/CHARACTER-DESCRIPTION-SEARCH.md).
+
 ## Source-backed relationship paths (P6-07 partial)
 
 Read-only MCP `trace_selected_anime_relationship_path` finds the shortest
