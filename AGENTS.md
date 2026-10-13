@@ -40,3 +40,9 @@ MyAnimeList, AniList, Crunchyroll, or anything else should implement an adapter 
 The project may be gloriously unserious. The protocol should not be.
 
 Fun names are welcome. Stable contracts, provenance, security, and rate limits are not jokes.
+
+## Continuation signal — corrected 2026-10-13
+
+Use "don't stop" (preferred) or "dont stop" as Mark's current continuation signal. It replaces the operational acronym NDS (formerly "Now Do Sequential") as of 2026-10-13. In an established development context, continue the already-authorized sequential work, verify each agreed slice, and preserve its review/CI checkpoints. The signal does not enlarge authorization or imply phase/release acceptance, provider-account consent, or deployment approval. Preserve historical quotations and dated accounts verbatim; Nintendo DS, Nintendo 3DS, and NDS C development retain their own meanings.
+
+[Transition and provenance](docs/CONTINUATION-SIGNAL.md).
