@@ -21,6 +21,8 @@ import { searchCharactersAcrossSelectedAnime } from "./services/selected-charact
 import { selectedCharacterSearchInputSchema, selectedCharacterSearchResultSchema } from "./domain/selected-character-search.js";
 import { selectedThemeSearchInputSchema, selectedThemeSearchResultSchema } from "./domain/selected-theme-search.js";
 import { searchThemesAcrossSelectedAnime } from "./services/selected-theme-search-service.js";
+import { selectedCharacterDescriptionInputSchema, selectedCharacterDescriptionResultSchema } from "./domain/selected-character-description.js";
+import { searchCharacterDescriptionsAcrossSelectedAnime } from "./services/selected-character-description-service.js";
 import { titledCharacterSearchInputSchema, titledCharacterSearchResultSchema } from "./domain/titled-character-search.js";
 import { searchCharactersInUniqueTitledAnime } from "./services/titled-character-search-service.js";
 import { providerRegistryResultSchema } from "./domain/provider-registry.js";
@@ -564,6 +566,34 @@ export function buildServer(): McpServer {
         return { isError: true, content: [{type: "text",
           text: error instanceof Error ? error.message : "Selected source theme lookup failed."
         }] };
+      }
+    }
+  );
+
+  server.registerTool(
+    "search_character_descriptions_in_selected_anime",
+    {
+      title: "Find literal character-description cues in selected anime",
+      description:
+        "Search one to six explicit phrase cues in the CHARACTER DESCRIPTION TEXT reported for one to five explicitly selected AniDB anime IDs. Report literal normalized text mentions and source location, not inferred visual appearance, species, aliases, demographics or a verified positive trait. Negated mentions remain mere mentions; ranking counts words, not semantic truth. Missing character descriptions from legacy caches remain explicitly unknown. Supports any/all requested cues, deterministic ranking, total-before-limit counts, and bounded sequential source reads with stop-on-error. No anime-wide tags treated as character attributes, global search or unselected work fetch.",
+      inputSchema: selectedCharacterDescriptionInputSchema,
+      outputSchema: selectedCharacterDescriptionResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await searchCharacterDescriptionsAcrossSelectedAnime(input, service);
+        return {
+          content: [{type:"text", text:
+            `Found ${output.matchedCharacterRows} source CHARACTER DESCRIPTION row(s) mentioning requested phrases in ${output.examinedAnimeIds.length} selected anime; ${output.legacyDescriptionUnknownRows} old-cache row(s) lack that metadata. This is lexical source-text evidence, NOT verified appearance or identity.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return {isError:true,content:[{type:"text",
+          text:"Could not validate the selected character-description request."
+        }]};
       }
     }
   );
