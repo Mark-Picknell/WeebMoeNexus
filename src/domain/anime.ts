@@ -35,6 +35,13 @@ export const characterSchema = z.object({
   role: z.string().nullable(),
   gender: z.string().nullable(),
   picture: z.string().nullable(),
+  /** Optional for normalized records created before character profile ingestion. */
+  description: z.string().nullable().optional(),
+  /** AniDB character entity category is not a species or role inference. */
+  characterType: z.strictObject({
+    id: z.number().int().positive().safe().nullable(),
+    name: z.string().nullable()
+  }).nullable().optional(),
   // Preserve AniDB's per-character episode list verbatim until its grammar is validated.
   episodeAppearancesRaw: z.string().nullable(),
   voiceActor: voiceActorSchema.nullable()

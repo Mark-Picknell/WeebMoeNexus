@@ -143,6 +143,11 @@ export function mapAniDbAnimeXml(
       role: attr(character, "type"),
       gender: nullableText(character.gender),
       picture: nullableText(character.picture),
+      description: nullableText(character.description),
+      characterType: character.charactertype == null ? null : {
+        id: safePositive(attr(character.charactertype, "id")),
+        name: nullableText(character.charactertype)
+      },
       episodeAppearancesRaw: nullableText(character.episodes),
       voiceActor: seiyuu
         ? {
