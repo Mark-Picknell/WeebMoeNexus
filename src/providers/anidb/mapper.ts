@@ -55,7 +55,7 @@ function attr(
 /** Do not transform malformed or absent source numbers into apparent identifiers. */
 function safeNonnegative(value: unknown): number | null {
   const raw = nullableText(value);
-  if (raw === null || !/^(0|[1-9]\\d*)$/.test(raw)) return null;
+  if (raw === null || !/^(0|[1-9]\d*)$/.test(raw)) return null;
   const parsed = Number(raw);
   return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : null;
 }
