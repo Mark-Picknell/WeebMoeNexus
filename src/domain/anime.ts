@@ -55,6 +55,25 @@ export const provenanceSchema = z.object({
   retrievedAt: z.string()
 });
 
+/** AniDB's reported anime-wide tag. Missing metadata stays unknown. */
+export const sourceTagSchema = z.object({
+  id: z.number().int().positive().safe().nullable(),
+  name: z.string().nullable(),
+  approval: z.number().int().nonnegative().safe().nullable(),
+  localSpoiler: z.boolean().nullable(),
+  globalSpoiler: z.boolean().nullable()
+});
+
+/** Source category hierarchy/weight, not an inferred genre classification. */
+export const sourceCategorySchema = z.object({
+  id: z.number().int().positive().safe().nullable(),
+  parentId: z.number().int().nonnegative().safe().nullable(),
+  name: z.string().nullable(),
+  description: z.string().nullable(),
+  weight: z.number().int().nonnegative().safe().nullable(),
+  restricted: z.boolean().nullable()
+});
+
 export const animeRecordSchema = z.object({
   id: z.number().int().positive(),
   titles: z.array(titleSchema),
@@ -68,6 +87,9 @@ export const animeRecordSchema = z.object({
   picture: z.string().nullable(),
   url: z.string().nullable(),
   relations: z.array(relationSchema),
+  /** Optional for cached records normalized before source-theme ingestion. */
+  tags: z.array(sourceTagSchema).optional(),
+  categories: z.array(sourceCategorySchema).optional(),
   creators: z.array(creatorCreditSchema),
   characters: z.array(characterSchema),
   episodes: z.array(episodeSchema),

@@ -52,6 +52,22 @@ function attr(
   return nullableText((node as Record<string, unknown>)[`@_${name}`]);
 }
 
+/** Do not transform malformed or absent source numbers into apparent identifiers. */
+function safeNonnegative(value: unknown): number | null {
+  const raw = nullableText(value);
+  if (raw === null || !/^(0|[1-9]\\d*)$/.test(raw)) return null;
+  const parsed = Number(raw);
+  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : null;
+}
+function safePositive(value: unknown): number | null {
+  const parsed = safeNonnegative(value);
+  return parsed !== null && parsed > 0 ? parsed : null;
+}
+function optionalFlag(value: unknown): boolean | null {
+  const raw = nullableText(value);
+  return raw === "1" ? true : raw === "0" ? false : null;
+}
+
 export function mapAniDbAnimeXml(
   xml: string,
   retrievedAt = new Date().toISOString()
@@ -101,6 +117,24 @@ export function mapAniDbAnimeXml(
     };
   });
 
+  // AniDB source-wide tags and categories are separate vocabularies.
+  // Do not infer trope membership from synopsis wording or missing rows.
+  const tags = list<any>(anime.tags?.tag).map((tag) => ({
+    id: safePositive(attr(tag, "id")),
+    name: nullableText(tag.name),
+    approval: safeNonnegative(attr(tag, "approval")),
+    localSpoiler: optionalFlag(attr(tag, "localspoiler")),
+    globalSpoiler: optionalFlag(attr(tag, "globalspoiler"))
+  }));
+  const categories = list<any>(anime.categories?.category).map((category) => ({
+    id: safePositive(attr(category, "id")),
+    parentId: safeNonnegative(attr(category, "parentid")),
+    name: nullableText(category.name),
+    description: nullableText(category.description),
+    weight: safeNonnegative(attr(category, "weight")),
+    restricted: optionalFlag(attr(category, "hentai"))
+  }));
+
   const characters = list<any>(anime.characters?.character).map((character) => {
     const seiyuu = character.seiyuu;
     return {
@@ -148,6 +182,8 @@ export function mapAniDbAnimeXml(
     picture: nullableText(anime.picture),
     url: nullableText(anime.url),
     relations,
+    tags,
+    categories,
     creators,
     characters,
     episodes,
