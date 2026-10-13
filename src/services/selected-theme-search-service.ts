@@ -42,6 +42,7 @@ export function searchSelectedThemeRecords(
       Number.isFinite(Date.parse(p.retrievedAt))
     );
     if (!p) throw new Error("Selected source record lacks matching AniDB provenance");
+    const sourceUrl = p.sourceUrl, retrievedAt = p.retrievedAt;
     const missingArrays: ("tags" | "categories")[] = [];
     if (anime.tags === undefined) missingArrays.push("tags");
     if (anime.categories === undefined) missingArrays.push("categories");
@@ -71,8 +72,8 @@ export function searchSelectedThemeRecords(
         matches.push({
           sourceAnimeId: anime.id,
           sourceAnimeTitle: title,
-          sourceAnimeUrl: p.sourceUrl,
-          retrievedAt: p.retrievedAt,
+          sourceAnimeUrl: sourceUrl,
+          retrievedAt: retrievedAt,
           kind, sourceRowIndex: index,
           evidenceSourceField: `${kind === "tag" ? "tags" : "categories"}[${index}].name`,
           sourceTermId: term.id, label: term.name, matchType,
