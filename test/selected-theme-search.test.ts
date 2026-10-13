@@ -34,8 +34,8 @@ test("bounded source label search ranks reported exact/prefix matches, keeps IDs
   const shown=searchSelectedThemeRecords({anidbIds:[41],query:"Time Travel",includeKnownSpoilers:true},[one]);
   assert.equal(shown.excludedKnownSpoilerRows,0);
   assert.equal(shown.totalLabelMatches,3);
-  assert.equal(shown.results[1]?.label,"time travel");
-  assert.equal(shown.results[1]?.localSpoiler,true);
+  assert.equal(shown.results[2]?.label,"time travel");
+  assert.equal(shown.results[2]?.localSpoiler,true);
 });
 
 test("source kind controls, normalized matching and bounded output do not erase source counts", () => {
