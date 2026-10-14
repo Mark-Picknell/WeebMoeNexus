@@ -30,7 +30,8 @@ test("fixture checks cannot satisfy pending semantic golden queries, and failure
   const features = corpus.cases.map((c: any) => ({ id: c.id, implementation: "not_implemented", scope: "Semantic resolver pending", testFiles: [] }));
   const report = buildValidationReport(features, {}, { ...summary, success: false, failed: 1, passed: 0 });
   assert.equal(report.summary.success, false);
-  assert.equal(report.features.length, 17);
+  assert.equal(report.features.length, corpus.cases.length, "The validation report must cover every current golden case");
+  assert.ok(report.features.some(r => r.id === "GQ-018" && r.status === "not_implemented"));
   assert.ok(report.features.every(r => r.status === "not_implemented"));
 });
 
