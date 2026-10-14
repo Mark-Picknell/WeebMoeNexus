@@ -697,6 +697,39 @@ On 2026-10-09 Mark said `Title=Viper GTS; Character=Carrera; Species=Succubus`, 
 - https://www.fandompost.com/2018/08/04/viper-gts-hentai-anime-dvd-review/ (English licensed release review confirms OVA content and credits)
 
 
+## GQ-018 — Aki Nijou / Nijō Aki: school-nurse identity, name-order variants and episode-evidence limits
+
+> "Nijou Aki / Aki Nijou / 二条 秋 — the blue-haired school nurse from *Maken-Ki!*"
+>
+> **Status:** human-nominated future acceptance case. This is **not** a passing resolver test or an implementation commitment.
+
+### Provenance and verified anchors
+
+On 2026-10-14 Mark nominated this character after a separate conversation, highlighting the unusually useful overlap between fictional medical diagnosis and WeebMoeNexus's source-evidence/testing work. The previous trajectory supplied the proposed AniDB character reference `ch36165`. **This was user-supplied and remains unverified.** Direct retrieval of `https://anidb.net/character/36165` returned an access-denied response during this review, not a confirmed identity match. Do not embed `anidb:character:36165` as a verified `providerId` in the golden fixture or production code without an authorized source check.
+
+Primary source: the official *Maken-Ki! Two* episode guide identifies **二条秋 (Nijō Aki)** as the school infirmary teacher/nurse in **episode 5** and includes a performance comment by **原田ひとみ (Hitomi Harada)**, specifically identified as playing Aki. The official soundtrack publisher separately credits `二条秋(CV:原田ひとみ)`. These establish a source-backed series/episode reference and Japanese voice credit, **not** a complete episode-by-episode appearance list.
+
+Secondary databases identify the same named character in *Maken-Ki!* and *Maken-Ki! Two*, with the spelling **Aki Nijou**, Japanese order **Nijō Aki**, and script **二条 秋**. Treat spelling variants as candidates for reconciliation, but keep each original title/season work ID separate until source-linked. Community material describes her Maken **Valhelm** as a medical diagnosis/"debugging" ability; that is a figurative resemblance to software debugging, **not** a claim that she is a computer engineer, and its source-grade remains secondary.
+
+### Golden acceptance criteria
+
+1. Search inputs `Aki Nijou`, `Nijou Aki`, `Nijō Aki`, and `二条 秋` should present a defensible work-constrained candidate. Preserve original name forms and source attribution; **do not automatically conflate unrelated same-name characters** or fabricate a source alias field.
+2. Distinguish *Maken-Ki!* (original series), *Maken-Ki! Two* (sequel), OVA and specials as separately identified catalog works. Do not copy a shared character's appearance, voice, credit or episode assertions indiscriminately to every release.
+3. Verify character ID joins from actually returned provider records before claiming that `ch36165` identifies Aki or that one global ID appears in every work. Until then, mark the ID **pending source verification**.
+4. Treat the official *Maken-Ki! Two* episode 5 description as **positive evidence of that named character in that episode**. Do not deduce her presence in another episode or season from a work-level listing or an arbitrary episode list.
+5. Retain the Japanese performer **Hitomi Harada / 原田ひとみ** with source edition/language. English performance references, if later verified, must remain distinct credits rather than substituting one voice actor for another.
+6. When searching for a nurse, white coat, or visually medical character, preserve the difference between the character's reported occupation, community visual tags and actual machine-verifiable source character attributes. Aki must not displace **Doctor / Isha** from GQ-001's *Akudama Drive* pink-haired/scalpel query just because both have medical associations.
+7. Explicitly distinguish community descriptions of **Valhelm** from source-confirmed production metadata. "Diagnostic" can describe an ability without implying real clinical practice or any computer-debugging role. Do not infer unsupported specialist occupation.
+8. The fixture stays **pending_resolver** with no live network calls. Its inclusion validates the corpus structure and future expectations only; it does **not** show WeebMoeNexus passes identity, scene or visual tests.
+
+### Sources and evidence grading
+
+- **Primary series episode page:** https://maken-ki-two.com/story/ — episode 5 features `二条秋` as the school nurse and quotes `原田ひとみさん（二条秋役）`. (official production site; verified 2026-10-14)
+- **Primary music credit:** https://columbia.jp/makenki/ — `二条秋(CV:原田ひとみ)`. (official record-label release page; verified 2026-10-14)
+- **Secondary name/work corroboration:** https://makenki.fandom.com/wiki/Aki_Nijou — Japanese-order spelling, school nurse/adviser, series variants, and Valhelm. (fan-maintained, not authoritative)
+- **Secondary credits and work list:** https://en.namikoi.com/characters/1622 — multiple anime editions and Japanese/English actors, pending independently credited per release.
+- **User-supplied unresolved AniDB ID:** https://anidb.net/character/36165 — inaccessible to this automated check; **do not claim verified**.
+
 ## Rule
 
 Golden queries are tests of capability, not shortcuts. Never special-case the answer into tool code.

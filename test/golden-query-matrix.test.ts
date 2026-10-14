@@ -73,6 +73,20 @@ test("critical past identity failures remain explicit negative/unknown regressio
   assert.equal(byId.get("GQ-017")?.input, "Title=Viper GTS; Character=Carrera; Species=Succubus");
 });
 
+test("GQ-018 remains a source-scoped future candidate with unresolved AniDB ID", () => {
+  const candidate = corpus.cases.find(c => c.id === "GQ-018");
+  assert.ok(candidate);
+  assert.match(candidate.input, /Nijou Aki \/ Aki Nijou/);
+  assert.ok(candidate.expectedEntities.some(e => e.type === "character" && e.name.includes("二条 秋")));
+  assert.ok(candidate.expectedEntities.some(e => e.name.includes("Maken-Ki! Two")));
+  assert.ok(candidate.requiredFindings.some(x => x.includes("episode 5") && x.includes("Hitomi Harada")));
+  assert.ok(candidate.doNotConclude.some(x => x.includes("ch36165") && x.includes("confirmed")));
+  assert.ok(candidate.doNotConclude.some(x => x.includes("other episodes")));
+  assert.ok(candidate.expectedEntities.every(e => !e.providerId), "No provider ID is asserted until verified");
+  assert.equal(candidate.execution.status, "pending_resolver");
+  assert.equal(candidate.execution.liveNetworkCallsAllowed, false);
+});
+
 test("fixtures do not claim production resolution has passed", () => {
   assert.ok(corpus.cases.every(c => c.execution.status === "pending_resolver"));
   assert.ok(corpus.cases.every(c => c.execution.liveNetworkCallsAllowed === false));

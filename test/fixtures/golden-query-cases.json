@@ -604,6 +604,53 @@
         "status": "pending_resolver",
         "liveNetworkCallsAllowed": false
       }
+    },
+    {
+      "id": "GQ-018",
+      "input": "Nijou Aki / Aki Nijou / 二条 秋 — identify the Maken-Ki! school nurse across distinct anime releases",
+      "capabilities": [
+        "character-search",
+        "name-order-normalization",
+        "source-id-reconciliation",
+        "episode-evidence",
+        "voice-credit"
+      ],
+      "expectedEntities": [
+        {
+          "type": "character",
+          "name": "Aki Nijou / Nijō Aki (二条 秋)"
+        },
+        {
+          "type": "anime",
+          "name": "Maken-Ki! (2011 original series)"
+        },
+        {
+          "type": "anime",
+          "name": "Maken-Ki! Two (2014 sequel)"
+        }
+      ],
+      "requiredFindings": [
+        "Official Maken-Ki! Two episode 5 explicitly refers to 二条秋 and identifies Hitomi Harada as her performer",
+        "preserve original and sequel as separate works; name-order normalization alone cannot verify provider identity across works",
+        "user-supplied AniDB ch36165 requires source validation before adding a providerId",
+        "character role/medical setting must not become inferred positive appearance traits or unverified episode sightings"
+      ],
+      "doNotConclude": [
+        "unverified AniDB ch36165 is a confirmed provider ID for this character",
+        "appearance in one episode or one series proves appearances in other episodes, specials or seasons",
+        "English and Japanese voice credits are interchangeable or source-independent",
+        "Valhelm medical diagnosis literally establishes a computer-debugging or scientist occupation",
+        "Aki's nurse role or lab-coat imagery overrides the pink-haired Doctor/Isha source evidence in GQ-001"
+      ],
+      "source": {
+        "document": "docs/GOLDEN-QUERIES.md",
+        "section": "GQ-018",
+        "kind": "human-curated-research"
+      },
+      "execution": {
+        "status": "pending_resolver",
+        "liveNetworkCallsAllowed": false
+      }
     }
   ]
 }
