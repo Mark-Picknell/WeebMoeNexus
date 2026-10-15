@@ -107,3 +107,37 @@ watch companion was built.
 
 **Owner register unchanged:** 56 of 87 complete. This checkpoint delivers
 a bounded, evidence-preserving building block, not a completed phase.
+
+## 2026-10-15: Guarded local title → source clue bridge
+
+A second read-only tool, `recall_character_clues_by_anime_title`,
+accepts an anime **title** instead of a numerical work ID. It queries
+only the *local* AniDB title dump and performs exactly one AniDB anime
+source read **only when the index has a single exact or normalized
+work-ID match**. No indexed result, multiple work IDs, or a fuzzy-only
+candidate returns an explicit no-match/selection-required status,
+including source work candidates, and **does not fetch** any upstream anime.
+
+`animeTitle`, `cues`, optional `episodeId`, `mode` and `limit`
+have the same source-text/evidence limitations. A positive episode
+reference is not frame or scene observation; a negated description
+mention is not a positive trait. The title dump must first be prepared
+using the existing documented local title-cache command. This bridge
+does not establish character discovery outside its chosen source work.
+
+- `src/domain/titled-scene-recall.ts`,
+  `src/services/titled-scene-recall-service.ts`:
+  output statuses, strict unique-selection checks and full
+  validation before local or provider reads.
+- `test/titled-scene-recall.test.ts`: synthetic service tests for
+  unique work, collisions, fuzzy-only matches, unknowns,
+  invalid inputs, malformed index and no unauthorized source reads.
+- `test/mcp-titled-scene-recall.test.ts`: actual in-memory MCP client,
+  local temporary gzipped index, synthetic source response, cached
+  repeat lookup, ambiguous title blocking and validation.
+- `test/deployment-mcp.test.ts`: all **19** registered tools must
+  be read-only over loopback HTTP.
+
+[Bridge service CI: 318/318 tests](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38746692302).
+The final combined MCP integration run is the authoritative checkpoint
+for tool registration; no live source IDs or scene recognition are claimed.

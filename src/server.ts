@@ -25,6 +25,8 @@ import { selectedCharacterDescriptionInputSchema, selectedCharacterDescriptionRe
 import { searchCharacterDescriptionsAcrossSelectedAnime } from "./services/selected-character-description-service.js";
 import { scopedSceneRecallInputSchema, scopedSceneRecallResultSchema } from "./domain/scoped-scene-recall.js";
 import { recallCharacterCluesFromSelectedWork } from "./services/scoped-scene-recall-service.js";
+import { titledSceneRecallInputSchema, titledSceneRecallResultSchema } from "./domain/titled-scene-recall.js";
+import { recallCharacterCluesInUniqueTitledAnime } from "./services/titled-scene-recall-service.js";
 import { titledCharacterSearchInputSchema, titledCharacterSearchResultSchema } from "./domain/titled-character-search.js";
 import { searchCharactersInUniqueTitledAnime } from "./services/titled-character-search-service.js";
 import { providerRegistryResultSchema } from "./domain/provider-registry.js";
@@ -572,6 +574,35 @@ export function buildServer(): McpServer {
         if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return { isError: true, content: [{type: "text",
           text: error instanceof Error ? error.message : "Selected source theme lookup failed."
+        }] };
+      }
+    }
+  );
+
+  server.registerTool(
+    "recall_character_clues_by_anime_title",
+    {
+      title: "Find character-description clue candidates in one unambiguous anime title",
+      description:
+        "Resolve a caller-supplied anime title using the OFFLINE AniDB title index. Fetch one paced/cached source anime only when the index finds exactly ONE non-fuzzy exact/normalized work; ambiguous or fuzzy title matches require explicit user selection and trigger zero source fetches. Then perform literal text-cue character recall with optional source episode-reference positives, unknown preserved. This is not global source discovery, visual recognition, verified positive traits, playback synchronization, personal memory or spoiler-safe co-viewing.",
+      inputSchema: titledSceneRecallInputSchema,
+      outputSchema: titledSceneRecallResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await recallCharacterCluesInUniqueTitledAnime(input, titleSearch, service);
+        return {
+          content: [{type:"text",text:output.status === "unique_work_searched"
+            ? `Located one non-fuzzy source title; found ${output.sourceRecall?.matchedCharacterRows} textual clue candidate(s). These are not confirmed scene identities or positive depicted traits.`
+            : `No source characters fetched. Local title-selection status: ${output.status}; choose a specific non-fuzzy work ID before source recall.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError:true,content:[{type:"text",
+          text:"Local title index unavailable, input invalid or source title evidence not trustworthy; no speculative work selection was made."
         }] };
       }
     }

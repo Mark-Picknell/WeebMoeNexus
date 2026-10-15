@@ -183,6 +183,25 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       scope:"Scoped one-work source-text candidate ranking with conservatively positive episode metadata and uncertainty retention, offline synthetic tests only."
     }]
   });
+  capabilities.push({
+    ...capability(
+      "unique_local_title_to_character_clue_recall", "implemented",
+      ["recall_character_clues_by_anime_title"],
+      "One unique exact/normalized locally indexed AniDB title maps to one source work for literal character-description clue recall.",
+      "src/services/titled-scene-recall-service.ts",
+      [
+        "Ambiguous, absent and fuzzy title matches trigger no source-anime reads; caller must select and confirm work identity.",
+        "Local title dump initialization is separately required; this bridge does not search a global media catalog.",
+        "Source mentions are not verified positive appearance traits and episode metadata does not establish scene presence.",
+        "No external streaming integration, viewer accounts, stored memory, visual recognition or spoiler-aware playback."
+      ]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/b61e5d2619808ef99aec35af2ec7bfe8b2486829/src/services/titled-scene-recall-service.ts",
+      checkedOn:"2026-10-15",basis:"implementation" as const,
+      scope:"Strict unique non-fuzzy local title selection to a single scoped source character-clue recall, synthetic offline regression only."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",

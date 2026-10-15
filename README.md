@@ -19,6 +19,10 @@ source episode references** while missing references remain unknown.
 The result is **not** a verified scene, visual trait, or watch-progress
 observation. No media or private viewer data is accessed.
 [Tool contract and verified tests](docs/SCOPED-SCENE-RECALL.md).
+The guarded `recall_character_clues_by_anime_title` bridge also accepts a
+**unique exact/normalized locally indexed anime title**. Ambiguous,
+absent or fuzzy-only title matches require work selection and cause
+**no upstream source reads**. [Selection and uncertainty](docs/SCOPED-SCENE-RECALL.md).
 
 ## Source-scoped character description cue search (P6-01 partial)
 
