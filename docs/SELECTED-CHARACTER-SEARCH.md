@@ -15,14 +15,21 @@ strict `compare_anime_entities` evidence/identity comparison contract.
 | `anidbIds` | 1–5 distinct positive, safe AniDB anime IDs. Supplied by the caller. |
 | `query` | Character-name string, 2–120 characters with at least two meaningful normalized characters. |
 | `workTitle` | Optional source-reported title constraint, 2–120 characters. **Ranking**, not identity truth or automatic lookup. |
+| `considerNameOrderVariants` | Optional, default `false`. Suggest a reversed **two-token Latin** name as an unverified source-row candidate. |
 | `limit` | Default 10, allowed 1–25; counts consider the entire examined candidate pool. |
 
 Character name matching ranks `exact`, then conservative case/width/
 punctuation-normalized forms, then `prefix`, then `contains` (minimum three
 normalized characters). All classes are **labels for name similarity**,
-not identity merges. There is no guessed transliteration, char-alias
+not identity merges. By default there is no guessed transliteration, character alias
 generation, reversed name-order matching, fuzzy character identity or global
-character search. `workTitle` is checked against source-reported title rows.
+character search. With explicit `considerNameOrderVariants: true`, exactly
+two normalized Latin-name tokens of at least two letters each may be
+reversed **only as a candidate** (`reversed_two_token_candidate`). This is
+not an official alias, translation, or stable-ID join. Direct exact and
+normalized matches outrank the lexical reversal; source work context
+continues to outrank all name similarities. Non-Latin script, multi-token
+names, and macron expansion/transliteration are not guessed. `workTitle` is checked against source-reported title rows.
 A reported match is displayed first; missing title metadata is `not_reported`,
 not false; differing known source-work titles are marked
 `different_source_work`, meaning a mismatch *in that source record*, not a
@@ -89,3 +96,22 @@ entity-alias ingestion, a second-provider integration, semantic golden-query
 acceptance or a deployed ChatGPT plugin. P3-10 remains open. Official
 source-wide indexes or sanctioned additional provider data, with owner
 authorization where required, are still needed for global character search.
+
+## 2026-10-14 follow-up: GQ-018 candidate order
+
+The added opt-in `considerNameOrderVariants` mode specifically supports
+a cautious candidate search relevant to *Aki Nijou / Nijou Aki*. It
+preserves the original source row, distinct source work/character IDs
+and voice credits, and it does **not** establish that the pending
+user-provided AniDB `ch36165` is correct or that characters appear in
+every sequel, special or episode. `二条 秋` is searched as actually
+reported; no fabricated romaji aliases are added.
+
+Regression coverage: `test/selected-character-name-order.test.ts`
+for original source semantics, explicit opt-in, collision and rank
+limits, and `test/mcp-selected-character-name-order.test.ts`
+for an actual MCP client, cache reuse, work precedence and invalid
+input with zero new reads.
+[Service CI: 307/307](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38669056146).
+[MCP CI: 308/308](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38669278134).
+The P3-10 task and GQ-018 remain open.

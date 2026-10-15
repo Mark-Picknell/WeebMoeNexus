@@ -51,6 +51,7 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       "Name matching in one to five explicitly requested AniDB anime source records; optional reported work-title context.",
       "src/services/selected-character-search-service.ts",
       ["No global character catalog, automatic work discovery, source-guessed aliases/species, or identity joins.",
+       "Optional two-token Latin name-order reversal is an unverified lexical candidate, never a source-reported alias or identity match.",
        "All relevant reads use the existing paced cache; missing rows prove only unreported metadata in the examined works."]
     ),
     evidence: [{

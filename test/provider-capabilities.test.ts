@@ -141,3 +141,12 @@ test("character description cue search advertises source mentions rather than se
   assert.equal(byId.get("character_species")?.implementation,"not_implemented");
   assert.equal(byId.get("character_aliases")?.implementation,"not_implemented");
 });
+
+test("optional character name-order candidates remain unverified, not declared source aliases", () => {
+  const byId = new Map(aniDbCapabilityDeclaration().capabilities.map(c => [c.id, c]));
+  const names = byId.get("selected_character_name_search")!;
+  assert.equal(names.implementation, "implemented");
+  assert.deepEqual(names.tools, ["search_characters_in_selected_anime"]);
+  assert.ok(names.limitations.some(value => value.includes("unverified lexical candidate")));
+  assert.equal(byId.get("character_aliases")?.implementation, "not_implemented");
+});

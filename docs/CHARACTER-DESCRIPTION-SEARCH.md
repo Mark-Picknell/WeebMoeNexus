@@ -103,3 +103,16 @@ appearance search remain open.
 attributes, appropriate candidate retrieval/ranking, and non-hardcoded
 live/golden-query acceptance. P6-09 also remains open. The total
 owner-assigned task count remains **56/87**.
+
+## 2026-10-14: Source profile now reaches `get_character`
+
+The existing read-only `get_character` MCP response now explicitly
+returns the source character's nullable `description` and
+`characterType` (nullable source ID and original label), or `null`
+for old cached records without those fields. This was added to the
+already-normalized source character projection, with real in-memory MCP
+and unit regressions. Do not mistake description prose for a verified
+appearance assertion, or a provider-reported character type for
+species.
+
+[Verified source profile MCP CI: 304/304](https://github.com/Mark-Picknell/WeebMoeNexus/actions/runs/38668811656).
