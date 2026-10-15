@@ -43,7 +43,9 @@ test("candidate reversal does not invent transliteration, aliases or cross-scrip
  const latin=searchSelectedCharacterRecords({
    anidbIds:[301],query:"Aki Nijou",considerNameOrderVariants:true
  },[anime]);
- assert.equal(latin.totalNameMatches,0,"macron expansion and extra tokens are not invented");
+ assert.equal(latin.totalNameMatches,1,"a direct prefix may match, but macron expansion is not invented");
+ assert.equal(latin.results[0]?.nameMatch,"prefix");
+ assert.ok(latin.results.every(x=>x.nameMatch!=="reversed_two_token_candidate"));
  assert.equal(searchSelectedCharacterRecords({
    anidbIds:[301],query:"秋 二条",considerNameOrderVariants:true
  },[anime]).totalNameMatches,0,"no Kanji name-order guess");
