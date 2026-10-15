@@ -21,7 +21,17 @@ function parseRequest(raw: SelectedCharacterSearchInput): ParsedSelectedCharacte
 }
 
 type Candidate = SelectedCharacterSearchResult["results"][number];
-const nameRank: Record<Candidate["nameMatch"], number> = { exact: 0, normalized: 1, prefix: 2, contains: 3 };
+const nameRank: Record<Candidate["nameMatch"], number> = {
+  exact: 0, normalized: 1, reversed_two_token_candidate: 2, prefix: 3, contains: 4
+};
+/** Lexical two-token reversal is a *candidate search*, not a source-authored alias. */
+function possibleReorderedName(queryKey: string, sourceKey: string): boolean {
+  const queryWords = queryKey.split(" "), sourceWords = sourceKey.split(" ");
+  if (queryWords.length !== 2 || sourceWords.length !== 2) return false;
+  // Avoid transliterating Japanese script, titles, digits or name particles.
+  if (![...queryWords, ...sourceWords].every(word => /^[a-z]{2,}$/.test(word))) return false;
+  return queryWords[0] === sourceWords[1] && queryWords[1] === sourceWords[0];
+}
 const workRank: Record<Candidate["workTitleMatch"], number> = {
   reported_match: 0, not_reported: 1, different_source_work: 2, not_requested: 0
 };
@@ -63,6 +73,8 @@ export function searchSelectedCharacterRecords(
       const key = normalizeAniDbTitle(character.name);
       const nameMatch: Candidate["nameMatch"] | null = character.name === input.query ? "exact"
         : key === q ? "normalized"
+        : input.considerNameOrderVariants && possibleReorderedName(q, key)
+          ? "reversed_two_token_candidate"
         : key.startsWith(q) ? "prefix"
         : [...q].length >= 3 && key.includes(q) ? "contains"
         : null;
@@ -89,6 +101,7 @@ export function searchSelectedCharacterRecords(
   return selectedCharacterSearchResultSchema.parse({
     scope: "explicit_selected_anidb_works",
     query: input.query, requestedWorkTitle: input.workTitle ?? null,
+    considerNameOrderVariants: input.considerNameOrderVariants,
     examinedAnimeIds: input.anidbIds,
     totalReportedCharacterRows,
     totalNameMatches: results.length,

@@ -608,7 +608,7 @@ export function buildServer(): McpServer {
     {
       title: "Search character names across selected anime",
       description:
-        "Search character-name rows reported by one to five EXPLICITLY selected AniDB anime IDs. Resolve work IDs using search_anime first. Exact/normalized/prefix/substring names are ranked with a supplied work-title constraint first; preserve provider IDs, source-row provenance, collisions, partial/unknown title evidence and truncation. This is not global character discovery, species/appearance search, fuzzy identity, aliases or cross-work identity resolution. Sequential bounded source reads stop on provider error.",
+        "Search character-name rows reported by one to five EXPLICITLY selected AniDB anime IDs. Resolve work IDs using search_anime first. Exact/normalized/prefix/substring names are ranked with a supplied work-title constraint first; preserve provider IDs, source-row provenance, collisions, partial/unknown title evidence and truncation. With considerNameOrderVariants=true, a reversed two-token Latin-name order may be offered only as an unverified candidate, never as a source alias or identity merge. This is not global character discovery, species/appearance search, fuzzy identity, verified aliases or cross-work identity resolution. Sequential bounded source reads stop on provider error.",
       inputSchema: selectedCharacterSearchInputSchema,
       outputSchema: selectedCharacterSearchResultSchema,
       annotations: {
