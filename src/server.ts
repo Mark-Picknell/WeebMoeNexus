@@ -371,11 +371,6 @@ export function buildServer(): McpServer {
           role: z.string().nullable(),
           gender: z.string().nullable(),
           picture: z.string().nullable(),
-          description: z.string().nullable(),
-          characterType: z.strictObject({
-            id: z.number().int().positive().safe().nullable(),
-            name: z.string().nullable()
-          }).nullable(),
           episodeAppearancesRaw: z.string().nullable(),
           episodeEvidence: episodeEvidenceSchema,
           voiceActor: z.object({
@@ -505,6 +500,11 @@ export function buildServer(): McpServer {
           role: z.string().nullable(),
           gender: z.string().nullable(),
           picture: z.string().nullable(),
+          description: z.string().nullable(),
+          characterType: z.strictObject({
+            id: z.number().int().positive().safe().nullable(),
+            name: z.string().nullable()
+          }).nullable(),
           episodeAppearancesRaw: z.string().nullable(),
           episodeEvidence: episodeEvidenceSchema,
           voiceActor: z.object({
