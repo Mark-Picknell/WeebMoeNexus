@@ -165,6 +165,24 @@ export function aniDbCapabilityDeclaration(): ProviderDeclaration {
       scope: "Source character-description ingestion and bounded literal text mentions; source row/provenance preservation and negation-safe synthetic MCP tests."
     }]
   });
+  capabilities.push({
+    ...capability(
+      "source_character_clue_episode_recall", "implemented",
+      ["recall_character_clues_in_selected_anime"],
+      "Candidate search in source character-description prose for exactly one caller-selected AniDB anime, with optional reported episode ID boost.",
+      "src/services/scoped-scene-recall-service.ts",
+      [
+        "Literal source-text mentions can be negated, figurative or unrelated to a scene; they are never verified positive traits.",
+        "Source episode reference is not video observation or timestamp-level scene identification; missing/unlisted episode metadata never excludes candidates.",
+        "No global search, automatic source discovery, watcher memory, user accounts, cross-provider joins, DRM interaction or spoiler-safe playback."
+      ]
+    ),
+    evidence: [{
+      url: "https://github.com/Mark-Picknell/WeebMoeNexus/blob/c8c0fdf7d1bd964314cf43a5963c8f9434f282ed/src/services/scoped-scene-recall-service.ts",
+      checkedOn: "2026-10-15",basis:"implementation" as const,
+      scope:"Scoped one-work source-text candidate ranking with conservatively positive episode metadata and uncertainty retention, offline synthetic tests only."
+    }]
+  });
   capabilities[0]!.nativeProvider = {
     assessment: "supported",
     scope: "One historical registered-client anime read for AniDB 15437; no current availability or catalog-wide guarantee.",

@@ -23,6 +23,8 @@ import { selectedThemeSearchInputSchema, selectedThemeSearchResultSchema } from 
 import { searchThemesAcrossSelectedAnime } from "./services/selected-theme-search-service.js";
 import { selectedCharacterDescriptionInputSchema, selectedCharacterDescriptionResultSchema } from "./domain/selected-character-description.js";
 import { searchCharacterDescriptionsAcrossSelectedAnime } from "./services/selected-character-description-service.js";
+import { scopedSceneRecallInputSchema, scopedSceneRecallResultSchema } from "./domain/scoped-scene-recall.js";
+import { recallCharacterCluesFromSelectedWork } from "./services/scoped-scene-recall-service.js";
 import { titledCharacterSearchInputSchema, titledCharacterSearchResultSchema } from "./domain/titled-character-search.js";
 import { searchCharactersInUniqueTitledAnime } from "./services/titled-character-search-service.js";
 import { providerRegistryResultSchema } from "./domain/provider-registry.js";
@@ -570,6 +572,34 @@ export function buildServer(): McpServer {
         if (error instanceof ProviderLookupError) return providerErrorResult(error);
         return { isError: true, content: [{type: "text",
           text: error instanceof Error ? error.message : "Selected source theme lookup failed."
+        }] };
+      }
+    }
+  );
+
+  server.registerTool(
+    "recall_character_clues_in_selected_anime",
+    {
+      title: "Recall source character candidates from textual clues and optional episode",
+      description:
+        "For ONE explicitly selected AniDB anime ID, find characters whose SOURCE DESCRIPTION TEXT literally mentions remembered cues. Optionally boost characters with positively parsed reference to one reported episode ID; unknown, partial and missing episode metadata never exclude candidates. This is NOT actual scene identification, timestamp/audio/image analysis, viewer memory, spoiler-safe co-viewing, semantic trait matching or live global anime discovery. Descriptions may negate cues; source phrase mentions are NOT confirmed traits. Validate all parameters before reading one paced/cached work; preserve original character IDs, source rows, counts, excerpt and episode evidence.",
+      inputSchema: scopedSceneRecallInputSchema,
+      outputSchema: scopedSceneRecallResultSchema,
+      annotations: { readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: true }
+    },
+    async input => {
+      try {
+        const output = await recallCharacterCluesFromSelectedWork(input, service);
+        return {
+          content: [{type:"text",text:
+            `Found ${output.matchedCharacterRows} lexical SOURCE CHARACTER-DESCRIPTION candidate(s) in explicitly selected AniDB work #${output.sourceAnimeId}. Episode status: ${output.sourceEpisodeStatus}; this does not confirm any character in a scene or even a positive depicted trait.`
+          }],
+          structuredContent: output
+        };
+      } catch (error) {
+        if (error instanceof ProviderLookupError) return providerErrorResult(error);
+        return { isError:true,content:[{type:"text",
+          text:"Invalid or unsupported source-scoped scene-clue request; no speculative scene identification performed."
         }] };
       }
     }
