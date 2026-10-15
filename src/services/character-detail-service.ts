@@ -8,6 +8,10 @@ export interface SourceCharacterDetail {
   role: string | null;
   gender: string | null;
   picture: string | null;
+  /** Source prose may contain negation; it is not a verified trait list. */
+  description: string | null;
+  /** Source character category only, not verified species. */
+  characterType: { id: number | null; name: string | null } | null;
   episodeAppearancesRaw: string | null;
   episodeEvidence: CharacterEpisodeEvidence;
   voiceActor: {
@@ -57,6 +61,8 @@ export function getCharacterInAnime(
     role: source.role,
     gender: source.gender,
     picture: source.picture,
+    description: source.description ?? null,
+    characterType: source.characterType ?? null,
     episodeAppearancesRaw: source.episodeAppearancesRaw,
     episodeEvidence: normalizeCharacterEpisodeAppearances(anime, source.episodeAppearancesRaw),
     voiceActor: source.voiceActor

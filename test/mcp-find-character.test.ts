@@ -17,6 +17,8 @@ const fixture = `<?xml version="1.0" encoding="UTF-8"?>
   <characters>
     <character id="501" type="main character in">
       <name>Carrera</name><gender>female</gender><episodes>1,2</episodes>
+      <description>A medical diagnostic ability is described here.</description>
+      <charactertype id="1">Character</charactertype>
       <seiyuu id="88">Sample Performer</seiyuu>
     </character>
     <character id="502" type="secondary">
@@ -118,6 +120,8 @@ test("real MCP find_character returns only source-scoped characters and retains 
       character: {
         anidbCharacterId: number;
         name: string;
+        description: string | null;
+        characterType: { id: number | null; name: string | null } | null;
         episodeAppearancesRaw: string | null;
         episodeEvidence: { parseStatus: string; linkedEpisodeIds: number[] };
         voiceActor: { name: string } | null;
@@ -128,6 +132,8 @@ test("real MCP find_character returns only source-scoped characters and retains 
     assert.equal(detail.requestedCharacterId, 501);
     assert.equal(detail.character?.anidbCharacterId, 501);
     assert.equal(detail.character?.name, "Carrera");
+    assert.equal(detail.character?.description, "A medical diagnostic ability is described here.");
+    assert.deepEqual(detail.character?.characterType, { id: 1, name: "Character" });
     assert.equal(detail.character?.episodeAppearancesRaw, "1,2");
     assert.deepEqual(detail.character?.episodeEvidence.linkedEpisodeIds, [801, 802]);
     assert.equal(detail.character?.voiceActor?.name, "Sample Performer");

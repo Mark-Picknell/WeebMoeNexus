@@ -9,6 +9,8 @@ const anime = mapAniDbAnimeXml(`<anime id="1725" restricted="1">
   <characters>
     <character id="501" type="main character in">
       <name>Carrera</name><gender>female</gender><episodes>1-3</episodes>
+      <description>Source mentions a nurse coat; this is lexical data, not a verified visual trait.</description>
+      <charactertype id="1">Character</charactertype>
       <seiyuu id="88" picture="example.jpg">Sample Performer</seiyuu>
     </character>
     <character id="502">
@@ -33,6 +35,8 @@ test("stable character ID reads exactly one member of a work without conflating 
     role: "main character in",
     gender: "female",
     picture: null,
+    description: "Source mentions a nurse coat; this is lexical data, not a verified visual trait.",
+    characterType: { id: 1, name: "Character" },
     episodeAppearancesRaw: "1-3",
     episodeEvidence: {
       raw: "1-3",
@@ -55,6 +59,8 @@ test("stable character ID reads exactly one member of a work without conflating 
   assert.equal(second.character?.episodeEvidence.parseStatus, "unknown");
   assert.equal(second.character?.episodeEvidence.coverage, "unknown");
   assert.equal(second.character?.gender, null);
+  assert.equal(second.character?.description, null);
+  assert.equal(second.character?.characterType, null);
 });
 
 test("unknown ID is not reported, rather than inferred to be nonexistent everywhere", () => {
@@ -76,4 +82,15 @@ test("cannot treat unrelated or forged source provenance as AniDB character evid
   const bad = mapAniDbAnimeXml('<anime id="77"><characters><character id="501"><name>Other</name></character></characters></anime>');
   bad.provenance[0]!.providerId = "1725";
   assert.throws(() => getCharacterInAnime(bad, 501), /matching AniDB source provenance/);
+});
+
+test("older cached character rows without profile fields remain explicit unknowns", () => {
+  const earlier = structuredClone(anime);
+  for (const record of earlier.characters) {
+    delete record.description;
+    delete record.characterType;
+  }
+  const detail = getCharacterInAnime(earlier, 501);
+  assert.equal(detail.character?.description, null);
+  assert.equal(detail.character?.characterType, null);
 });
